@@ -1,0 +1,70 @@
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="card shadow-lg p-4 rounded-4" style="max-width: 420px; width: 100%;">
+    
+    <!-- Logo -->
+    <div class="text-center mb-4">
+      <img 
+        [src]="'assets/layout/images/' + (layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white') + '.svg'"
+        alt="Sakai logo"
+        class="mb-3"
+        style="width: 90px;"
+      />
+      <h3 class="fw-bold">Welcome!</h3>
+      <p class="text-muted">Sign in to continue</p>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="loginName"
+          placeholder="Enter username"
+          class="form-control"
+        />
+        <div *ngIf="formControl['loginName'].touched && formControl['loginName'].errors?.['required']" class="text-danger small">
+          Username is required
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter password"
+          class="form-control"
+        />
+        <div *ngIf="formControl['password'].touched && formControl['password'].errors?.['required']" class="text-danger small">
+          Password is required
+        </div>
+      </div>
+
+      <!-- Remember & Forgot -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe" />
+          <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+        <a href="#" class="text-decoration-none text-primary fw-semibold">Forgot password?</a>
+      </div>
+
+      <!-- Sign In Button -->
+      <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+        Sign In
+      </button>
+
+      <!-- Error Message -->
+      <div *ngIf="userNamePasswordError" class="alert alert-danger mt-3 py-2">
+        Invalid username or password. Please try again.
+      </div>
+
+    </form>
+  </div>
+</div>

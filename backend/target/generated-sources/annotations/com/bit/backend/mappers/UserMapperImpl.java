@@ -1,0 +1,59 @@
+package com.bit.backend.mappers;
+
+import com.bit.backend.dtos.AuthDto;
+import com.bit.backend.dtos.SignUpDto;
+import com.bit.backend.dtos.UserDto;
+import com.bit.backend.entities.User;
+import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = "org.mapstruct.ap.MappingProcessor",
+    date = "2026-01-27T23:06:19+0530",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
+)
+@Component
+public class UserMapperImpl implements UserMapper {
+
+    @Override
+    public UserDto toUserDto(User user) {
+        if ( user == null ) {
+            return null;
+        }
+
+        UserDto userDto = new UserDto();
+
+        userDto.setId( user.getId() );
+        userDto.setFirstName( user.getFirstName() );
+        userDto.setLastName( user.getLastName() );
+        userDto.setLogin( user.getLogin() );
+
+        return userDto;
+    }
+
+    @Override
+    public User signUpToUser(SignUpDto signUpDto) {
+        if ( signUpDto == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setFirstName( signUpDto.firstName() );
+        user.setLastName( signUpDto.lastName() );
+        user.setLogin( signUpDto.login() );
+
+        return user;
+    }
+
+    @Override
+    public AuthDto toAuthDto(Integer authId) {
+        if ( authId == null ) {
+            return null;
+        }
+
+        AuthDto authDto = new AuthDto();
+
+        return authDto;
+    }
+}
