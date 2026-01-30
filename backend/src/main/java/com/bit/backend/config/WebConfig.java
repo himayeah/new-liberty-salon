@@ -26,8 +26,7 @@ public class WebConfig {
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,
                 HttpHeaders.ACCEPT,
-                HttpHeaders.CACHE_CONTROL
-        ));
+                HttpHeaders.CACHE_CONTROL));
         config.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
@@ -35,12 +34,16 @@ public class WebConfig {
                 HttpMethod.DELETE.name(),
                 HttpMethod.PATCH.name(),
                 HttpMethod.HEAD.name(),
-                HttpMethod.OPTIONS.name()
-        ));
+                HttpMethod.OPTIONS.name()));
         config.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         bean.setOrder(-102);
         return bean;
+    }
+
+    @Bean
+    public com.bit.backend.mappers.UserMapper userMapper() {
+        return com.bit.backend.mappers.UserMapper.INSTANCE;
     }
 }

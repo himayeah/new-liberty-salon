@@ -7,11 +7,12 @@ import com.bit.backend.entities.User;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-import java.util.List;
-
-@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
+@Mapper(builder = @Builder(disableBuilder = true))
 public interface UserMapper {
+
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDto toUserDto(User user);
 
@@ -20,5 +21,5 @@ public interface UserMapper {
 
     AuthDto toAuthDto(Integer authId);
 
-//    List<AuthDto> toAuthDto(List<Integer> authIds);
+    // List<AuthDto> toAuthDto(List<Integer> authIds);
 }
