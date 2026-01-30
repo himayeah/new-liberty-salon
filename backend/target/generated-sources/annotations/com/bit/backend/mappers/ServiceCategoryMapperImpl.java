@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-30T21:53:24+0530",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
+    date = "2026-01-30T22:58:52+0530",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260128-0750, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
@@ -44,15 +44,15 @@ public class ServiceCategoryMapperImpl implements ServiceCategoryMapper {
             return null;
         }
 
-        Long id = null;
         String categoryName = null;
-        Number displayOrder = null;
         String description = null;
+        Number displayOrder = null;
+        Long id = null;
 
-        id = serviceCategoryDto.getId();
         categoryName = serviceCategoryDto.getCategoryName();
-        displayOrder = serviceCategoryDto.getDisplayOrder();
         description = serviceCategoryDto.getDescription();
+        displayOrder = serviceCategoryDto.getDisplayOrder();
+        id = serviceCategoryDto.getId();
 
         ServiceCategoryEntity serviceCategoryEntity = new ServiceCategoryEntity( id, categoryName, displayOrder, description );
 

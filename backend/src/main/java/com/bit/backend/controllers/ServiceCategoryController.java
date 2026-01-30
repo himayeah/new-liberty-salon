@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/service-category")
 public class ServiceCategoryController {
 
     private final ServiceCategoryServiceI serviceCategoryServiceI;
@@ -22,22 +22,23 @@ public class ServiceCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ServiceCategoryDto> addForm(@RequestBody ServiceCategoryDto serviceCategoryDto) throws AppException {
-        try{
+    public ResponseEntity<ServiceCategoryDto> addForm(@RequestBody ServiceCategoryDto serviceCategoryDto)
+            throws AppException {
+        try {
             ServiceCategoryDto serviceCategoryResponse = serviceCategoryServiceI.addServiceCategory(serviceCategoryDto);
-            return ResponseEntity.created(URI.create("/service-category/" + serviceCategoryResponse.getServiceName())).body(serviceCategoryResponse);
-            } catch (Exception e) {
+            return ResponseEntity.created(URI.create("/service-category/" + serviceCategoryResponse.getServiceName()))
+                    .body(serviceCategoryResponse);
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<ServiceCategoryDto>> getServiceCategory(){
+    public ResponseEntity<List<ServiceCategoryDto>> getServiceCategory() {
         try {
             List<ServiceCategoryDto> serviceCategoryDtoList = serviceCategoryServiceI.getServiceCategory();
-            return  ResponseEntity.ok().body(serviceCategoryDtoList);
-        }
-        catch (Exception e) {
+            return ResponseEntity.ok().body(serviceCategoryDtoList);
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -46,22 +47,21 @@ public class ServiceCategoryController {
     public ResponseEntity<ServiceCategoryDto> updateServiceCategory(
             @PathVariable long id,
             @RequestBody ServiceCategoryDto serviceCategoryDto) {
-        try{
-            ServiceCategoryDto responseServiceCategoryDt = serviceCategoryServiceI.updateServiceCategory(id, serviceCategoryDto);
+        try {
+            ServiceCategoryDto responseServiceCategoryDt = serviceCategoryServiceI.updateServiceCategory(id,
+                    serviceCategoryDto);
             return ResponseEntity.ok(responseServiceCategoryDt);
-        }
-        catch (Exception e) {
-            throw  new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ServiceCategoryDto> deleteServiceCategory(@PathVariable long id) {
-        try{
+        try {
             ServiceCategoryDto serviceCategoryDto = serviceCategoryServiceI.deleteServiceCategory(id);
             return ResponseEntity.ok(serviceCategoryDto);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

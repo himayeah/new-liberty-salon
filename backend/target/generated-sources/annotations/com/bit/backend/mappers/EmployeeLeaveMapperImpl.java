@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-30T21:53:24+0530",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
+    date = "2026-01-30T22:58:52+0530",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260128-0750, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class EmployeeLeaveMapperImpl implements EmployeeLeaveMapper {
@@ -21,21 +21,21 @@ public class EmployeeLeaveMapperImpl implements EmployeeLeaveMapper {
             return null;
         }
 
-        long id = 0L;
         String employeeName = null;
-        String leaveType = null;
-        String startDate = null;
         String endDate = null;
+        long id = 0L;
+        String leaveType = null;
         String reason = null;
+        String startDate = null;
 
+        employeeName = employeeLeaveEntity.getEmployeeName();
+        endDate = employeeLeaveEntity.getEndDate();
         if ( employeeLeaveEntity.getId() != null ) {
             id = employeeLeaveEntity.getId();
         }
-        employeeName = employeeLeaveEntity.getEmployeeName();
         leaveType = employeeLeaveEntity.getLeaveType();
-        startDate = employeeLeaveEntity.getStartDate();
-        endDate = employeeLeaveEntity.getEndDate();
         reason = employeeLeaveEntity.getReason();
+        startDate = employeeLeaveEntity.getStartDate();
 
         EmployeeLeaveDto employeeLeaveDto = new EmployeeLeaveDto( id, employeeName, leaveType, startDate, endDate, reason );
 
@@ -48,19 +48,19 @@ public class EmployeeLeaveMapperImpl implements EmployeeLeaveMapper {
             return null;
         }
 
-        Long id = null;
         String employeeName = null;
-        String leaveType = null;
-        String startDate = null;
         String endDate = null;
+        String leaveType = null;
         String reason = null;
+        String startDate = null;
+        Long id = null;
 
-        id = employeeLeaveDto.getId();
         employeeName = employeeLeaveDto.getEmployeeName();
-        leaveType = employeeLeaveDto.getLeaveType();
-        startDate = employeeLeaveDto.getStartDate();
         endDate = employeeLeaveDto.getEndDate();
+        leaveType = employeeLeaveDto.getLeaveType();
         reason = employeeLeaveDto.getReason();
+        startDate = employeeLeaveDto.getStartDate();
+        id = employeeLeaveDto.getId();
 
         EmployeeLeaveEntity employeeLeaveEntity = new EmployeeLeaveEntity( id, employeeName, leaveType, startDate, endDate, reason );
 

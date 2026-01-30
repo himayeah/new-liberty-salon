@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-30T21:53:24+0530",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
+    date = "2026-01-30T22:58:52+0530",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260128-0750, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class ClientRegMapperImpl implements ClientRegMapper {
@@ -23,17 +23,17 @@ public class ClientRegMapperImpl implements ClientRegMapper {
 
         ClientRegDto clientRegDto = new ClientRegDto();
 
-        clientRegDto.setFirstName( clientRegEntity.getFirstName() );
-        clientRegDto.setLastName( clientRegEntity.getLastName() );
-        clientRegDto.setEmail( clientRegEntity.getEmail() );
-        clientRegDto.setPhoneNumber( clientRegEntity.getPhoneNumber() );
-        clientRegDto.setDateOfBirth( clientRegEntity.getDateOfBirth() );
-        clientRegDto.setGender( clientRegEntity.getGender() );
-        clientRegDto.setPreferredStylist( clientRegEntity.getPreferredStylist() );
         clientRegDto.setAllergies( clientRegEntity.getAllergies() );
-        clientRegDto.setTotalVisits( clientRegEntity.getTotalVisits() );
+        clientRegDto.setDateOfBirth( clientRegEntity.getDateOfBirth() );
+        clientRegDto.setEmail( clientRegEntity.getEmail() );
+        clientRegDto.setFirstName( clientRegEntity.getFirstName() );
+        clientRegDto.setGender( clientRegEntity.getGender() );
+        clientRegDto.setLastName( clientRegEntity.getLastName() );
         clientRegDto.setLastVisitedDate( clientRegEntity.getLastVisitedDate() );
         clientRegDto.setLifetimeValue( clientRegEntity.getLifetimeValue() );
+        clientRegDto.setPhoneNumber( clientRegEntity.getPhoneNumber() );
+        clientRegDto.setPreferredStylist( clientRegEntity.getPreferredStylist() );
+        clientRegDto.setTotalVisits( clientRegEntity.getTotalVisits() );
 
         return clientRegDto;
     }
@@ -46,17 +46,17 @@ public class ClientRegMapperImpl implements ClientRegMapper {
 
         ClientRegEntity clientRegEntity = new ClientRegEntity();
 
-        clientRegEntity.setFirstName( clientRegDto.getFirstName() );
-        clientRegEntity.setLastName( clientRegDto.getLastName() );
-        clientRegEntity.setEmail( clientRegDto.getEmail() );
-        clientRegEntity.setPhoneNumber( clientRegDto.getPhoneNumber() );
-        clientRegEntity.setDateOfBirth( clientRegDto.getDateOfBirth() );
-        clientRegEntity.setGender( clientRegDto.getGender() );
-        clientRegEntity.setPreferredStylist( clientRegDto.getPreferredStylist() );
         clientRegEntity.setAllergies( clientRegDto.getAllergies() );
-        clientRegEntity.setTotalVisits( clientRegDto.getTotalVisits() );
+        clientRegEntity.setDateOfBirth( clientRegDto.getDateOfBirth() );
+        clientRegEntity.setEmail( clientRegDto.getEmail() );
+        clientRegEntity.setFirstName( clientRegDto.getFirstName() );
+        clientRegEntity.setGender( clientRegDto.getGender() );
+        clientRegEntity.setLastName( clientRegDto.getLastName() );
         clientRegEntity.setLastVisitedDate( clientRegDto.getLastVisitedDate() );
         clientRegEntity.setLifetimeValue( clientRegDto.getLifetimeValue() );
+        clientRegEntity.setPhoneNumber( clientRegDto.getPhoneNumber() );
+        clientRegEntity.setPreferredStylist( clientRegDto.getPreferredStylist() );
+        clientRegEntity.setTotalVisits( clientRegDto.getTotalVisits() );
 
         return clientRegEntity;
     }
