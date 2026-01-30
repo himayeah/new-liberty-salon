@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-27T23:06:19+0530",
+    date = "2026-01-30T21:43:58+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
@@ -21,9 +21,20 @@ public class EmployeeRegMapperImpl implements EmployeeRegMapper {
             return null;
         }
 
-        EmployeeRegDto employeeRegDto = new EmployeeRegDto();
+        EmployeeRegDto.EmployeeRegDtoBuilder employeeRegDto = EmployeeRegDto.builder();
 
-        return employeeRegDto;
+        employeeRegDto.id( employeeRegEntity.getId() );
+        employeeRegDto.employeeName( employeeRegEntity.getEmployeeName() );
+        employeeRegDto.dateJoined( employeeRegEntity.getDateJoined() );
+        employeeRegDto.designation( employeeRegEntity.getDesignation() );
+        employeeRegDto.specializations( employeeRegEntity.getSpecializations() );
+        employeeRegDto.hourlyRate( employeeRegEntity.getHourlyRate() );
+        employeeRegDto.commissionRate( employeeRegEntity.getCommissionRate() );
+        employeeRegDto.weeklyOffDays( employeeRegEntity.getWeeklyOffDays() );
+        employeeRegDto.maxAppointmentsPerDay( employeeRegEntity.getMaxAppointmentsPerDay() );
+        employeeRegDto.actions( employeeRegEntity.getActions() );
+
+        return employeeRegDto.build();
     }
 
     @Override
@@ -33,6 +44,19 @@ public class EmployeeRegMapperImpl implements EmployeeRegMapper {
         }
 
         EmployeeRegEntity employeeRegEntity = new EmployeeRegEntity();
+
+        if ( employeeRegDto.getId() != null ) {
+            employeeRegEntity.setId( employeeRegDto.getId() );
+        }
+        employeeRegEntity.setEmployeeName( employeeRegDto.getEmployeeName() );
+        employeeRegEntity.setDateJoined( employeeRegDto.getDateJoined() );
+        employeeRegEntity.setDesignation( employeeRegDto.getDesignation() );
+        employeeRegEntity.setSpecializations( employeeRegDto.getSpecializations() );
+        employeeRegEntity.setHourlyRate( employeeRegDto.getHourlyRate() );
+        employeeRegEntity.setCommissionRate( employeeRegDto.getCommissionRate() );
+        employeeRegEntity.setWeeklyOffDays( employeeRegDto.getWeeklyOffDays() );
+        employeeRegEntity.setMaxAppointmentsPerDay( employeeRegDto.getMaxAppointmentsPerDay() );
+        employeeRegEntity.setActions( employeeRegDto.getActions() );
 
         return employeeRegEntity;
     }

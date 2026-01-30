@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-27T23:06:19+0530",
+    date = "2026-01-30T21:43:58+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
@@ -23,6 +23,18 @@ public class ServiceMapperImpl implements ServiceMapper {
         }
 
         ServiceDto serviceDto = new ServiceDto();
+
+        if ( serviceEntity.getId() != null ) {
+            serviceDto.setId( serviceEntity.getId() );
+        }
+        serviceDto.setServiceName( serviceEntity.getServiceName() );
+        serviceDto.setPrice( serviceEntity.getPrice() );
+        serviceDto.setCommission( serviceEntity.getCommission() );
+        serviceDto.setColorCode( serviceEntity.getColorCode() );
+        serviceDto.setDescription( serviceEntity.getDescription() );
+        if ( serviceEntity.getIsActive() != null ) {
+            serviceDto.setIsActive( Boolean.parseBoolean( serviceEntity.getIsActive() ) );
+        }
 
         return serviceDto;
     }
@@ -40,6 +52,16 @@ public class ServiceMapperImpl implements ServiceMapper {
         String colorCode = null;
         String description = null;
         String isActive = null;
+
+        id = serviceDto.getId();
+        serviceName = serviceDto.getServiceName();
+        price = serviceDto.getPrice();
+        commission = serviceDto.getCommission();
+        colorCode = serviceDto.getColorCode();
+        description = serviceDto.getDescription();
+        if ( serviceDto.getIsActive() != null ) {
+            isActive = String.valueOf( serviceDto.getIsActive() );
+        }
 
         ServiceEntity serviceEntity = new ServiceEntity( id, serviceName, price, commission, colorCode, description, isActive );
 

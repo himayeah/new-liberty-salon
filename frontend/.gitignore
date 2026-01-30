@@ -1,0 +1,24 @@
+/node_modules
+# Source specific
+.DS_Store
+.checkstyle
+.classpath
+.project
+.settings/
+.vscode/
+.idea/
+
+# Node modules
+/node_modules
+
+# Angular
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+test-output/
+
+# Logs
+*-debug.log
+*-error.log

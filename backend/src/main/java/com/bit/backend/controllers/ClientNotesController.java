@@ -21,17 +21,19 @@ public class ClientNotesController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientNotesDto> addClientNote(@RequestBody ClientNotesDto clientNotesDto) throws AppException {
+    public ResponseEntity<ClientNotesDto> addClientNote(@RequestBody ClientNotesDto clientNotesDto)
+            throws AppException {
         try {
             ClientNotesDto clientNotesDtoResponse = clientNotesServiceI.addClientNote(clientNotesDto);
-            return ResponseEntity.created(URI.create("/client-notes/" + clientNotesDtoResponse.getClientName())).body(clientNotesDtoResponse);
-            } catch (Exception e) {
+            return ResponseEntity.created(URI.create("/client-notes/" + clientNotesDtoResponse.getClientName()))
+                    .body(clientNotesDtoResponse);
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    public ResponseEntity<ClientNotesDto> getClientNote() {
+    public ResponseEntity<List<ClientNotesDto>> getClientNote() {
         try {
             List<ClientNotesDto> clientNotesDtoList = clientNotesServiceI.getClientNote();
             return ResponseEntity.ok(clientNotesDtoList);
@@ -41,7 +43,8 @@ public class ClientNotesController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ClientNotesDto> updateClientNote(@PathVariable long id, @RequestBody ClientNotesDto clientNotesDto){
+    public ResponseEntity<ClientNotesDto> updateClientNote(@PathVariable long id,
+            @RequestBody ClientNotesDto clientNotesDto) {
         try {
             ClientNotesDto responseClientNotesDto = clientNotesServiceI.updateClientNote(id, clientNotesDto);
             return ResponseEntity.ok(responseClientNotesDto);
@@ -51,11 +54,11 @@ public class ClientNotesController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<ClientNotesDto> deleteClientNote(@PathVariable long id){
+    public ResponseEntity<ClientNotesDto> deleteClientNote(@PathVariable long id) {
         try {
             ClientNotesDto clientNotesDto = clientNotesServiceI.deleteClientNote(id);
             return ResponseEntity.ok(clientNotesDto);
-            } catch (Exception e) {
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

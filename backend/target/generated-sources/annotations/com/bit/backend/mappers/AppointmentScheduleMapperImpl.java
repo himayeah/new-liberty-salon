@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-27T23:06:19+0530",
+    date = "2026-01-30T21:43:58+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
@@ -32,6 +32,18 @@ public class AppointmentScheduleMapperImpl implements AppointmentScheduleMapper 
         String bookingSource = null;
         String notes = null;
         String cancellationReason = null;
+
+        id = appointmentScheduleDto.getId();
+        clientName = appointmentScheduleDto.getClientName();
+        stylistName = appointmentScheduleDto.getStylistName();
+        serviceName = appointmentScheduleDto.getServiceName();
+        appointmentDate = appointmentScheduleDto.getAppointmentDate();
+        appointmentStartTime = appointmentScheduleDto.getAppointmentStartTime();
+        appointmentEndTime = appointmentScheduleDto.getAppointmentEndTime();
+        appointmentStatus = appointmentScheduleDto.getAppointmentStatus();
+        bookingSource = appointmentScheduleDto.getBookingSource();
+        notes = appointmentScheduleDto.getNotes();
+        cancellationReason = appointmentScheduleDto.getCancellationReason();
 
         AppointmentScheduleEntity appointmentScheduleEntity = new AppointmentScheduleEntity( id, clientName, stylistName, serviceName, appointmentDate, appointmentStartTime, appointmentEndTime, appointmentStatus, bookingSource, notes, cancellationReason );
 

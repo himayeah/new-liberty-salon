@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-27T23:06:19+0530",
+    date = "2026-01-30T21:43:58+0530",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
@@ -23,6 +23,18 @@ public class ClientRegMapperImpl implements ClientRegMapper {
 
         ClientRegDto clientRegDto = new ClientRegDto();
 
+        clientRegDto.setFirstName( clientRegEntity.getFirstName() );
+        clientRegDto.setLastName( clientRegEntity.getLastName() );
+        clientRegDto.setEmail( clientRegEntity.getEmail() );
+        clientRegDto.setPhoneNumber( clientRegEntity.getPhoneNumber() );
+        clientRegDto.setDateOfBirth( clientRegEntity.getDateOfBirth() );
+        clientRegDto.setGender( clientRegEntity.getGender() );
+        clientRegDto.setPreferredStylist( clientRegEntity.getPreferredStylist() );
+        clientRegDto.setAllergies( clientRegEntity.getAllergies() );
+        clientRegDto.setTotalVisits( clientRegEntity.getTotalVisits() );
+        clientRegDto.setLastVisitedDate( clientRegEntity.getLastVisitedDate() );
+        clientRegDto.setLifetimeValue( clientRegEntity.getLifetimeValue() );
+
         return clientRegDto;
     }
 
@@ -33,6 +45,18 @@ public class ClientRegMapperImpl implements ClientRegMapper {
         }
 
         ClientRegEntity clientRegEntity = new ClientRegEntity();
+
+        clientRegEntity.setFirstName( clientRegDto.getFirstName() );
+        clientRegEntity.setLastName( clientRegDto.getLastName() );
+        clientRegEntity.setEmail( clientRegDto.getEmail() );
+        clientRegEntity.setPhoneNumber( clientRegDto.getPhoneNumber() );
+        clientRegEntity.setDateOfBirth( clientRegDto.getDateOfBirth() );
+        clientRegEntity.setGender( clientRegDto.getGender() );
+        clientRegEntity.setPreferredStylist( clientRegDto.getPreferredStylist() );
+        clientRegEntity.setAllergies( clientRegDto.getAllergies() );
+        clientRegEntity.setTotalVisits( clientRegDto.getTotalVisits() );
+        clientRegEntity.setLastVisitedDate( clientRegDto.getLastVisitedDate() );
+        clientRegEntity.setLifetimeValue( clientRegDto.getLifetimeValue() );
 
         return clientRegEntity;
     }

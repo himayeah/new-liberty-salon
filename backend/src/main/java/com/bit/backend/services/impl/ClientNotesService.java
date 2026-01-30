@@ -9,7 +9,6 @@ import com.bit.backend.services.ClientNotesServiceI;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class ClientNotesService implements ClientNotesServiceI {
     @Override
     public ClientNotesDto updateClientNote(long id, ClientNotesDto clientNotesDto) {
         try {
-            Optional<ClientNotesEntity> optionalClientNotesEntity = clientNotesMapper.findById(id);
+            Optional<ClientNotesEntity> optionalClientNotesEntity = clientNotesRepository.findById(id);
             if (!optionalClientNotesEntity.isPresent()) {
                 throw new AppException("Client Note does Not Exist", HttpStatus.BAD_REQUEST);
             }
@@ -63,20 +62,18 @@ public class ClientNotesService implements ClientNotesServiceI {
             throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
         }
     }
-        @Override
-        public ClientNotesDto deleteClientNote(long id) {
-            try {
-                Optional<ClientNotesEntity> optionalClientNotesEntity = clientNotesRepository.findById(id);
-                if (!optionalClientNotesEntity.isPresent()) {
-                    throw new AppException("Client Note does Not Exist", HttpStatus.BAD_REQUEST);
-                }
-                clientNotesRepository.deleteById(id);
-                return clientNotesMapper.toClientNotesDto(optionalClientNotesEntity.get());
-            } catch (Exception e) {
-                throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+
+    @Override
+    public ClientNotesDto deleteClientNote(long id) {
+        try {
+            Optional<ClientNotesEntity> optionalClientNotesEntity = clientNotesRepository.findById(id);
+            if (!optionalClientNotesEntity.isPresent()) {
+                throw new AppException("Client Note does Not Exist", HttpStatus.BAD_REQUEST);
             }
+            clientNotesRepository.deleteById(id);
+            return clientNotesMapper.toClientNotesDto(optionalClientNotesEntity.get());
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
         }
-
     }
-
 }

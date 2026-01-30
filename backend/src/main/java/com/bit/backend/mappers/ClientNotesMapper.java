@@ -12,8 +12,9 @@ import java.util.Optional;
 @Mapper(componentModel = "spring")
 public interface ClientNotesMapper {
     ClientNotesDto toClientNotesDto(ClientNotesEntity clientNotesEntity);
+
     ClientNotesEntity toClientNotesEntity(ClientNotesDto clientNotesDto);
+
     List<ClientNotesDto> toClientNotesDtoList(List<ClientNotesEntity> clientNotesEntityList);
 
-    Optional<ClientNotesEntity> findById(long id);
 }
