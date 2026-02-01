@@ -26,6 +26,7 @@ import { ServiceComponent } from './service/service.component';
 import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule.component';
 import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 import { ClientNotesComponent } from './client-notes/client-notes.component';
+import { ProductCategoryComponent } from './product-category/product-category.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { ClientNotesComponent } from './client-notes/client-notes.component';
     ServiceComponent,
     EmployeeScheduleComponent,
     EmployeeLeaveComponent,
-    ClientNotesComponent
+    ClientNotesComponent,
+    ProductCategoryComponent
   ],
 
     imports: [

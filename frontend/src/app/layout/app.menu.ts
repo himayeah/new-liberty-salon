@@ -129,6 +129,13 @@ const navigationModel = [
                 icon: 'pi pi-wrench', // services
                 routerLink: ['/pages/service'],
             },
+            {
+                label: 'Product Categories',    
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-tags', // product categories
+                routerLink: ['/pages/product-category'],
+            },
         ],
     },
 

@@ -1,0 +1,80 @@
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Client Registration</h4>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="productCategoryForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                    <!--Category Name-->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Category Name</mat-label>
+                            <input matInput formControlName="categoryName" />
+                            <mat-error *ngIf="isInvalid('categoryName','required')">Category Name is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!--Buttons-->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
+                            {{ saveButtonLabel }}
+                        </button>
+                        <button type="button" mat-stroked-button class="ms-2" (click)="resetData()">Reset</button>
+                    </div>
+                </div>
+            </form>
+                    </div>
+        </div>
+
+        <!--Table Section-->
+        <div class="card shadow-sm mt-5">
+            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Product Categories</h4>
+                <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
+                    <mat-icon>refresh</mat-icon>
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Filter</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Search categories" />
+                        </mat-form-field>
+                </div>  
+        </div>
+
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="table table-hover align-middle">
+                <!--Columns-->
+                <ng-container matColumnDef="categoryName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Category Name</th>
+                    <td mat-cell *matCellDef="let element">{{ element.categoryName }}</td>
+                </ng-container>
+                <!--Action Column-->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <!--Rows-->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [ngClass]="{
+                        'table-primary': selectedRow?.id === row.id,
+                        'table-success': lastAddedRow?.id === row.id,
+                        'table-warning': lastEditedRow?.id === row.id
+                    }">
+                </tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>
