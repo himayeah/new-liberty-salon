@@ -136,6 +136,13 @@ const navigationModel = [
                 icon: 'pi pi-tags', // product categories
                 routerLink: ['/pages/product-category'],
             },
+            {
+                label: 'Products',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-shopping-cart', // products
+                routerLink: ['/pages/product'],
+            }
         ],
     },
 

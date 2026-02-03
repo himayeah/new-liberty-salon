@@ -12,6 +12,7 @@ import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule
 import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 import { ClientNotesComponent } from './client-notes/client-notes.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
+import { ProductComponent } from './product/product.component';
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -36,6 +37,7 @@ export const PagesRoutes: Routes = [
         {path:'employee-schedule', component: EmployeeScheduleComponent},
         {path:'employee-leave', component: EmployeeLeaveComponent},
         { path: 'product-category', component: ProductCategoryComponent},
+        { path: 'product', component: ProductComponent},
         { path: '**', redirectTo: '/notfound' },
 
     ])],
