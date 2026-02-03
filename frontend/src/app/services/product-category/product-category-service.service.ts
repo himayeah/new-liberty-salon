@@ -13,44 +13,44 @@ export class ProductCategoryServiceService {
 
   serviceCall(form_details: any): Observable<any> {
 
-      const requestUrl = `${environment.baseUrl}/product-category`;
+    const requestUrl = `${environment.baseUrl}/product-category`;
 
-      let headers = new HttpHeaders();
-      const token = this.httpService.getAuthToken();
-      if (token !== null) {
-          headers = headers.set('Authorization', 'Bearer ' + token);
-      }
-      return this.http.post(requestUrl, form_details, { headers });
-  }
-
-getData() {
-  const requestUrl = `${environment.baseUrl}/product-category`;
-  let headers = new HttpHeaders();
-  const token = this.httpService.getAuthToken();
-  if (token !== null) {
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.post(requestUrl, form_details, { headers });
   }
-  return this.http.get(requestUrl, { headers });
-}
 
-editData(id: number, form_details:any){
-  const requestUrl = `${environment.baseUrl}/product-edit/${id}`;
-  let headers = new HttpHeaders();
-  const token = this.httpService.getAuthToken();
-  if (token !== null){
-    headers = headers.set('Authorization', 'Bearer ' + token);
+  getData() {
+    const requestUrl = `${environment.baseUrl}/product-category`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get(requestUrl, { headers });
   }
-  return this.http.put(requestUrl, form_details, {headers: headers});
-  
-}
-deleteData(id: number){
-  const requestUrl = `${environment.baseUrl}/product-category/${id}`;
-  let headers = new HttpHeaders();
-  const token = this.httpService.getAuthToken();
-  if (token !== null){
-    headers = headers.set('Authorization', 'Bearer ' + token);
+
+  editData(id: number, form_details: any) {
+    const requestUrl = `${environment.baseUrl}/product-edit/${id}`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.put(requestUrl, form_details, { headers: headers });
+
   }
-  return this.http.delete(requestUrl, {headers: headers});
-}
+  deleteData(id: number) {
+    const requestUrl = `${environment.baseUrl}/product-category/${id}`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.delete(requestUrl, { headers: headers });
+  }
 
 }

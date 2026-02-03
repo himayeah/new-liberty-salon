@@ -1,0 +1,65 @@
+package com.bit.backend.controllers;
+
+import com.bit.backend.exceptions.AppException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.bit.backend.dtos.ProductDto;
+import com.bit.backend.services.ProductServiceI;
+
+import java.net.URI;
+import java.util.List;
+ 
+@RestController
+@RequestMapping("/product") // Base path for all client-reg endpoints
+public class ProductController {
+
+    private final ProductServiceI productServiceI;
+
+    public ProductController(ProductServiceI productServiceI) { this.productServiceI = productServiceI; }
+
+    @PostMapping
+    public ResponseEntity<ProductDto>  addForm(@RequestBody ProductDto ProductDto) throws AppException {
+        try {
+            ProductDto productDtoResponse - productServiceI.addProduct(ProductDto);
+            return ResponseEntity.created(URI.create("/product" + productDtoResponse)).body(productDtoResponse);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductDto>> getData(){
+        try {
+            List<ProductDto> productDtoList = productServiceI.getData();
+            return ResponseEntity.ok(productDtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR); 
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<ProductDto> updateProduct(
+        @PathVariable long id,
+        @RequestBody ProductDto productDto ) {
+            try {
+                ProductDto productDtoResponse = productServiceI.updateProduct(id, productDto);
+                return ResponseEntity.ok(productDtoResponse);
+            } catch (Exception e) {
+                throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR); 
+            }
+        }
+
+    @DeleteMapping
+    public ResponseEntity<ProductDto> deleteProduct (
+        @PathVariable long id) {
+            try {
+                ProductDto productDtoResponse = productServiceI.deleteProduct(id);
+                return ResponseEntity.ok(productDtoResponse);
+            } catch (Exception e) {
+                throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR); 
+            }
+        }
+    }
+
+

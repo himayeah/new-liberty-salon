@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-02-03T20:00:35+0530",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260128-0750, environment: Java 21.0.9 (Eclipse Adoptium)"
+    date = "2026-02-03T22:45:01+0530",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
 )
 @Component
 public class ServiceMapperImpl implements ServiceMapper {
@@ -24,17 +24,17 @@ public class ServiceMapperImpl implements ServiceMapper {
 
         ServiceDto serviceDto = new ServiceDto();
 
-        serviceDto.setColorCode( serviceEntity.getColorCode() );
-        serviceDto.setCommission( serviceEntity.getCommission() );
-        serviceDto.setDescription( serviceEntity.getDescription() );
         if ( serviceEntity.getId() != null ) {
             serviceDto.setId( serviceEntity.getId() );
         }
+        serviceDto.setServiceName( serviceEntity.getServiceName() );
+        serviceDto.setPrice( serviceEntity.getPrice() );
+        serviceDto.setCommission( serviceEntity.getCommission() );
+        serviceDto.setColorCode( serviceEntity.getColorCode() );
+        serviceDto.setDescription( serviceEntity.getDescription() );
         if ( serviceEntity.getIsActive() != null ) {
             serviceDto.setIsActive( Boolean.parseBoolean( serviceEntity.getIsActive() ) );
         }
-        serviceDto.setPrice( serviceEntity.getPrice() );
-        serviceDto.setServiceName( serviceEntity.getServiceName() );
 
         return serviceDto;
     }
@@ -45,23 +45,23 @@ public class ServiceMapperImpl implements ServiceMapper {
             return null;
         }
 
-        String colorCode = null;
-        BigDecimal commission = null;
-        String description = null;
         Long id = null;
-        String isActive = null;
-        BigDecimal price = null;
         String serviceName = null;
+        BigDecimal price = null;
+        BigDecimal commission = null;
+        String colorCode = null;
+        String description = null;
+        String isActive = null;
 
-        colorCode = serviceDto.getColorCode();
-        commission = serviceDto.getCommission();
-        description = serviceDto.getDescription();
         id = serviceDto.getId();
+        serviceName = serviceDto.getServiceName();
+        price = serviceDto.getPrice();
+        commission = serviceDto.getCommission();
+        colorCode = serviceDto.getColorCode();
+        description = serviceDto.getDescription();
         if ( serviceDto.getIsActive() != null ) {
             isActive = String.valueOf( serviceDto.getIsActive() );
         }
-        price = serviceDto.getPrice();
-        serviceName = serviceDto.getServiceName();
 
         ServiceEntity serviceEntity = new ServiceEntity( id, serviceName, price, commission, colorCode, description, isActive );
 
