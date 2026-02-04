@@ -135,8 +135,14 @@
 							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
+					<compilerArgs>
+						<arg>-Amapstruct.suppressGeneratorTimestamp=true</arg>
+						<arg>-Amapstruct.defaultComponentModel=spring</arg>
+						<arg>-Amapstruct.unmappedTargetPolicy=IGNORE</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
+
 
 		</plugins>
 	</build>

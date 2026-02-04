@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-02-03T22:45:26+0530",
     comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260128-0750, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -23,18 +22,18 @@ public class ProductMapperImpl implements ProductMapper {
 
         ProductDto productDto = new ProductDto();
 
-        productDto.setId( productEntity.getId() );
-        productDto.setProductName( productEntity.getProductName() );
-        productDto.setCategoryName( productEntity.getCategoryName() );
-        productDto.setBrand( productEntity.getBrand() );
-        productDto.setProductDescription( productEntity.getProductDescription() );
-        productDto.setUnit( productEntity.getUnit() );
-        productDto.setPurchasePrice( productEntity.getPurchasePrice() );
-        productDto.setSellingPrice( productEntity.getSellingPrice() );
         productDto.setBarcode( productEntity.getBarcode() );
+        productDto.setBrand( productEntity.getBrand() );
+        productDto.setCategoryName( productEntity.getCategoryName() );
+        productDto.setId( productEntity.getId() );
+        productDto.setProductDescription( productEntity.getProductDescription() );
+        productDto.setProductName( productEntity.getProductName() );
+        productDto.setPurchasePrice( productEntity.getPurchasePrice() );
+        productDto.setReOrderLevel( productEntity.getReOrderLevel() );
+        productDto.setSellingPrice( productEntity.getSellingPrice() );
         productDto.setSku( productEntity.getSku() );
         productDto.setTaxable( productEntity.isTaxable() );
-        productDto.setReOrderLevel( productEntity.getReOrderLevel() );
+        productDto.setUnit( productEntity.getUnit() );
 
         return productDto;
     }
@@ -47,18 +46,18 @@ public class ProductMapperImpl implements ProductMapper {
 
         ProductEntity productEntity = new ProductEntity();
 
-        productEntity.setId( productDto.getId() );
-        productEntity.setProductName( productDto.getProductName() );
-        productEntity.setCategoryName( productDto.getCategoryName() );
-        productEntity.setBrand( productDto.getBrand() );
-        productEntity.setProductDescription( productDto.getProductDescription() );
-        productEntity.setUnit( productDto.getUnit() );
-        productEntity.setPurchasePrice( productDto.getPurchasePrice() );
-        productEntity.setSellingPrice( productDto.getSellingPrice() );
         productEntity.setBarcode( productDto.getBarcode() );
+        productEntity.setBrand( productDto.getBrand() );
+        productEntity.setCategoryName( productDto.getCategoryName() );
+        productEntity.setId( productDto.getId() );
+        productEntity.setProductDescription( productDto.getProductDescription() );
+        productEntity.setProductName( productDto.getProductName() );
+        productEntity.setPurchasePrice( productDto.getPurchasePrice() );
+        productEntity.setReOrderLevel( productDto.getReOrderLevel() );
+        productEntity.setSellingPrice( productDto.getSellingPrice() );
         productEntity.setSku( productDto.getSku() );
         productEntity.setTaxable( productDto.isTaxable() );
-        productEntity.setReOrderLevel( productDto.getReOrderLevel() );
+        productEntity.setUnit( productDto.getUnit() );
 
         return productEntity;
     }

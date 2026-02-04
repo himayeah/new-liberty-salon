@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-02-03T22:45:01+0530",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.16 (Microsoft)"
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.45.0.v20260128-0750, environment: Java 21.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class ClientNotesMapperImpl implements ClientNotesMapper {
@@ -24,10 +23,10 @@ public class ClientNotesMapperImpl implements ClientNotesMapper {
         ClientNotesDto clientNotesDto = new ClientNotesDto();
 
         clientNotesDto.setClientName( clientNotesEntity.getClientName() );
-        clientNotesDto.setStylistName( clientNotesEntity.getStylistName() );
-        clientNotesDto.setNoteType( clientNotesEntity.getNoteType() );
         clientNotesDto.setNoteContent( clientNotesEntity.getNoteContent() );
         clientNotesDto.setNoteDate( clientNotesEntity.getNoteDate() );
+        clientNotesDto.setNoteType( clientNotesEntity.getNoteType() );
+        clientNotesDto.setStylistName( clientNotesEntity.getStylistName() );
 
         return clientNotesDto;
     }
@@ -41,10 +40,10 @@ public class ClientNotesMapperImpl implements ClientNotesMapper {
         ClientNotesEntity clientNotesEntity = new ClientNotesEntity();
 
         clientNotesEntity.setClientName( clientNotesDto.getClientName() );
-        clientNotesEntity.setStylistName( clientNotesDto.getStylistName() );
-        clientNotesEntity.setNoteType( clientNotesDto.getNoteType() );
         clientNotesEntity.setNoteContent( clientNotesDto.getNoteContent() );
         clientNotesEntity.setNoteDate( clientNotesDto.getNoteDate() );
+        clientNotesEntity.setNoteType( clientNotesDto.getNoteType() );
+        clientNotesEntity.setStylistName( clientNotesDto.getStylistName() );
 
         return clientNotesEntity;
     }
