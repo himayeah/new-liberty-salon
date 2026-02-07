@@ -14,9 +14,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ClientRegComponent } from './client-reg/client-reg.component';
-import {EmployeeRegComponent} from './employee-reg/employee-reg.component';
+import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
 import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -28,6 +28,7 @@ import { EmployeeLeaveComponent } from './employee-leave/employee-leave.componen
 import { ClientNotesComponent } from './client-notes/client-notes.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductComponent } from './product/product.component';
+import { TaxComponent } from './tax/tax.component';
 
 
 @NgModule({
@@ -44,9 +45,10 @@ import { ProductComponent } from './product/product.component';
     ClientNotesComponent,
     ProductCategoryComponent,
     ProductComponent,
+    TaxComponent
   ],
 
-    imports: [
+  imports: [
     CommonModule,
     PagesRoutingModule,
     ReactiveFormsModule,
@@ -64,6 +66,6 @@ import { ProductComponent } from './product/product.component';
     MatSelectModule,
     MatSlideToggleModule,
     MatCheckboxModule,
-]
-  })
-  export class PagesModule { }
+  ]
+})
+export class PagesModule { }
