@@ -1,6 +1,5 @@
 package com.bit.backend.mappers;
 
-import com.bit.backend.dtos.AuthDto;
 import com.bit.backend.dtos.SignUpDto;
 import com.bit.backend.dtos.UserDto;
 import com.bit.backend.entities.User;
@@ -43,16 +42,5 @@ public class UserMapperImpl implements UserMapper {
         user.setLogin( signUpDto.login() );
 
         return user;
-    }
-
-    @Override
-    public AuthDto toAuthDto(Integer authId) {
-        if ( authId == null ) {
-            return null;
-        }
-
-        AuthDto authDto = new AuthDto();
-
-        return authDto;
     }
 }

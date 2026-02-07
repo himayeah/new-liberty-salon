@@ -21,6 +21,7 @@ com/bit/backend/dtos/ServiceCategoryDto.class
 com/bit/backend/services/impl/ClientNotesService.class
 com/bit/backend/mappers/ClientNotesMapperImpl.class
 com/bit/backend/services/PrivilegeGroupServiceI.class
+com/bit/backend/mappers/TaxMapperImpl.class
 com/bit/backend/mappers/CommonDataMapper.class
 com/bit/backend/controllers/FormDemoController.class
 com/bit/backend/repositories/EmployeeRegRepository.class
@@ -38,6 +39,7 @@ com/bit/backend/repositories/LoginFormRepository.class
 com/bit/backend/dtos/StaffServicesDto.class
 com/bit/backend/dtos/FormDemoDto.class
 com/bit/backend/controllers/EmployeeRegController.class
+com/bit/backend/entities/TaxEntity.class
 com/bit/backend/services/impl/FormDemoService.class
 com/bit/backend/repositories/UserRepository.class
 com/bit/backend/services/impl/ServiceService.class
@@ -56,6 +58,7 @@ com/bit/backend/entities/PrivilegeGroupUser.class
 com/bit/backend/mappers/EmployeeLeaveMapper.class
 com/bit/backend/services/ProductServiceI.class
 com/bit/backend/mappers/EmployeeRegMapper.class
+com/bit/backend/services/impl/TaxService.class
 com/bit/backend/entities/Privilege.class
 com/bit/backend/mappers/ProductCategoryMapperImpl.class
 com/bit/backend/mappers/SignFormMapper.class
@@ -65,6 +68,7 @@ com/bit/backend/controllers/PrivilegeController.class
 com/bit/backend/controllers/EmployeeLeaveController.class
 com/bit/backend/dtos/LoginFormDto.class
 com/bit/backend/mappers/ClientRegMapper.class
+com/bit/backend/repositories/TaxRepository.class
 com/bit/backend/dtos/SystemPrivilegeListDto.class
 com/bit/backend/services/impl/signFormEntity.class
 com/bit/backend/config/RestExceptionHandler.class
@@ -89,9 +93,11 @@ com/bit/backend/controllers/CommonServiceController.class
 com/bit/backend/repositories/ServiceRepository.class
 com/bit/backend/controllers/ProductCategoryController.class
 com/bit/backend/mappers/StaffServicesMapper.class
+com/bit/backend/controllers/TaxController.class
 com/bit/backend/dtos/CommonDataDto.class
 com/bit/backend/mappers/LoginFormMapperImpl.class
 com/bit/backend/services/ServiceServiceI.class
+com/bit/backend/dtos/TaxDto.class
 com/bit/backend/entities/LoginFormEntity.class
 com/bit/backend/entities/ProductCategoryEntity.class
 com/bit/backend/dtos/ProductCategoryDto.class
@@ -144,9 +150,11 @@ com/bit/backend/mappers/ClientRegMapperImpl.class
 com/bit/backend/entities/FormDemoEntity.class
 com/bit/backend/services/SignFormServiceI.class
 com/bit/backend/entities/SignFormEntity.class
+com/bit/backend/mappers/TaxMapper.class
 com/bit/backend/controllers/ServiceController.class
 com/bit/backend/repositories/ServiceCategoryRepository.class
 com/bit/backend/services/PrivilegeServiceI.class
+com/bit/backend/services/TaxServiceI.class
 com/bit/backend/controllers/ClientNotesController.class
 com/bit/backend/mappers/ProductMapperImpl.class
 com/bit/backend/mappers/AppointmentScheduleMapper.class

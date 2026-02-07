@@ -10,7 +10,7 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Tax Name</mat-label>
-                            <input matInput formControlNaame="taxName" />
+                            <input matInput formControlName="taxName" />
                             <mat-error *ngIf="isInvalid('taxName','required')">
                                 Tax Name is required
                             </mat-error>
@@ -59,8 +59,7 @@
                 <div class="col-md-4">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter()" placeholder="Search by tax name" />
-                    </mat-form-field>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Search by tax name" />
                     </mat-form-field>
                 </div>
             </div>

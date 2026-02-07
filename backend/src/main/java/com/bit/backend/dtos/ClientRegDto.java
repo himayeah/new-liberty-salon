@@ -23,6 +23,3 @@ public class ClientRegDto {
     private String lastVisitedDate;
     private double lifetimeValue;
 }
-
-
-

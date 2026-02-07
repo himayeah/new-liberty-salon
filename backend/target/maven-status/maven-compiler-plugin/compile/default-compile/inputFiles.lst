@@ -6,6 +6,7 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/ClientNotesDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/ServiceController.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/ProductDto.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/TaxController.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/PrivilegeGroupAuthRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/AuthDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/ClientNotesController.java
@@ -24,9 +25,12 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/StaffServicesEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/config/PasswordConfig.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/SignFormRepository.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/TaxDto.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/impl/TaxService.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/SystemPrivilegeListDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/EmployeeLeaveMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/EmployeeRegController.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/TaxRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/ClientNotesMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/UserMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/CommonDataRepository.java
@@ -46,9 +50,11 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/config/RestExceptionHandler.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/ServiceCategoryMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/ProductRepository.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/TaxEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/ClientRegRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/ServiceMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/PrivilegeGroupMapper.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/TaxMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/ClientRegServiceI.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/PrivilegeGroupServiceI.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/PrivilegeGroupRepository.java
@@ -70,6 +76,7 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/SignFormServiceI.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/CommonServiceController.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/SignFormController.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/TaxServiceI.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/CommonDataMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/ServiceRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/FormDemoMapper.java
