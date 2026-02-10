@@ -22,11 +22,14 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/impl/SignFormService.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/ProductCategoryRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/ServiceCategoryDto.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/SupplierRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/StaffServicesEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/config/PasswordConfig.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/impl/SupplierService.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/SignFormRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/TaxDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/impl/TaxService.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/SupplierServiceI.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/SystemPrivilegeListDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/EmployeeLeaveMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/EmployeeRegController.java
@@ -52,6 +55,7 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/ProductRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/TaxEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/ClientRegRepository.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/SupplierMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/ServiceMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/PrivilegeGroupMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/TaxMapper.java
@@ -72,6 +76,7 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/FormDemoDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/impl/ProductCategoryService.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/ClientRegEntity.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/SupplierController.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/SignFormEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/SignFormServiceI.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/CommonServiceController.java
@@ -115,6 +120,7 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/FormDemoRepository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/EmployeeRegDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/services/impl/PrivilegeGroupService.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/SupplierDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/mappers/SignFormMapper.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/ProductEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/Privilege.java
@@ -123,6 +129,7 @@
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/controllers/FormDemoController.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/AppointmentScheduleEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/LoginFormEntity.java
+/Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/SupplierEntity.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/repositories/JpaRespository.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/dtos/SignUpDto.java
 /Users/himayanirmani/Documents/myProject/backend/src/main/java/com/bit/backend/entities/PrivilegeGroup.java

@@ -58,7 +58,7 @@ export class ClientRegComponent implements OnInit {
     fetchStylists(): void {
         this.employeeRegService.getData().subscribe({
             next: (response: any[]) => {
-                this.stylists = response.filter(employee => 
+                this.stylists = response.filter(employee =>
                     employee.designation === 'Bridal stylist' || employee.designation === 'Groom stylist'
                 );
             },
@@ -122,7 +122,7 @@ export class ClientRegComponent implements OnInit {
         }
     }
 
-// this editData() is the html method
+    // this editData() is the html method
     editData(data: any): void {
         this.clientRegForm.patchValue({
             ...data,

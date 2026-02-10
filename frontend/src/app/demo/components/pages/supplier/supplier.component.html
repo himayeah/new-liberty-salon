@@ -1,0 +1,173 @@
+<div class="container my-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Supplier Registration</h4>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+
+                    <!--Supplier Name-->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Supplier Name</mat-label>
+                            <input matInput formControlName="supplierName" />
+                            <mat-error *ngIf="isInvalid('supplierName','required')">
+                                Supplier Name is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!--Contact Person-->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Contact Person Name</mat-label>
+                            <input matInput formControlName="contactName" />
+                            <mat-error *ngIf="isInvalid('contactName','required')">
+                                Contact Person Name is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!--Phone Number-->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Contact Phone Number</mat-label>
+                            <input matInput formControlName="phoneNumber" />
+                            <mat-error *ngIf="isInvalid('phoneNumber','required')">Phone number is required</mat-error>
+                            <mat-error *ngIf="isInvalid('phoneNumber','pattern')">Invalid phone number</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!--Email Address-->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Contact Email Address</mat-label>
+                            <input matInput formControlName="emailAddress" />
+                            <mat-error *ngIf="isInvalid('emailAddress','required')">Email address is
+                                required</mat-error>
+                            <mat-error *ngIf="isInvalid('emailAddress','pattern')">Invalid email address</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!--Address-->
+                    <div class="col-md-12">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Address</mat-label>
+                            <textarea matInput formControlName="address"
+                                placeholder="Enter Supplier Address"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!--Payment Terms-->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Payment Terms</mat-label>
+                            <mat-select formControlName="paymentTerms">
+                                <mat-option value="Cash">Cash</mat-option>
+                                <mat-option value="Net 30">Net 30</mat-option>
+                                <mat-option value="Net 60">Net 60</mat-option>
+                                <mat-option value="Net 90">Advanced</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="isInvalid('paymentTerms','required')">
+                                Payment Terms is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!--Buttons-->
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
+                            {{ saveButtonLabel }}
+                        </button>
+                        <button type="button" mat-stroked-button class="ms-2" (click)="resetData()">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--Table Section-->
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Supplier Information</h4>
+            <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Filter</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Search supplier" />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table mat-table [dataSource]="dataSource" matSort class="table table-hover align-middle">
+
+                    <!--Supplier Name Column-->
+                    <ng-container matColumnDef="supplierName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Supplier Name</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.supplierName }}</mat-cell>
+                    </ng-container>
+
+                    <!--Contact Person Column-->
+                    <ng-container matColumnDef="contactName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Contact Person Name</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.contactName }}</mat-cell>
+                    </ng-container>
+
+                    <!--Phone Number Column-->
+                    <ng-container matColumnDef="phoneNumber">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Phone Number</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.phoneNumber }}</mat-cell>
+                    </ng-container>
+
+                    <!--Email Address Column-->
+                    <ng-container matColumnDef="emailAddress">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Email Address</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.emailAddress }}</mat-cell>
+                    </ng-container>
+
+                    <!--Address Column-->
+                    <ng-container matColumnDef="address">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.address }}</mat-cell>
+                    </ng-container>
+
+                    <!--Payment Terms Column-->
+                    <ng-container matColumnDef="paymentTerms">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Payment Terms</mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ element.paymentTerms }}</mat-cell>
+                    </ng-container>
+
+                    <!--Action Column-->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!--Rows-->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+                        'table-primary': selectedRow?.id === row.id,
+                        'table-success': lastAddedRow?.id === row.id,
+                        'table-warning': lastEditedRow?.id === row.id
+                    }">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+
+</div>

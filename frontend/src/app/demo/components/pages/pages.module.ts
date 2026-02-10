@@ -29,6 +29,7 @@ import { ClientNotesComponent } from './client-notes/client-notes.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductComponent } from './product/product.component';
 import { TaxComponent } from './tax/tax.component';
+import { SupplierComponent } from './supplier/supplier.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { TaxComponent } from './tax/tax.component';
     ClientNotesComponent,
     ProductCategoryComponent,
     ProductComponent,
-    TaxComponent
+    TaxComponent,
+    SupplierComponent
   ],
 
   imports: [
