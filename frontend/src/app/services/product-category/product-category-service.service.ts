@@ -7,13 +7,13 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ClientNotesServiceService {
+export class ProductCategoryServiceService {
 
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
   serviceCall(form_details: any): Observable<any> {
 
-    const requestUrl = `${environment.baseUrl}/client-notes`;
+    const requestUrl = `${environment.baseUrl}/product-category`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -24,7 +24,7 @@ export class ClientNotesServiceService {
   }
 
   getData() {
-    const requestUrl = `${environment.baseUrl}/client-notes`;
+    const requestUrl = `${environment.baseUrl}/product-category`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -33,22 +33,18 @@ export class ClientNotesServiceService {
     return this.http.get(requestUrl, { headers });
   }
 
-  //form data editing
   editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/client-notes-edit/${id}`;
-
+    const requestUrl = `${environment.baseUrl}/product-edit/${id}`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
     return this.http.put(requestUrl, form_details, { headers: headers });
+
   }
-
-  //table data delete
   deleteData(id: number) {
-    const requestUrl = `${environment.baseUrl}/client-notes/${id}`;
-
+    const requestUrl = `${environment.baseUrl}/product-category/${id}`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {

@@ -19,7 +19,4 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     User signUpToUser(SignUpDto signUpDto);
 
-    AuthDto toAuthDto(Integer authId);
-
-    // List<AuthDto> toAuthDto(List<Integer> authIds);
 }

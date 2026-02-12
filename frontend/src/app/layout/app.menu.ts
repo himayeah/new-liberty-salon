@@ -87,7 +87,7 @@ const navigationModel = [
             }
         ],
     },
-       
+
     {
         label: 'Privileges',
         isVisible: true,
@@ -110,7 +110,7 @@ const navigationModel = [
         ],
     },
 
-      {
+    {
         label: 'Master Data',
         isVisible: false,
         auth: authenticationEnum.Home,
@@ -129,12 +129,40 @@ const navigationModel = [
                 icon: 'pi pi-wrench', // services
                 routerLink: ['/pages/service'],
             },
+            {
+                label: 'Product Categories',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-tags', // product categories
+                routerLink: ['/pages/product-category'],
+            },
+            {
+                label: 'Products',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-shopping-cart', // products
+                routerLink: ['/pages/product'],
+            },
+            {
+                label: 'Supplier',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-shopping-cart',
+                routerLink: ['/pages/supplier']
+            },
+            {
+                label: 'Tax',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-shopping-cart',
+                routerLink: ['pages/tax']
+            }
         ],
     },
 
     {
         label: 'UI Components',
-        isVisible:true ,
+        isVisible: true,
         items: [
             { label: 'Form Layout', icon: 'pi pi-id-card', routerLink: ['/uikit/formlayout'] },
             { label: 'Input', icon: 'pi pi-pencil', routerLink: ['/uikit/input'] },
@@ -154,7 +182,7 @@ const navigationModel = [
             { label: 'Misc', icon: 'pi pi-cog', routerLink: ['/uikit/misc'] },
         ],
     },
-  
+
     {
         label: 'Utilities',
         isVisible: false,
@@ -235,7 +263,7 @@ const navigationModel = [
             },
         ],
     },
-    
+
     {
         label: 'Get Started',
         isVisible: false,

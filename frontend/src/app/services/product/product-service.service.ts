@@ -1,30 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '../http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpService } from '../http.service';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/app/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClientNotesServiceService {
-
+export class ProductServiceService {
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
-  serviceCall(form_details: any): Observable<any> {
-
-    const requestUrl = `${environment.baseUrl}/client-notes`;
+  serviceCall(form_detalils: any): Observable<any> {
+    const requestUrl = `${environment.baseUrl}/product`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
-    return this.http.post(requestUrl, form_details, { headers });
+    return this.http.post(requestUrl, form_detalils, { headers });
   }
 
-  getData() {
-    const requestUrl = `${environment.baseUrl}/client-notes`;
+  getData(): Observable<any> {
+    const requestUrl = `${environment.baseUrl}/product`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -33,9 +32,8 @@ export class ClientNotesServiceService {
     return this.http.get(requestUrl, { headers });
   }
 
-  //form data editing
-  editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/client-notes-edit/${id}`;
+  editData(id: number, form_details: any): Observable<any> {
+    const requestUrl = `${environment.baseUrl}/product-edit/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -45,9 +43,8 @@ export class ClientNotesServiceService {
     return this.http.put(requestUrl, form_details, { headers: headers });
   }
 
-  //table data delete
-  deleteData(id: number) {
-    const requestUrl = `${environment.baseUrl}/client-notes/${id}`;
+  deleteData(id: number): Observable<any> {
+    const requestUrl = `${environment.baseUrl}/product/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();

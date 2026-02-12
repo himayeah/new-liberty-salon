@@ -11,6 +11,10 @@ import { ServiceComponent } from './service/service.component';
 import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule.component';
 import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 import { ClientNotesComponent } from './client-notes/client-notes.component';
+import { ProductCategoryComponent } from './product-category/product-category.component';
+import { ProductComponent } from './product/product.component';
+import { TaxComponent } from './tax/tax.component';
+import { SupplierComponent } from './supplier/supplier.component';
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -24,16 +28,20 @@ export const PagesRoutes: Routes = [
         { path: 'empty', loadChildren: () => import('./empty/emptydemo.module').then(m => m.EmptyDemoModule) },
         { path: 'timeline', loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: 'client-reg', component: ClientRegComponent }, // need to include the path here for form demo component
-        { path: 'client-notes', component: ClientNotesComponent},
+        { path: 'client-notes', component: ClientNotesComponent },
         { path: 'employee-reg', component: EmployeeRegComponent },
         { path: 'appointment-schedule', component: AppointmentScheduleComponent },
         { path: 'employee-attendance', loadChildren: () => import('./employee-attendance/employee-attendance.module').then(m => m.EmployeeAttendanceModule) },
-        {path:'stylist-task-management', component: StylistTaskManagementComponent},
-        {path:'inventory', component: InventoryComponent},
-        {path:'service-category', component: ServiceCategoryComponent},
-        {path:'service', component: ServiceComponent},
-        {path:'employee-schedule', component: EmployeeScheduleComponent},
-        {path:'employee-leave', component: EmployeeLeaveComponent},
+        { path: 'stylist-task-management', component: StylistTaskManagementComponent },
+        { path: 'inventory', component: InventoryComponent },
+        { path: 'service-category', component: ServiceCategoryComponent },
+        { path: 'service', component: ServiceComponent },
+        { path: 'employee-schedule', component: EmployeeScheduleComponent },
+        { path: 'employee-leave', component: EmployeeLeaveComponent },
+        { path: 'product-category', component: ProductCategoryComponent },
+        { path: 'product', component: ProductComponent },
+        { path: 'tax', component: TaxComponent },
+        { path: 'supplier', component: SupplierComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],
