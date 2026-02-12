@@ -1,0 +1,35 @@
+# frontend
+/node_modules
+# Source specific
+.DS_Store
+.checkstyle
+.classpath
+.project
+.settings/
+.vscode/
+.idea/
+
+# Node modules
+/node_modules
+
+# Angular
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+test-output/
+
+# Logs
+*-debug.log
+*-error.log
+
+# backend
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Backend Maven/Java
+backend/target/
+
