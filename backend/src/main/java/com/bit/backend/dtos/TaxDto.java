@@ -16,4 +16,7 @@ public class TaxDto {
     private String effectiveDate;
     private String isActive;
 
+    public String getTaxName() {return taxName;}
+
+
 }

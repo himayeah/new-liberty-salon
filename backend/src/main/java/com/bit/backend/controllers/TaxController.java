@@ -60,7 +60,7 @@ public class TaxController {
         }
     }
 
-    @DeleteMapping("{id")
+    @DeleteMapping("{id}")
     public ResponseEntity<TaxDto> deleteTax(@PathVariable long id) {
         try {
             TaxDto taxDto = taxServiceI.deleteTax(id);
