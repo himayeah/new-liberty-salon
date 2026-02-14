@@ -30,6 +30,7 @@ import { ProductCategoryComponent } from './product-category/product-category.co
 import { ProductComponent } from './product/product.component';
 import { TaxComponent } from './tax/tax.component';
 import { SupplierComponent } from './supplier/supplier.component';
+import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { SupplierComponent } from './supplier/supplier.component';
     ProductCategoryComponent,
     ProductComponent,
     TaxComponent,
-    SupplierComponent
+    SupplierComponent,
+    PurchaseOrderComponent
   ],
 
   imports: [

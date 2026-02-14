@@ -11,4 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductCategoryDto {
     private String productCategoryName;
+
+    public String getProductCategoryName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

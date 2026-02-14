@@ -12,7 +12,7 @@ export class SupplierServiceService {
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
   serviceCall(form_details: any): Observable<any> {
-    const requestUrl = `${environment.baseUrl}/supplier`;
+    const requestUrl = `${environment.baseUrl}/api/supplier`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -22,7 +22,7 @@ export class SupplierServiceService {
   }
 
   getData() {
-    const requestUrl = `${environment.baseUrl}/supplier`;
+    const requestUrl = `${environment.baseUrl}/api/supplier`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -32,7 +32,7 @@ export class SupplierServiceService {
   }
 
   editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/supplier-edit/${id}`;
+    const requestUrl = `${environment.baseUrl}/api/supplier-edit/${id}`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -42,7 +42,7 @@ export class SupplierServiceService {
   }
 
   deleteData(id: number) {
-    const requestUrl = `${environment.baseUrl}/supplier/${id}`;
+    const requestUrl = `${environment.baseUrl}/api/supplier/${id}`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {

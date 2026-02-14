@@ -29,4 +29,8 @@ public class ClientNotesEntity {
 
     @Column(name = "note_date")
     private String noteDate;
+
+     public void setId(long id) {
+    }
 }
+

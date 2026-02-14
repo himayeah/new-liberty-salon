@@ -60,7 +60,6 @@ public class EmployeeLeaveService implements EmployeeLeaveServiceI {
             newEmployeeLeaveEntity.setId(id);
             EmployeeLeaveEntity employeeLeaveEntity = employeeLeaveRepository.save(newEmployeeLeaveEntity);
             EmployeeLeaveDto employeeLeaveDtoRes = employeeLeaveMapper.toEmployeeLeaveDto(employeeLeaveEntity);
-            System.out.println("update Successfully: " + employeeLeaveDtoRes.getEmployeeName());
             return employeeLeaveDtoRes;
     } catch (Exception e) {
             throw new AppException("Request filled with error:" + e, HttpStatus.BAD_REQUEST);

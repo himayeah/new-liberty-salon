@@ -151,6 +151,13 @@ const navigationModel = [
                 routerLink: ['/pages/supplier']
             },
             {
+                label: 'Purchase Order',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-shopping-cart',
+                routerLink: ['/pages/purchase-order']
+            },
+            {
                 label: 'Tax',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,

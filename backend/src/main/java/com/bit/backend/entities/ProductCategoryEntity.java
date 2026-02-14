@@ -19,4 +19,7 @@ public class ProductCategoryEntity {
     @Column(name = "product_category_name")
     private String productCategoryName;
 
+     public void setId(long id) {
+    }
 }
+

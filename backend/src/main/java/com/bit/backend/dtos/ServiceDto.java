@@ -17,4 +17,8 @@ public class ServiceDto {
     private String colorCode;
     private String description;
     private Boolean isActive;
+
+    public String getServiceName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

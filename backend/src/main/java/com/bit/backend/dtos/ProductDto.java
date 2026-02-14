@@ -21,4 +21,8 @@ public class ProductDto {
     private boolean isTaxable;
     private int reOrderLevel;
 
+    public String getProductName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
