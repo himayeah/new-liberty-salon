@@ -83,7 +83,7 @@ export class ProductComponent implements OnInit {
         this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        this.messageService.showError('Failed to fetch product data.');
+        this.messageService.showError('Failed to fetch product data');
       }
     });
 

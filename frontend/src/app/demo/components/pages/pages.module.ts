@@ -31,6 +31,7 @@ import { ProductComponent } from './product/product.component';
 import { TaxComponent } from './tax/tax.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
     ProductComponent,
     TaxComponent,
     SupplierComponent,
-    PurchaseOrderComponent
+    PurchaseOrderComponent,
+    PurchaseOrderDetailComponent
   ],
 
   imports: [

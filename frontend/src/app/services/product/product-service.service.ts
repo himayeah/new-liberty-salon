@@ -4,7 +4,6 @@ import { HttpService } from '../http.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/app/environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })

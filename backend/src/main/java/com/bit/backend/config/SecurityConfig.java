@@ -30,7 +30,11 @@ public class SecurityConfig {
                                 "/login",
                                 "/register",
                                 "/employee_reg/**",
-                                "/api/v1/client-reg/**"
+                                "/api/v1/client-reg/**",
+                                "/api/v1/supplier-reg/**",
+                                "/api/v1/purchase-order/**",
+                                "/api/v1/purchase-order-detail/**"
+
                         ).permitAll()
                                 .anyRequest().authenticated()
                 );
