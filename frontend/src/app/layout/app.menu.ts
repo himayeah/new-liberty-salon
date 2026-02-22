@@ -170,6 +170,13 @@ const navigationModel = [
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-shopping-cart',
                 routerLink: ['pages/tax']
+            },
+            {
+                label: 'Invoice',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-shopping-cart',
+                routerLink: ['pages/invoice']
             }
         ],
     },

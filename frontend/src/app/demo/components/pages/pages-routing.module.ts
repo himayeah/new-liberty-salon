@@ -17,6 +17,7 @@ import { TaxComponent } from './tax/tax.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
+import { InvoiceComponent } from './invoice/invoice.component';
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -46,6 +47,7 @@ export const PagesRoutes: Routes = [
         { path: 'supplier', component: SupplierComponent },
         { path: 'purchase-order', component: PurchaseOrderComponent },
         { path: 'purchase-order-detail', component: PurchaseOrderDetailComponent },
+        { path: 'invoice', component: InvoiceComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],
