@@ -22,4 +22,8 @@ public class ClientRegDto {
     private int totalVisits;
     private String lastVisitedDate;
     private double lifetimeValue;
+
+    public String getFirstName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

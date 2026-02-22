@@ -13,6 +13,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ClientRegComponent } from './client-reg/client-reg.component';
 import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
 import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
@@ -30,6 +31,11 @@ import { ProductCategoryComponent } from './product-category/product-category.co
 import { ProductComponent } from './product/product.component';
 import { TaxComponent } from './tax/tax.component';
 import { SupplierComponent } from './supplier/supplier.component';
+import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
+import { InvoiceComponent } from './invoice/invoice.component';
+import { InvoiceItemModalComponent } from './invoice/invoice-item-modal/invoice-item-modal.component';
+import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/invoice-payment-modal.component';
 
 
 @NgModule({
@@ -47,7 +53,12 @@ import { SupplierComponent } from './supplier/supplier.component';
     ProductCategoryComponent,
     ProductComponent,
     TaxComponent,
-    SupplierComponent
+    SupplierComponent,
+    PurchaseOrderComponent,
+    PurchaseOrderDetailComponent,
+    InvoiceComponent,
+    InvoiceItemModalComponent,
+    InvoicePaymentModalComponent
   ],
 
   imports: [
@@ -68,6 +79,7 @@ import { SupplierComponent } from './supplier/supplier.component';
     MatSelectModule,
     MatSlideToggleModule,
     MatCheckboxModule,
+    MatDialogModule,
   ]
 })
 export class PagesModule { }

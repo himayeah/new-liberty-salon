@@ -4,7 +4,6 @@ import { HttpService } from '../http.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/app/environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +11,7 @@ export class ProductServiceService {
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
   serviceCall(form_detalils: any): Observable<any> {
-    const requestUrl = `${environment.baseUrl}/product`;
+    const requestUrl = `${environment.baseUrl}/api/product`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -23,7 +22,7 @@ export class ProductServiceService {
   }
 
   getData(): Observable<any> {
-    const requestUrl = `${environment.baseUrl}/product`;
+    const requestUrl = `${environment.baseUrl}/api/product`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -33,7 +32,7 @@ export class ProductServiceService {
   }
 
   editData(id: number, form_details: any): Observable<any> {
-    const requestUrl = `${environment.baseUrl}/product-edit/${id}`;
+    const requestUrl = `${environment.baseUrl}/api/product-edit/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -44,7 +43,7 @@ export class ProductServiceService {
   }
 
   deleteData(id: number): Observable<any> {
-    const requestUrl = `${environment.baseUrl}/product/${id}`;
+    const requestUrl = `${environment.baseUrl}/api/product/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();

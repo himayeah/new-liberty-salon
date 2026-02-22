@@ -39,4 +39,8 @@ public class SupplierEntity {
     @Column(name = "payment_terms")
     private String paymentTerms;
 
+    public void setId(long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
