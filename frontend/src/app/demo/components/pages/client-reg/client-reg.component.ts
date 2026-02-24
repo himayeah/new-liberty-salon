@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
+import { ClientFormComponent } from './client-form/client-form.component';
 
 @Component({
     selector: 'app-client-reg',
@@ -16,68 +16,25 @@ export class ClientRegComponent implements OnInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
-    clientRegForm: FormGroup;
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = ['firstName', 'lastName', 'email', 'phoneNumber', 'dateOfBirth', 'gender', 'preferredStylist', 'allergies', 'totalVisits', 'lastVisitedDate', 'lifetimeValue', 'actions'];
 
-    stylists: any[] = [];
-
     // state control (Not logic)
-    isButtonDisabled = false;
-    submitted = false;
-    saveButtonLabel = 'Save';
-    mode: 'add' | 'edit' = 'add';
-    selectedData: any = null;
     selectedRow: any = null;
     lastAddedRow: any = null;
     lastEditedRow: any = null;
 
     constructor(
-        private fb: FormBuilder,
         private clientRegService: ClientRegServiceService,
         private messageService: MessageServiceService,
-        private employeeRegService: EmployeeRegServicesService
-    ) {
-        this.clientRegForm = this.fb.group({
-            firstName: ['', Validators.required],
-            lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]],
-            email: ['', [Validators.required, Validators.email]],
-            phoneNumber: ['', [Validators.required, Validators.pattern('^(\\+94|94|0)(7[01245678][0-9]{7})$')]],
-            dateOfBirth: ['', Validators.required],
-            gender: ['', Validators.required],
-            preferredStylist: [''],
-            allergies: [''], // Allergies field, not required
-        });
-    }
+        private dialog: MatDialog
+    ) { }
 
     ngOnInit(): void {
         this.populateData();
-        this.fetchStylists();
-    }
-
-    fetchStylists(): void {
-        this.employeeRegService.getData().subscribe({
-            next: (response: any[]) => {
-                this.stylists = response.filter(employee =>
-                    employee.designation === 'Bridal stylist' || employee.designation === 'Groom stylist'
-                );
-            },
-            error: (error) => {
-                this.messageService.showError('Error fetching stylists: ' + error.message);
-            }
-        });
-    }
-
-    // convenience getter
-    get f() { return this.clientRegForm.controls; }
-
-    isInvalid(controlName: string, errorType: string): boolean {
-        const control = this.f[controlName];
-        return (control.touched || this.submitted) && control.hasError(errorType);
     }
 
     populateData(): void {
-        //getData() connects to service class method. 
         this.clientRegService.getData().subscribe({
             next: (response: any[]) => {
                 this.dataSource = new MatTableDataSource(response || []);
@@ -90,49 +47,33 @@ export class ClientRegComponent implements OnInit {
         });
     }
 
-    onSubmit(): void {
-        this.submitted = true;
-        if (this.clientRegForm.invalid) return;
+    openAddClientModal(): void {
+        const dialogRef = this.dialog.open(ClientFormComponent, {
+            width: '600px',
+            data: { mode: 'add' }
+        });
 
-        this.isButtonDisabled = true;
-        const formValue = this.clientRegForm.value;
-
-        if (this.mode === 'add') {
-            this.clientRegService.serviceCall(formValue).subscribe({
-                next: (response) => {
-                    this.dataSource.data = [response, ...this.dataSource.data];
-                    this.messageService.showSuccess('Saved Successfully!');
-                    this.highlightRow('add', response);
-                    this.resetFormState();
-                },
-                error: (error) => this.handleError(error)
-            });
-        } else {
-            //this editData is the service Class method
-            this.clientRegService.editData(this.selectedData?.id, formValue).subscribe({
-                next: (response) => {
-                    const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
-                    if (index > -1) this.dataSource.data[index] = response;
-                    this.messageService.showSuccess('Updated Successfully!');
-                    this.highlightRow('edit', response);
-                    this.resetFormState();
-                },
-                error: (error) => this.handleError(error)
-            });
-        }
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.populateData();
+            }
+        });
     }
 
-    // this editData() is the html method
     editData(data: any): void {
-        this.clientRegForm.patchValue({
-            ...data,
-            preferredStylist: data.preferredStylist ? data.preferredStylist.id : null
+        const dialogRef = this.dialog.open(ClientFormComponent, {
+            width: '600px',
+            data: { mode: 'edit', client: data }
         });
-        this.selectedData = data;
-        this.saveButtonLabel = 'Update';
-        this.mode = 'edit';
-        this.isButtonDisabled = false;
+
         this.selectedRow = data;
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.populateData();
+            }
+            this.selectedRow = null;
+        });
     }
 
     deleteData(data: any): void {
@@ -158,22 +99,7 @@ export class ClientRegComponent implements OnInit {
         if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
     }
 
-    resetData(): void {
-        this.clientRegForm.reset();
-        this.clientRegForm.enable();
-        this.submitted = false;
-        this.saveButtonLabel = 'Save';
-        this.mode = 'add';
-        this.selectedRow = null;
-        this.isButtonDisabled = false;
-    }
-
     // helpers
-    private handleError(error: any): void {
-        this.messageService.showError('Action failed: ' + error.message);
-        this.isButtonDisabled = false;
-    }
-
     private highlightRow(type: 'add' | 'edit', response: any): void {
         if (type === 'add') this.lastAddedRow = response;
         else this.lastEditedRow = response;
@@ -181,11 +107,5 @@ export class ClientRegComponent implements OnInit {
             this.lastAddedRow = null;
             this.lastEditedRow = null;
         }, 3000);
-    }
-
-    private resetFormState(): void {
-        this.resetData();
-        this.isButtonDisabled = false;
-        this.populateData();
     }
 }

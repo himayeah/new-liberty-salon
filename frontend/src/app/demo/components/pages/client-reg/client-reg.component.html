@@ -1,213 +1,105 @@
-<div class="container my-4">
-  <!-- Registration Form -->
-  <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Client Registration</h4>
-    </div>
-    <div class="card-body">
-      <form [formGroup]="clientRegForm" (ngSubmit)="onSubmit()">
-        <div class="row g-3">
-          <!-- First Name -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>First Name</mat-label>
-              <input matInput formControlName="firstName"/>
-              <mat-error *ngIf="isInvalid('firstName','required')">
-                First Name is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <!-- Last Name -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Last Name</mat-label>
-              <input matInput formControlName="lastName" />
-              <mat-error *ngIf="isInvalid('lastName','required')">Last Name is required</mat-error>
-              <mat-error *ngIf="isInvalid('lastName','minlength')">Minimum 3 characters</mat-error>
-              <mat-error *ngIf="isInvalid('lastName','maxlength')">Maximum 15 characters</mat-error>
+<!-- Table Section -->
+<div class="card shadow-sm">
+  <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+    <h4 class="mb-0">Client Information</h4>
 
-            </mat-form-field>
-          </div>
-          <!-- Email -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email" />
-              <mat-error *ngIf="isInvalid('email','required')">Email is required</mat-error>
-              <mat-error *ngIf="isInvalid('email','email')">Invalid email format</mat-error>
-            </mat-form-field>
-          </div>
-          <!-- Phone Number -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Phone Number</mat-label>
-              <input matInput formControlName="phoneNumber"/>
-              <mat-error *ngIf="isInvalid('phoneNumber','required')">Phone number is required</mat-error>
-              <mat-error *ngIf="isInvalid('phoneNumber','pattern')">Invalid phone number</mat-error>
-            </mat-form-field>
-          </div>
-          <!-- Date of Birth -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Date of Birth</mat-label>
-              <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth" placeholder="Date of Birth">
-              <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
-              <mat-datepicker #dobPicker></mat-datepicker>
-              <mat-error *ngIf="isInvalid('dateOfBirth','required')">
-                Date of Birth is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <!-- Gender -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Gender</mat-label>
-              <mat-select formControlName="gender">
-                <mat-option value="Male">Male</mat-option>
-                <mat-option value="Female">Female</mat-option>
-                <mat-option value="Other">Other</mat-option>
-              </mat-select>
-              <mat-error *ngIf="isInvalid('gender','required')">
-                Gender is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <!-- Preferred Stylist -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Preferred Stylist</mat-label>
-              <mat-select formControlName="preferredStylist">
-                <mat-option *ngFor="let stylist of stylists" [value]="stylist.id">{{stylist.employeeName}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="isInvalid('preferredStylist','required')">
-                Preferred Stylist is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <!-- Allergies -->
-          <div class="col-md-12">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Allergies</mat-label>
-              <textarea matInput formControlName="allergies" placeholder="List any allergies or sensitivities"></textarea>
-            </mat-form-field>
-          </div>
-        </div>  <!-- Closing tag for row g-3 -->
-      
-        <!-- Buttons -->
-        <div class="d-flex justify-content-end mt-4">
-          <button type="submit" mat-raised-button color="primary" [disabled]="isButtonDisabled">
-            {{ saveButtonLabel }}
-          </button>
-          <button type="button" mat-stroked-button class="ms-2" (click)="resetData()">Reset</button>
-        </div>
-      </form>
-    </div>
+    <button mat-icon-button color="inherit" (click)="refreshData()" matTooltip="Refresh">
+      <mat-icon>refresh</mat-icon>
+    </button>
   </div>
-
-  <!-- Table Section -->
-  <div class="card shadow-sm mt-5">
-    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">Client Information</h4>
-
-      <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
-
-        <mat-icon>refresh</mat-icon>
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button mat-raised-button color="primary" (click)="openAddClientModal()">
+        <mat-icon>add</mat-icon> Add New Client
       </button>
-    </div>
-    <div class="card-body">
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Filter</mat-label>
-
-            <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" />
-
-          </mat-form-field>
-        </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" />
+        </mat-form-field>
       </div>
+    </div>
 
-      <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort class="table table-hover align-middle">
-          <!-- Columns -->
-          <ng-container matColumnDef="firstName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
-            <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
-          </ng-container>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="table table-hover align-middle">
+        <!-- Columns -->
+        <ng-container matColumnDef="firstName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+          <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="lastName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
-            <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
-          </ng-container>
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+          <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-          </ng-container>
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+          <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="phoneNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
-            <td mat-cell *matCellDef="let element">{{ element.phoneNumber }}</td>
-          </ng-container>
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
+          <td mat-cell *matCellDef="let element">{{ element.phoneNumber }}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="dateOfBirth">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Birth </th>
-            <td mat-cell *matCellDef="let element">{{element.dateOfBirth | date:'mediumDate'}}</td>
-          </ng-container>
+        <ng-container matColumnDef="dateOfBirth">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Birth </th>
+          <td mat-cell *matCellDef="let element">{{element.dateOfBirth | date:'mediumDate'}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="gender">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
-            <td mat-cell *matCellDef="let element">{{element.gender}}</td>
-          </ng-container>
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
+          <td mat-cell *matCellDef="let element">{{element.gender}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="preferredStylist">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Preferred Stylist </th>
-            <td mat-cell *matCellDef="let element">{{element.preferredStylist}}</td>
-          </ng-container>
+        <ng-container matColumnDef="preferredStylist">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Preferred Stylist </th>
+          <td mat-cell *matCellDef="let element">{{element.preferredStylist}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="allergies">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Allergies </th>
-            <td mat-cell *matCellDef="let element">{{element.allergies}}</td>
-          </ng-container>
+        <ng-container matColumnDef="allergies">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Allergies </th>
+          <td mat-cell *matCellDef="let element">{{element.allergies}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="totalVisits">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Visits </th>
-            <td mat-cell *matCellDef="let element">{{element.totalVisits}}</td>
-          </ng-container>
+        <ng-container matColumnDef="totalVisits">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Visits </th>
+          <td mat-cell *matCellDef="let element">{{element.totalVisits}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="lastVisitedDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Visited </th>
-            <td mat-cell *matCellDef="let element">{{element.lastVisitedDate | date:'mediumDate'}}</td>
-          </ng-container>
+        <ng-container matColumnDef="lastVisitedDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Visited </th>
+          <td mat-cell *matCellDef="let element">{{element.lastVisitedDate | date:'mediumDate'}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="lifetimeValue">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Lifetime Value </th>
-            <td mat-cell *matCellDef="let element">{{element.lifetimeValue | currency}}</td>
-          </ng-container>
+        <ng-container matColumnDef="lifetimeValue">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Lifetime Value </th>
+          <td mat-cell *matCellDef="let element">{{element.lifetimeValue | currency}}</td>
+        </ng-container>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Actions </th>
-            <td mat-cell *matCellDef="let element">
-              <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
-          <!-- Rows -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-              [ngClass]="{
+        <!-- Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
                 'table-primary': selectedRow?.id === row.id,
                 'table-success': lastAddedRow?.id === row.id,
                 'table-warning': lastEditedRow?.id === row.id
               }">
-          </tr>
-        </table>
-      </div>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </tr>
+      </table>
     </div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

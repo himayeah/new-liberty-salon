@@ -15,6 +15,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ClientRegComponent } from './client-reg/client-reg.component';
+import { ClientFormComponent } from './client-reg/client-form/client-form.component';
 import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
 import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -37,7 +38,6 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { InvoiceItemModalComponent } from './invoice/invoice-item-modal/invoice-item-modal.component';
 import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/invoice-payment-modal.component';
 
-
 @NgModule({
   declarations: [
     ClientRegComponent,
@@ -58,7 +58,8 @@ import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/in
     PurchaseOrderDetailComponent,
     InvoiceComponent,
     InvoiceItemModalComponent,
-    InvoicePaymentModalComponent
+    InvoicePaymentModalComponent,
+    ClientFormComponent
   ],
 
   imports: [
