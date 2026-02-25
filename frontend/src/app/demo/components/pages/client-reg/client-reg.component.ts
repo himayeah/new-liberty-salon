@@ -51,6 +51,7 @@ export class ClientRegComponent implements OnInit {
         });
     }
 
+    //Add New client pop-up
     openAddClientModal(): void {
         const dialogRef = this.dialog.open(ClientFormComponent, {
             width: '600px',
