@@ -76,6 +76,21 @@ public class ClientRegService implements ClientRegServiceI {
     }
 
     @Override
+    public ClientRegDto getById(long id) {
+        try {
+            Optional<ClientRegEntity> optionalClientRegEntity = clientRegRepository.findById(id);
+            if (!optionalClientRegEntity.isPresent()) {
+                throw new AppException("Client Reg Does Not Exist", HttpStatus.NOT_FOUND);
+            }
+            return clientRegMapper.toClientRegDto(optionalClientRegEntity.get());
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
     public ClientRegDto deleteClientReg(long id) {
 
         try {

@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { ClientFormComponent } from './client-form/client-form.component';
@@ -27,8 +29,10 @@ export class ClientRegComponent implements OnInit {
     constructor(
         private clientRegService: ClientRegServiceService,
         private messageService: MessageServiceService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router
     ) { }
+
 
     ngOnInit(): void {
         this.populateData();
@@ -78,7 +82,12 @@ export class ClientRegComponent implements OnInit {
         });
     }
 
+    viewData(data: any): void {
+        this.router.navigate(['/pages/client-profile', data.id]);
+    }
+
     deleteData(data: any): void {
+
         this.clientRegService.deleteData(data.id).subscribe({
             next: () => {
                 this.messageService.showSuccess('Deleted Successfully!');

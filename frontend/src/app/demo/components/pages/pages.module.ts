@@ -15,6 +15,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
+
 import { ClientRegComponent } from './client-reg/client-reg.component';
 import { ClientFormComponent } from './client-reg/client-form/client-form.component';
 import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
@@ -38,6 +41,8 @@ import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-o
 import { InvoiceComponent } from './invoice/invoice.component';
 import { InvoiceItemModalComponent } from './invoice/invoice-item-modal/invoice-item-modal.component';
 import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/invoice-payment-modal.component';
+import { ClientProfileComponent } from './client-profile/client-profile.component';
+
 
 @NgModule({
   declarations: [
@@ -60,7 +65,9 @@ import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/in
     InvoiceComponent,
     InvoiceItemModalComponent,
     InvoicePaymentModalComponent,
-    ClientFormComponent
+    ClientFormComponent,
+    ClientProfileComponent
+
   ],
 
   imports: [
@@ -83,6 +90,9 @@ import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/in
     MatCheckboxModule,
     MatDialogModule,
     MatCardModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+
   ]
 })
 export class PagesModule { }

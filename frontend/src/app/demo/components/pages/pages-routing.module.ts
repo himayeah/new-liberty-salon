@@ -18,6 +18,8 @@ import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { ClientProfileComponent } from './client-profile/client-profile.component';
+
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -31,6 +33,8 @@ export const PagesRoutes: Routes = [
         { path: 'empty', loadChildren: () => import('./empty/emptydemo.module').then(m => m.EmptyDemoModule) },
         { path: 'timeline', loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: 'client-reg', component: ClientRegComponent }, // need to include the path here for form demo component
+        { path: 'client-profile/:id', component: ClientProfileComponent },
+
         { path: 'client-notes', component: ClientNotesComponent },
         { path: 'employee-reg', component: EmployeeRegComponent },
         { path: 'appointment-schedule', component: AppointmentScheduleComponent },
