@@ -14,7 +14,7 @@ export class ClientRegServiceService {
       serviceCall(form_details: any): Observable<any> {
 
           //The BE url you're sending form data etc to (connects at Controller class)
-          const requestUrl = `${environment.baseUrl}/client-reg`;
+          const requestUrl = `${environment.baseUrl}/api/v1/client-reg`;
           
           //extra info sent with the request. starts empty
           let headers = new HttpHeaders();
@@ -30,7 +30,7 @@ export class ClientRegServiceService {
 
   getData() {
     //base url should match in getData() Controller class url
-    const requestUrl = `${environment.baseUrl}/client-reg`;
+    const requestUrl = `${environment.baseUrl}/api/v1/client-reg`;
     //starts with empty headers
     let headers = new HttpHeaders();
     //if user logged in, gets the Token
@@ -45,7 +45,7 @@ export class ClientRegServiceService {
   }
 
   editData(id: number, form_details:any){
-    const requestUrl = `${environment.baseUrl}/client-edit/${id}`;
+    const requestUrl = `${environment.baseUrl}/api/v1/client-reg/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -56,7 +56,7 @@ export class ClientRegServiceService {
   }
 
   deleteData(id: number){
-    const requestUrl = `${environment.baseUrl}/client-reg/${id}`;
+    const requestUrl = `${environment.baseUrl}/api/v1/client-reg/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();

@@ -56,6 +56,7 @@ export class ClientRegComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.populateData();
+                this.highlightRow('add', result);
             }
         });
     }
@@ -71,6 +72,7 @@ export class ClientRegComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.populateData();
+                this.highlightRow('edit', result);
             }
             this.selectedRow = null;
         });

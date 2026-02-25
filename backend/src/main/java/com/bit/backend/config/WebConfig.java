@@ -41,9 +41,4 @@ public class WebConfig {
         bean.setOrder(-102);
         return bean;
     }
-
-    @Bean
-    public com.bit.backend.mappers.UserMapper userMapper() {
-        return com.bit.backend.mappers.UserMapper.INSTANCE;
-    }
 }

@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
 import { ClientRegComponent } from './client-reg/client-reg.component';
 import { ClientFormComponent } from './client-reg/client-form/client-form.component';
 import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
@@ -81,6 +82,7 @@ import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/in
     MatSlideToggleModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatCardModule,
   ]
 })
 export class PagesModule { }
