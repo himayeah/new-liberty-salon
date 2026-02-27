@@ -8,7 +8,7 @@ import { FormBuilder } from '@angular/forms';
 import { ClientNotesServiceService } from 'src/app/services/client-notes/client-notes-service.service';
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service'; 
+import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 
 @Component({
   selector: 'app-client-notes',
@@ -21,7 +21,7 @@ export class ClientNotesComponent implements OnInit {
 
   clientNotesForm: FormGroup;
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['clientName', 'staffName', 'noteType', 'noteContent', 'createdDate', 'actions'];
+  displayedColumns: string[] = ['clientName', 'stylistName', 'noteType', 'noteContent', 'noteDate', 'actions'];
 
   clients: any[] = [];
   stylists: any[] = [];
@@ -35,7 +35,7 @@ export class ClientNotesComponent implements OnInit {
   lastAddedRow: any = null;
   lastEditedRow: any = null;
 
-  constructor( 
+  constructor(
     private fb: FormBuilder,
     private clientNotesService: ClientNotesServiceService,
     private messageService: MessageServiceService,
@@ -44,10 +44,10 @@ export class ClientNotesComponent implements OnInit {
   ) {
     this.clientNotesForm = this.fb.group({
       clientName: ['', Validators.required],
-      staffName: ['', Validators.required],
+      stylistName: ['', Validators.required],
       noteType: ['', Validators.required],
       noteContent: [''],
-      createdDate: ['', Validators.required]
+      noteDate: ['', Validators.required]
     });
   }
 
@@ -59,7 +59,7 @@ export class ClientNotesComponent implements OnInit {
 
   fetchStylists(): void {
     this.employeeRegService.getData().subscribe({
-      next: (response:any[]) => {
+      next: (response: any[]) => {
         this.stylists = response.filter(employee => employee.designation === 'Bridal stylist' || employee.designation === 'Groom stylist');
       },
       error: (error) => {
@@ -70,7 +70,7 @@ export class ClientNotesComponent implements OnInit {
 
   fetchClients(): void {
     this.clientRegService.getData().subscribe({
-      next: (response:any[]) => {
+      next: (response: any[]) => {
         this.clients = response;
       },
       error: (error) => {
@@ -80,7 +80,7 @@ export class ClientNotesComponent implements OnInit {
   }
 
   get f() { return this.clientNotesForm.controls; }
-  
+
   isInvalid(controlName: string, errorType: string): boolean {
     const control = this.f[controlName];
     return (control.touched || this.submitted) && control.hasError(errorType);
@@ -105,7 +105,7 @@ export class ClientNotesComponent implements OnInit {
 
     this.isButtonDisabled = true;
     const formValue = this.clientNotesForm.value;
-  
+
     if (this.mode === 'add') {
       this.clientNotesService.serviceCall(formValue).subscribe({
         next: (response) => {
@@ -133,10 +133,10 @@ export class ClientNotesComponent implements OnInit {
         }
       });
     }
-    }
+  }
 
-    //table edit icon
-    editData(data: any): void {
+  //table edit icon
+  editData(data: any): void {
     this.clientNotesForm.patchValue({
       ...data
     });
@@ -146,7 +146,7 @@ export class ClientNotesComponent implements OnInit {
     this.isButtonDisabled = false;
     this.selectedRow = data;
   }
-  
+
   //table delete icon
   deleteData(data: any): void {
     this.clientNotesService.deleteData(data.id).subscribe({
@@ -156,7 +156,7 @@ export class ClientNotesComponent implements OnInit {
       },
       error: (error) => this.messageService.showError('Delete failed: ' + error.message)
     });
-    }
+  }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
@@ -190,7 +190,7 @@ export class ClientNotesComponent implements OnInit {
     }
     this.selectedRow = rowData;
   }
-  
+
   private resetFormState(): void {
     this.clientNotesForm.reset();
     this.submitted = false;
@@ -206,5 +206,5 @@ export class ClientNotesComponent implements OnInit {
     this.isButtonDisabled = false;
   }
 
-  
+
 }

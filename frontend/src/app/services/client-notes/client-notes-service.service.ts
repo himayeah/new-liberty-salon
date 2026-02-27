@@ -34,8 +34,8 @@ export class ClientNotesServiceService {
   }
 
   //form data editing
-  /**editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/client-notes-edit/${id}`;
+  editData(id: number, form_details: any) {
+    const requestUrl = `${environment.baseUrl}/client-notes/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
@@ -44,7 +44,6 @@ export class ClientNotesServiceService {
     }
     return this.http.put(requestUrl, form_details, { headers: headers });
   }
-    **/
 
   //table data delete
   deleteData(id: number) {

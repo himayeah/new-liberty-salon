@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientNotesDto {
+    private Long id;
     private String clientName;
     private String stylistName;
     private String noteType;
