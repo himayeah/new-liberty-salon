@@ -17,10 +17,10 @@ public class ClientNotesDto {
     private String noteDate;
 
     public String getFirstName() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return clientName;
     }
 
     public String getClientName() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return clientName;
     }
 }
