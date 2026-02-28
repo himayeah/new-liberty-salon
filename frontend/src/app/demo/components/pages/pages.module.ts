@@ -43,6 +43,7 @@ import { InvoiceItemModalComponent } from './invoice/invoice-item-modal/invoice-
 import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/invoice-payment-modal.component';
 import { ClientProfileComponent } from './client-profile/client-profile.component';
 import { ClientAdditionalNotesComponent } from './client-profile/client-additional-notes/client-additional-notes.component';
+import { EmployeeFormComponent } from './employee-reg/employee-form/employee-form.component';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { ClientAdditionalNotesComponent } from './client-profile/client-addition
     InvoicePaymentModalComponent,
     ClientFormComponent,
     ClientProfileComponent,
-    ClientAdditionalNotesComponent
+    ClientAdditionalNotesComponent,
+    EmployeeFormComponent
 
   ],
 

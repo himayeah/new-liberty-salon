@@ -30,13 +30,6 @@ const navigationModel = [
                 routerLink: ['/pages/client-reg'],
             },
             {
-                label: 'Client Notes',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-book', // notes/journal
-                routerLink: ['/pages/client-notes'],
-            },
-            {
                 label: 'Employee Registration',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
