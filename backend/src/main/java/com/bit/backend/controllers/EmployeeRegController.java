@@ -40,6 +40,16 @@ public class EmployeeRegController {
         }
     }
 
+    @GetMapping("/employee_get/{id}")
+    public ResponseEntity<EmployeeRegDto> getById(@PathVariable long id) {
+        try {
+            EmployeeRegDto employeeRegDto = employeeRegServiceI.getById(id);
+            return ResponseEntity.ok(employeeRegDto);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/employee_edit/{id}")
     public ResponseEntity<EmployeeRegDto> updateEmployeeReg(
             @PathVariable long id,

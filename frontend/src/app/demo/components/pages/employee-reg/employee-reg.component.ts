@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
@@ -39,11 +40,16 @@ export class EmployeeRegComponent implements OnInit {
     constructor(
         private employeeRegService: EmployeeRegServicesService,
         private messageService: MessageServiceService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
         this.populateData();
+    }
+
+    viewData(data: any): void {
+        this.router.navigate(['/pages/employee-profile', data.id]);
     }
 
     populateData(): void {

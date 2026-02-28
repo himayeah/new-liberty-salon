@@ -19,6 +19,7 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { ClientProfileComponent } from './client-profile/client-profile.component';
+import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 
 
 export const PagesRoutes: Routes = [
@@ -34,9 +35,10 @@ export const PagesRoutes: Routes = [
         { path: 'timeline', loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: 'client-reg', component: ClientRegComponent }, // need to include the path here for form demo component
         { path: 'client-profile/:id', component: ClientProfileComponent },
+        { path: 'employee-reg', component: EmployeeRegComponent },
+        { path: 'employee-profile/:id', component: EmployeeProfileComponent },
 
         { path: 'client-notes', component: ClientNotesComponent },
-        { path: 'employee-reg', component: EmployeeRegComponent },
         { path: 'appointment-schedule', component: AppointmentScheduleComponent },
         { path: 'employee-attendance', loadChildren: () => import('./employee-attendance/employee-attendance.module').then(m => m.EmployeeAttendanceModule) },
         { path: 'stylist-task-management', component: StylistTaskManagementComponent },

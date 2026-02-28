@@ -8,7 +8,7 @@ import { environment } from 'src/app/environments/environment';
     providedIn: 'root',
 })
 export class EmployeeRegServicesService {
-    constructor(private http: HttpClient, private httpService: HttpService) {}
+    constructor(private http: HttpClient, private httpService: HttpService) { }
 
     serviceCall(form_details: any): Observable<any> {
         const requestUrl = `${environment.baseUrl}/employee_reg`;
@@ -33,27 +33,37 @@ export class EmployeeRegServicesService {
         return this.http.get(requestUrl, { headers });
     }
 
-    editData(id: number, form_details:any){
-        const requestUrl = `${environment.baseUrl}/employee_edit/${id}`;
-    
-        let headers = new HttpHeaders();
-        const token = this.httpService.getAuthToken();
-        if (token !== null){
-          headers = headers.set('Authorization', 'Bearer ' + token);
-        }  
-        return this.http.put(requestUrl, form_details, {headers: headers});
-      }
-
-    deleteData(id: number){
-        const requestUrl = `${environment.baseUrl}/employee_delete/${id}`;
-    
+    getDataById(id: any) {
+        const requestUrl = `${environment.baseUrl}/employee_get/${id}`;
         let headers = new HttpHeaders();
         const token = this.httpService.getAuthToken();
         if (token !== null) {
             headers = headers.set('Authorization', 'Bearer ' + token);
         }
-    
+        return this.http.get(requestUrl, { headers });
+    }
+
+    editData(id: number, form_details: any) {
+        const requestUrl = `${environment.baseUrl}/employee_edit/${id}`;
+
+        let headers = new HttpHeaders();
+        const token = this.httpService.getAuthToken();
+        if (token !== null) {
+            headers = headers.set('Authorization', 'Bearer ' + token);
+        }
+        return this.http.put(requestUrl, form_details, { headers: headers });
+    }
+
+    deleteData(id: number) {
+        const requestUrl = `${environment.baseUrl}/employee_delete/${id}`;
+
+        let headers = new HttpHeaders();
+        const token = this.httpService.getAuthToken();
+        if (token !== null) {
+            headers = headers.set('Authorization', 'Bearer ' + token);
+        }
+
         return this.http.delete(requestUrl, { headers });
-      }
+    }
 
 }

@@ -6,7 +6,12 @@ import java.util.List;
 
 public interface EmployeeRegServiceI {
     EmployeeRegDto addEmployee(EmployeeRegDto employeeRegDto);
+
     List<EmployeeRegDto> getData();
+
     EmployeeRegDto updateEmployeeReg(long id, EmployeeRegDto employeeRegDto);
+
     EmployeeRegDto deleteEmployeeReg(long id);
+
+    EmployeeRegDto getById(long id);
 }
