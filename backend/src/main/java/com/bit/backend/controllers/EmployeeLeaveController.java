@@ -1,7 +1,6 @@
 package com.bit.backend.controllers;
 
 import com.bit.backend.dtos.EmployeeLeaveDto;
-import com.bit.backend.dtos.EmployeeLeaveDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.EmployeeLeaveServiceI;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.net.URI;
 
 @RestController
-@RequestMapping ("/employee_leave")
+@RequestMapping("/employee_leave")
 public class EmployeeLeaveController {
 
     private final EmployeeLeaveServiceI employeeLeaveServiceI;
@@ -22,18 +21,19 @@ public class EmployeeLeaveController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeLeaveDto> addForm(@RequestBody EmployeeLeaveDto employeeLeaveDto) throws AppException {
-        try{
+    public ResponseEntity<EmployeeLeaveDto> addForm(@RequestBody EmployeeLeaveDto employeeLeaveDto)
+            throws AppException {
+        try {
             EmployeeLeaveDto employeeLeaveDtoResponse = employeeLeaveServiceI.addEmployeeLeave(employeeLeaveDto);
             return ResponseEntity.created(URI.create("/employee_leave")).body(employeeLeaveDtoResponse);
-            } catch (Exception e) {
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/employee-leave-get")
     public ResponseEntity<List<EmployeeLeaveDto>> getData() {
-        try{
+        try {
             List<EmployeeLeaveDto> employeeLeaveDto = employeeLeaveServiceI.getData();
             return ResponseEntity.ok(employeeLeaveDto);
         } catch (Exception e) {

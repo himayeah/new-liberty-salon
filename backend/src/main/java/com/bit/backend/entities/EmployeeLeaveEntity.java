@@ -2,10 +2,12 @@ package com.bit.backend.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "employee_leave")
 public class EmployeeLeaveEntity {
@@ -28,16 +30,4 @@ public class EmployeeLeaveEntity {
 
     @Column(name="reason")
     private String reason;
-
-    public void setId(long id) {
-    }
-
-    public EmployeeLeaveEntity(Long id, String employeeName, String leaveType, String startDate, String endDate, String reason) {
-        this.id = id;
-        this.employeeName = employeeName;
-        this.leaveType = leaveType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.reason = reason;
-    }
 }
