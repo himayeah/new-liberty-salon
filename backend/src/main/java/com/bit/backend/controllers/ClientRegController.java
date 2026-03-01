@@ -35,22 +35,17 @@ public class ClientRegController {
             // then save the response as the clientRegDtoResponse (Which is a ClientRegDto
             // type)
             ClientRegDto clientRegDtoResponse = clientRegServiceI.addClientReg(clientRegDto);
-            return ResponseEntity.created(URI.create("/client-reg/" + clientRegDtoResponse.getFirstName()))
+            return ResponseEntity.created(URI.create("/api/v1/client-reg/" + clientRegDtoResponse.getId()))
                     .body(clientRegDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        // If any exception occurs during the process, it catches it.
-        // error handling p1. next go to : ClientRegService.java
     }
 
     @GetMapping
     public ResponseEntity<List<ClientRegDto>> getData() {
 
         try {
-            // ***calls the getData() function in the ServiceI, does whatever the
-            // functionality it's asking to do, and saves the result of it in
-            // clientRegDtoList
             List<ClientRegDto> clientRegDtoList = clientRegServiceI.getData();
             return ResponseEntity.ok(clientRegDtoList);
         } catch (Exception e) {
@@ -58,7 +53,7 @@ public class ClientRegController {
         }
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ClientRegDto> getById(@PathVariable long id) {
         try {
             ClientRegDto clientRegDto = clientRegServiceI.getById(id);
@@ -68,7 +63,7 @@ public class ClientRegController {
         }
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ClientRegDto> updateClientReg(
             @PathVariable long id,
             @RequestBody ClientRegDto clientRegDto) {
@@ -81,7 +76,7 @@ public class ClientRegController {
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ClientRegDto> deleteClientReg(@PathVariable long id) {
 
         try {
