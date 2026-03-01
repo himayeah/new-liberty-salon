@@ -16,18 +16,19 @@ public class EmployeeLeaveEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="employee_name")
-    private String employeeName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    private EmployeeRegEntity employeeRegEntity;
 
-    @Column(name="leave_type")
+    @Column(name = "leave_type")
     private String leaveType;
 
-    @Column(name="start_date")
+    @Column(name = "start_date")
     private String startDate;
 
-    @Column(name="end_date")
+    @Column(name = "end_date")
     private String endDate;
 
-    @Column(name="reason")
+    @Column(name = "reason")
     private String reason;
 }
