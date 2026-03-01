@@ -1,184 +1,108 @@
-.appointment-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+.container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    animation: fadeIn 0.5s ease-out;
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    min-height: 100%;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.mat-mdc-card {
+.client-card {
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-mat-card-header {
-    padding: 1rem 1.5rem;
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    color: white;
-
-    mat-card-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0 !important;
-    }
-}
-
-.table-header {
-    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+.header-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 16px 24px;
+    background-color: #6c757d;
+    color: white;
 
-    button {
-        color: white;
+    h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
     }
 }
 
-mat-card-content {
-    padding: 1.5rem !important;
+.content-section {
+    padding: 24px;
+    background-color: white;
 }
 
-.appointment-form {
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 1rem;
-
-        mat-form-field {
-            grid-column: span 4;
-            width: 100%;
-
-            @media (max-width: 991px) {
-                grid-column: span 6;
-            }
-
-            @media (max-width: 576px) {
-                grid-column: span 12;
-            }
-
-            &.span-6 {
-                grid-column: span 6;
-
-                @media (max-width: 576px) {
-                    grid-column: span 12;
-                }
-            }
-        }
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 1rem;
-        margin-top: 1.5rem;
-
-        button {
-            padding: 0 1.5rem;
-            border-radius: 8px;
-        }
-    }
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-.table-filters {
-    margin-bottom: 1rem;
+.search-field {
+    flex: 0 0 350px;
+    max-width: 100%;
 
-    mat-form-field {
-        width: 300px;
-        max-width: 100%;
+    @media (max-width: 600px) {
+        flex: 1 1 100%;
     }
 }
 
 .table-container {
     overflow-x: auto;
-    border-radius: 8px;
+    margin-bottom: 16px;
     border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
 
-    table {
-        width: 100%;
+.mat-table {
+    width: 100%;
+}
 
-        th {
-            background: #f8fafc;
-            font-weight: 600;
-            color: #334155;
-            padding: 1rem !important;
-        }
+.full-width {
+    width: 100%;
+}
 
-        td {
-            padding: 0.75rem 1rem !important;
-            color: #475569;
-        }
+// Row Highlighting
+.selected-row {
+    background-color: #e3f2fd !important;
+}
 
-        .selectable-row {
-            transition: background-color 0.2s ease;
-            cursor: pointer;
+.added-row {
+    background-color: #e8f5e9 !important;
+}
 
-            &:hover {
-                background-color: #f1f5f9;
-            }
+.edited-row {
+    background-color: #fff9c4 !important;
+}
 
-            &.row-selected {
-                background-color: #e0e7ff !important;
-            }
+// Responsive Design
+@media (max-width: 768px) {
+    .container {
+        padding: 12px;
+    }
 
-            &.row-added {
-                background-color: #dcfce7 !important;
-                animation: pulseSuccess 2s;
-            }
+    .content-section {
+        padding: 16px;
+    }
 
-            &.row-edited {
-                background-color: #fef9c3 !important;
-                animation: pulseWarning 2s;
-            }
-        }
+    .actions-bar {
+        flex-direction: column;
+        align-items: stretch;
     }
 }
 
-@keyframes pulseSuccess {
-    0% {
-        background-color: #dcfce7;
-    }
-
-    50% {
-        background-color: #f0fdf4;
-    }
-
-    100% {
-        background-color: transparent;
-    }
+.mat-column-actions button {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
-@keyframes pulseWarning {
-    0% {
-        background-color: #fef9c3;
-    }
-
-    50% {
-        background-color: #fffbeb;
-    }
-
-    100% {
-        background-color: transparent;
-    }
-}
-
+// Appointment specific status badges
 .status-badge {
     padding: 4px 10px;
     border-radius: 20px;

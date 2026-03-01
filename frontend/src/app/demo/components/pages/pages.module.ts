@@ -47,6 +47,7 @@ import { EmployeeFormComponent } from './employee-reg/employee-form/employee-for
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { EmployeeLeaveFormComponent } from './employee-leave/employee-leave-form/employee-leave-form.component';
 import { EmployeeScheduleFormComponent } from './employee-schedule/employee-schedule-form/employee-schedule-form.component';
+import { AppointmentFormComponent } from './appointment-schedule/appointment-form/appointment-form.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { EmployeeScheduleFormComponent } from './employee-schedule/employee-sche
     EmployeeFormComponent,
     EmployeeProfileComponent,
     EmployeeLeaveFormComponent,
-    EmployeeScheduleFormComponent
+    EmployeeScheduleFormComponent,
+    AppointmentFormComponent
   ],
 
   imports: [

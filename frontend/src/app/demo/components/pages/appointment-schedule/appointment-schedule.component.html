@@ -1,145 +1,22 @@
-<div class="appointment-container">
-  <!-- Appointment Schedule Form -->
-  <mat-card class="schedule-card">
-    <mat-card-header>
-      <mat-card-title>Appointment Schedule</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <form [formGroup]="appointmentScheduleForm" (ngSubmit)="onSubmit()" class="appointment-form">
-        <div class="form-grid">
-
-          <!-- Client Name -->
-          <mat-form-field appearance="outline">
-            <mat-label>Client Name</mat-label>
-            <mat-select formControlName="clientId">
-              <mat-option *ngFor="let client of clients" [value]="client.id">
-                {{ client.firstName }} {{ client.lastName }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('clientId')?.hasError('required')">
-              Client is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Stylist Name -->
-          <mat-form-field appearance="outline">
-            <mat-label>Stylist Name</mat-label>
-            <mat-select formControlName="stylistId">
-              <mat-option *ngFor="let stylist of stylists" [value]="stylist.id">
-                {{ stylist.firstName }} {{ stylist.lastName }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('stylistId')?.hasError('required')">
-              Stylist is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Service -->
-          <mat-form-field appearance="outline">
-            <mat-label>Service</mat-label>
-            <mat-select formControlName="serviceId">
-              <mat-option *ngFor="let service of services" [value]="service.id">
-                {{ service.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('serviceId')?.hasError('required')">
-              Service is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Appointment Date -->
-          <mat-form-field appearance="outline">
-            <mat-label>Appointment Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="appointmentDate" placeholder="Choose a date" />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentDate')?.hasError('required')">
-              Appointment Date is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Appointment Start Time -->
-          <mat-form-field appearance="outline">
-            <mat-label>Start Time</mat-label>
-            <input matInput type="time" formControlName="appointmentStartTime" placeholder="HH:MM" />
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('required')">
-              Start Time is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Appointment End Time -->
-          <mat-form-field appearance="outline">
-            <mat-label>End Time</mat-label>
-            <input matInput type="time" formControlName="appointmentEndTime" placeholder="HH:MM" />
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentEndTime')?.hasError('required')">
-              End Time is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Appointment Status -->
-          <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="appointmentStatus">
-              <mat-option *ngFor="let s of appointmentStatuses" [value]="s.value">{{ s.viewValue }}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentStatus')?.hasError('required')">
-              Status is required
-            </mat-error>
-          </mat-form-field>
-
-          <!--Booking Source-->
-          <mat-form-field appearance="outline">
-            <mat-label>Booking Source</mat-label>
-            <mat-select formControlName="bookingSource">
-              <mat-option *ngFor="let s of bookingSources" [value]="s.value">{{ s.viewValue }}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="submitted && appointmentScheduleForm.get('bookingSource')?.hasError('required')">
-              Booking Source is required
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Notes -->
-          <mat-form-field appearance="outline" class="span-6">
-            <mat-label>Notes</mat-label>
-            <textarea matInput formControlName="notes" placeholder="Enter notes here..." rows="3"></textarea>
-          </mat-form-field>
-
-          <!-- Cancellation Reason (Wait, the original had 'notes' as formControlName twice) -->
-          <!-- Fixing the formControlName to cancellationReason if it exists, or leaving as notes if that was intended, but I'll check the TS. -->
-          <!-- TS showed only 'notes' in the group. I'll stick to 'notes' but maybe it was a bug in original. -->
-          <mat-form-field appearance="outline" class="span-6">
-            <mat-label>Cancellation Reason</mat-label>
-            <textarea matInput formControlName="notes" placeholder="Enter cancellation reason here..."
-              rows="3"></textarea>
-          </mat-form-field>
-        </div>
-
-        <!-- Buttons -->
-        <div class="form-actions">
-          <button type="submit" mat-raised-button color="primary"
-            [disabled]="isButtonDisabled">{{saveButtonLabel}}</button>
-          <button type="button" mat-stroked-button (click)="resetData()">Reset</button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Table Section -->
-  <mat-card class="info-card">
-    <mat-card-header class="table-header">
-      <mat-card-title>Appointment Information</mat-card-title>
+<div class="container">
+  <mat-card class="client-card">
+    <div class="header-section">
+      <h2>Appointment Information</h2>
       <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
-        <mat-icon>refresh</mat-icon>
+        <mat-icon class="material-icons">refresh</mat-icon>
       </button>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <div class="table-filters">
-        <mat-form-field appearance="outline">
+    </div>
+
+    <div class="content-section">
+      <div class="actions-bar">
+        <button mat-raised-button color="primary" (click)="openAddModal()">
+          <mat-icon class="material-icons">add</mat-icon> Add New Appointment
+        </button>
+
+        <mat-form-field appearance="outline" class="search-field">
           <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Search Appointments" />
-          <mat-icon matSuffix>search</mat-icon>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search Appointments" #input />
+          <mat-icon matSuffix class="material-icons">search</mat-icon>
         </mat-form-field>
       </div>
 
@@ -208,24 +85,30 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Actions </th>
             <td mat-cell *matCellDef="let element">
-              <div class="action-buttons">
-                <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
+              <button mat-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                <mat-icon class="material-icons">edit</mat-icon> Edit
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                <mat-icon class="material-icons">delete</mat-icon>
+              </button>
             </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="selectable-row"
-            [class.row-selected]="selectedRow?.id === row.id" [class.row-added]="lastAddedRow?.id === row.id"
-            [class.row-edited]="lastEditedRow?.id === row.id"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+            'selected-row': selectedRow?.id === row.id,
+            'added-row': lastAddedRow?.id === row.id,
+            'edited-row': lastEditedRow?.id === row.id
+          }"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="12" style="padding: 16px; text-align: center;">No data matching the filter
+              "{{input.value}}"</td>
+          </tr>
         </table>
       </div>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-    </mat-card-content>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+        aria-label="Select page of appointments"></mat-paginator>
+    </div>
   </mat-card>
 </div>
