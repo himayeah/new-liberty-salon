@@ -46,6 +46,7 @@ import { ClientAdditionalNotesComponent } from './client-profile/client-addition
 import { EmployeeFormComponent } from './employee-reg/employee-form/employee-form.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { EmployeeLeaveFormComponent } from './employee-leave/employee-leave-form/employee-leave-form.component';
+import { EmployeeScheduleFormComponent } from './employee-schedule/employee-schedule-form/employee-schedule-form.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { EmployeeLeaveFormComponent } from './employee-leave/employee-leave-form
     ClientAdditionalNotesComponent,
     EmployeeFormComponent,
     EmployeeProfileComponent,
-    EmployeeLeaveFormComponent
+    EmployeeLeaveFormComponent,
+    EmployeeScheduleFormComponent
   ],
 
   imports: [

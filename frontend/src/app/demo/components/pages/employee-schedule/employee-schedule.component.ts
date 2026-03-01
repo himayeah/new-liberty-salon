@@ -1,11 +1,11 @@
-import { Component, effect, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { EmployeeScheduleService } from 'src/app/services/employee-schedule/employee-schedule-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
+import { EmployeeScheduleFormComponent } from './employee-schedule-form/employee-schedule-form.component';
 
 @Component({
   selector: 'app-employee-schedule',
@@ -16,68 +16,30 @@ export class EmployeeScheduleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  employeeScheduleForm: FormGroup;
-  dataSource: MatTableDataSource<any>;
-  employees: any[] = [];
+  dataSource = new MatTableDataSource<any>([]);
+  displayedColumns: string[] = [
+    'employeeName', 'workDay', 'isActive',
+    'startTime', 'endTime', 'effectiveDate', 'endDate', 'actions'
+  ];
 
-  displayedColumns: string[] = ['employeeName','workDay','startTime','endTime','effectiveDate','endDate','actions'];
-
-  isButtonDisabled: boolean = false;
-  submitted: boolean = false;
-  saveButtonLabel: string = 'Save';
-  mode: 'add' | 'edit' = 'add';
-  selectedData: any = null;
   selectedRow: any = null;
-  lastAddedRow: any;
-  lastEditedRow: any;
+  lastAddedRow: any = null;
+  lastEditedRow: any = null;
 
   constructor(
-    private fb: FormBuilder,
-    private employeeScheduleService: EmployeeScheduleService,
+    private scheduleService: EmployeeScheduleService,
     private messageService: MessageServiceService,
-    private employeeRegServices: EmployeeRegServicesService
-  ) {
-    this.employeeScheduleForm = this.fb.group({
-      employeeId: ['', Validators.required],
-      workDay: ['', Validators.required],
-      isActive: [true],
-      startTime: [''],
-      endTime: [''],
-      effectiveDate: [''],
-      endDate: ['']
-    });
-    this.dataSource = new MatTableDataSource<any>();
-  }
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
-    this.loadEmployees();
+    this.populateData();
   }
-
-  loadEmployees(): void {
-    this.employeeRegServices.getData().subscribe({
-      next: (response: any[]) => {
-        this.employees = response || [];
-        this.populateData();
-      },
-      error: (error) => {
-        this.messageService.showError('Error fetching employees: ' + error.message);
-        this.populateData();
-      }
-    });
-  }
-
-  // convenience getter
-    get f() { return this.employeeScheduleForm.controls; }
-
-    isInvalid(controlName: string, errorType: string): boolean {
-        const control = this.f[controlName];
-        return (control.touched || this.submitted) && control.hasError(errorType);
-    }
 
   populateData(): void {
-    this.employeeScheduleService.getData().subscribe({
-      next: (response: any[]) => {
-        this.dataSource.data = new MatTableDataSource(response || []).data;
+    this.scheduleService.getData().subscribe({
+      next: (response: any) => {
+        this.dataSource = new MatTableDataSource(response || []);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -87,52 +49,44 @@ export class EmployeeScheduleComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    this.submitted = true;
-    if (this.employeeScheduleForm.invalid) return;
-    
-    this.isButtonDisabled = true;
-    const formValue = this.employeeScheduleForm.value;
+  openAddScheduleModal(): void {
+    const dialogRef = this.dialog.open(EmployeeScheduleFormComponent, {
+      width: '680px',
+      data: { mode: 'add' }
+    });
 
-    if (this.mode === 'add'){
-      this.employeeScheduleService.serviceCall(formValue).subscribe({
-        next: (response) => {
-          this.dataSource.data = [response, ...this.dataSource.data];
-          this.messageService.showSuccess('Saved Successfully!');
-          this.highlightRow('add', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    }  }
-
-  deleteSchedule(schedule: any): void {
-    this.employeeScheduleService.deleteData(schedule.id).subscribe({
-      next: () => {
-        this.dataSource.data = this.dataSource.data.filter(s => s.id !== schedule.id);
-        this.messageService.showSuccess('Deleted Successfully!');
-      },
-      error: (error) => this.handleError(error)
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('add', result);
+      }
     });
   }
 
-  resetData(): void {
-    this.employeeScheduleForm.reset();
-    this.employeeScheduleForm.enable();
-    this.submitted = false;
-    this.saveButtonLabel = 'Save';
-    this.mode = 'add';
-    this.selectedRow = null;
-    this.isButtonDisabled = false;
+  editSchedule(schedule: any): void {
+    this.selectedRow = schedule;
+    const dialogRef = this.dialog.open(EmployeeScheduleFormComponent, {
+      width: '680px',
+      data: { mode: 'edit', schedule }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('edit', result);
+      }
+      this.selectedRow = null;
+    });
   }
 
-  refreshData(): void {
-    this.populateData();
-    if (this.dataSource) {
-        this.dataSource.filter = '';
-        if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
-    }
-    this.selectedRow = null;
+  deleteSchedule(schedule: any): void {
+    this.scheduleService.deleteData(schedule.id).subscribe({
+      next: () => {
+        this.messageService.showSuccess('Deleted Successfully!');
+        this.populateData();
+      },
+      error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+    });
   }
 
   applyFilter(event: Event): void {
@@ -141,22 +95,19 @@ export class EmployeeScheduleComponent implements OnInit {
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
 
-  private handleError(error: any): void {
-    this.messageService.showError('Action failed: ' + error.message);
-    this.isButtonDisabled = false;
-  } 
+  refreshData(): void {
+    this.populateData();
+    this.dataSource.filter = '';
+    this.selectedRow = null;
+    if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+  }
 
   private highlightRow(type: 'add' | 'edit', response: any): void {
     if (type === 'add') this.lastAddedRow = response;
     else this.lastEditedRow = response;
     setTimeout(() => {
-        this.lastAddedRow = null;
-        this.lastEditedRow = null;
+      this.lastAddedRow = null;
+      this.lastEditedRow = null;
     }, 3000);
-  }
-
-  private resetFormState(): void {
-    this.resetData();
-    this.isButtonDisabled = false;
   }
 }
