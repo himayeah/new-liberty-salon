@@ -29,10 +29,11 @@
               + ' ' + element.client.lastName) : '') }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="stylistName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Stylist </th>
-            <td mat-cell *matCellDef="let element">{{ element.stylistName || (element.stylist ?
-              (element.stylist.firstName + ' ' + element.stylist.lastName) : '') }}</td>
+          <ng-container matColumnDef="employeeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Employee </th>
+            <td mat-cell *matCellDef="let element">{{ element.employeeName || element.stylistName || (element.employee ?
+              (element.employee.firstName + ' ' + element.employee.lastName) : (element.stylist ?
+              (element.stylist.firstName + ' ' + element.stylist.lastName) : '')) }}</td>
           </ng-container>
 
           <ng-container matColumnDef="serviceName">

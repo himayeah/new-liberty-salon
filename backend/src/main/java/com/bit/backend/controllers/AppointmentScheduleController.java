@@ -21,18 +21,20 @@ public class AppointmentScheduleController {
     }
 
     @PostMapping("/appointment-schedule-form")
-    public ResponseEntity<AppointmentScheduleDto> addAppointment(@RequestBody AppointmentScheduleDto appointmentScheduleDto) {
-        try{
-            AppointmentScheduleDto appointmentScheduleDtoResponse = appointmentScheduleServiceI.addAppointment(appointmentScheduleDto);
-        return ResponseEntity.created(URI.create("/appointment-schedule-form" + appointmentScheduleDtoResponse.getFirstName())).body(appointmentScheduleDtoResponse);
-    } catch (Exception e) {
+    public ResponseEntity<AppointmentScheduleDto> addAppointment(
+            @RequestBody AppointmentScheduleDto appointmentScheduleDto) {
+        try {
+            AppointmentScheduleDto appointmentScheduleDtoResponse = appointmentScheduleServiceI
+                    .addAppointment(appointmentScheduleDto);
+            return ResponseEntity.ok(appointmentScheduleDtoResponse);
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/appointment-schedule-form")
-    public ResponseEntity <List<AppointmentScheduleDto>> getAppoinyment() {
-        try{
+    public ResponseEntity<List<AppointmentScheduleDto>> getAppoinyment() {
+        try {
             List<AppointmentScheduleDto> appointmentScheduleDtoList = appointmentScheduleServiceI.getAppointments();
             return ResponseEntity.ok(appointmentScheduleDtoList);
         } catch (Exception e) {
@@ -43,18 +45,19 @@ public class AppointmentScheduleController {
     @PutMapping("/appointment-schedule-form/{id}")
     public ResponseEntity<AppointmentScheduleDto> updateAppointment(
             @PathVariable long id,
-            @RequestBody AppointmentScheduleDto appointmentScheduleDto){
+            @RequestBody AppointmentScheduleDto appointmentScheduleDto) {
         try {
-            AppointmentScheduleDto responseAppointmentScheduleDto = appointmentScheduleServiceI.updateAppointment(id, appointmentScheduleDto);
+            AppointmentScheduleDto responseAppointmentScheduleDto = appointmentScheduleServiceI.updateAppointment(id,
+                    appointmentScheduleDto);
             return ResponseEntity.ok(responseAppointmentScheduleDto);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/appointment-schedule-form/{id}")
     public ResponseEntity<AppointmentScheduleDto> deleteAppointment(@PathVariable long id) {
-        try{
+        try {
             AppointmentScheduleDto appointmentScheduleDto = appointmentScheduleServiceI.deleteAppointment(id);
             return ResponseEntity.ok(appointmentScheduleDto);
         } catch (Exception e) {

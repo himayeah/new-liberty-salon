@@ -20,7 +20,7 @@ export class AppointmentScheduleComponent implements OnInit {
 
     displayedColumns: string[] = [
         'clientName',
-        'stylistName',
+        'employeeName',
         'serviceName',
         'appointmentDate',
         'appointmentStartTime',
