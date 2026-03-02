@@ -86,11 +86,12 @@
                     <!-- Rows -->
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
-                'selected-row': selectedRow?.id === row.id,
-                'added-row':    lastAddedRow?.id === row.id,
-                'edited-row':   lastEditedRow?.id === row.id
+                'selected-row': selectedRow === row,
+                'added-row':    lastAddedRow?.id === row.id && row.id !== null,
+                'edited-row':   lastEditedRow?.id === row.id && row.id !== null
               }">
                     </tr>
+
 
                     <!-- No data row -->
                     <tr class="mat-row" *matNoDataRow>

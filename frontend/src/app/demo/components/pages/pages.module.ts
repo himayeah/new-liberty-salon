@@ -48,6 +48,8 @@ import { EmployeeProfileComponent } from './employee-profile/employee-profile.co
 import { EmployeeLeaveFormComponent } from './employee-leave/employee-leave-form/employee-leave-form.component';
 import { EmployeeScheduleFormComponent } from './employee-schedule/employee-schedule-form/employee-schedule-form.component';
 import { AppointmentFormComponent } from './appointment-schedule/appointment-form/appointment-form.component';
+import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
+import { EmployeeAttendanceFormComponent } from './employee-attendance/employee-attendance-form/employee-attendance-form.component';
 
 @NgModule({
   declarations: [
@@ -77,8 +79,12 @@ import { AppointmentFormComponent } from './appointment-schedule/appointment-for
     EmployeeProfileComponent,
     EmployeeLeaveFormComponent,
     EmployeeScheduleFormComponent,
-    AppointmentFormComponent
+    AppointmentFormComponent,
+    EmployeeAttendanceComponent,
+    EmployeeAttendanceFormComponent
   ],
+
+
 
   imports: [
     CommonModule,

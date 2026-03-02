@@ -4,8 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeScheduleService } from 'src/app/services/employee-schedule/employee-schedule-service.service';
+import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { EmployeeScheduleFormComponent } from './employee-schedule-form/employee-schedule-form.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-employee-schedule',
@@ -28,6 +30,7 @@ export class EmployeeScheduleComponent implements OnInit {
 
   constructor(
     private scheduleService: EmployeeScheduleService,
+    private employeeRegService: EmployeeRegServicesService,
     private messageService: MessageServiceService,
     private dialog: MatDialog
   ) { }
@@ -37,17 +40,52 @@ export class EmployeeScheduleComponent implements OnInit {
   }
 
   populateData(): void {
-    this.scheduleService.getData().subscribe({
-      next: (response: any) => {
-        this.dataSource = new MatTableDataSource(response || []);
+    forkJoin({
+      employees: this.employeeRegService.getData(),
+      schedules: this.scheduleService.getData()
+    }).subscribe({
+      next: (result: any) => {
+        const employees = result.employees || [];
+        const schedules = result.schedules || [];
+
+        const combinedData: any[] = [];
+
+        employees.forEach((emp: any) => {
+          const empSchedules = schedules.filter((s: any) => s.employeeId === emp.id);
+
+          if (empSchedules.length > 0) {
+            empSchedules.forEach((s: any) => {
+              combinedData.push({
+                ...s,
+                employeeName: emp.employeeName,
+                employeeId: emp.id
+              });
+            });
+          } else {
+            combinedData.push({
+              id: null,
+              employeeId: emp.id,
+              employeeName: emp.employeeName,
+              workDay: null,
+              isActive: false,
+              startTime: null,
+              endTime: null,
+              effectiveDate: null,
+              endDate: null
+            });
+          }
+        });
+
+        this.dataSource = new MatTableDataSource(combinedData);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        this.messageService.showError('Error fetching schedules: ' + error.message);
+        this.messageService.showError('Error fetching data: ' + error.message);
       }
     });
   }
+
 
   openAddScheduleModal(): void {
     const dialogRef = this.dialog.open(EmployeeScheduleFormComponent, {
@@ -63,31 +101,42 @@ export class EmployeeScheduleComponent implements OnInit {
     });
   }
 
-  editSchedule(schedule: any): void {
-    this.selectedRow = schedule;
+  editSchedule(row: any): void {
     const dialogRef = this.dialog.open(EmployeeScheduleFormComponent, {
       width: '680px',
-      data: { mode: 'edit', schedule }
+      data: {
+        mode: row.id ? 'edit' : 'add',
+        schedule: row
+      }
     });
+
+    this.selectedRow = row;
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.populateData();
-        this.highlightRow('edit', result);
+        this.highlightRow(row.id ? 'edit' : 'add', result);
       }
       this.selectedRow = null;
     });
   }
 
   deleteSchedule(schedule: any): void {
-    this.scheduleService.deleteData(schedule.id).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Deleted Successfully!');
-        this.populateData();
-      },
-      error: (error) => this.messageService.showError('Delete failed: ' + error.message)
-    });
+    if (!schedule.id) {
+      this.messageService.showError('No schedule to delete');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this schedule?')) {
+      this.scheduleService.deleteData(schedule.id).subscribe({
+        next: () => {
+          this.messageService.showSuccess('Deleted Successfully!');
+          this.populateData();
+        },
+        error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+      });
+    }
   }
+
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();

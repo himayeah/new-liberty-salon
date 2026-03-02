@@ -50,6 +50,8 @@ const navigationModel = [
                 icon: 'pi pi-clock', // attendance/time
                 routerLink: ['/pages/employee-attendance'],
             },
+
+
             {
                 label: 'Employee Schedule',
                 isVisible: false,

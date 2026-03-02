@@ -20,6 +20,8 @@ import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-o
 import { InvoiceComponent } from './invoice/invoice.component';
 import { ClientProfileComponent } from './client-profile/client-profile.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
+import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
+
 
 
 export const PagesRoutes: Routes = [
@@ -40,7 +42,7 @@ export const PagesRoutes: Routes = [
 
         { path: 'client-notes', component: ClientNotesComponent },
         { path: 'appointment-schedule', component: AppointmentScheduleComponent },
-        { path: 'employee-attendance', loadChildren: () => import('./employee-attendance/employee-attendance.module').then(m => m.EmployeeAttendanceModule) },
+        { path: 'employee-attendance', component: EmployeeAttendanceComponent },
         { path: 'stylist-task-management', component: StylistTaskManagementComponent },
         { path: 'inventory', component: InventoryComponent },
         { path: 'service-category', component: ServiceCategoryComponent },
