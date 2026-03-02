@@ -66,13 +66,13 @@ const navigationModel = [
                 icon: 'pi pi-moon', // attendance/time
                 routerLink: ['/pages/employee-leave'],
             },
-            {
-                label: 'Stylist Task Management',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-briefcase', // tasks/work
-                routerLink: ['/pages/stylist-task-management'],
-            },
+            //{
+            //label: 'Stylist Task Management',
+            //isVisible: false,
+            // auth: authenticationEnum.Home_Dashboard,
+            // icon: 'pi pi-briefcase', // tasks/work
+            // routerLink: ['/pages/stylist-task-management'],
+            //},
             {
                 label: 'Inventory',
                 isVisible: false,
@@ -137,6 +137,13 @@ const navigationModel = [
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-shopping-cart', // products
                 routerLink: ['/pages/product'],
+            },
+            {
+                label: 'Inventory',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-box', // inventory/storage
+                routerLink: ['/pages/inventory'],
             },
             {
                 label: 'Supplier',
