@@ -36,14 +36,19 @@
                     <td mat-cell *matCellDef="let element">{{ element.employeeName }}</td>
                 </ng-container>
 
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                    <td mat-cell *matCellDef="let element">{{ element.checkInTime | date:'mediumDate' }}</td>
+                </ng-container>
+
                 <ng-container matColumnDef="checkInTime">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Check-in Time </th>
-                    <td mat-cell *matCellDef="let element">{{ element.checkInTime | date:'short' }}</td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Check-in </th>
+                    <td mat-cell *matCellDef="let element">{{ element.checkInTime | date:'HH:mm' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="checkOutTime">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Check-out Time </th>
-                    <td mat-cell *matCellDef="let element">{{ element.checkOutTime | date:'short' }}</td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Check-out </th>
+                    <td mat-cell *matCellDef="let element">{{ element.checkOutTime | date:'HH:mm' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="status">

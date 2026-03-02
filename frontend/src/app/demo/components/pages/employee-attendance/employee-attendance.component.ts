@@ -21,7 +21,7 @@ export class EmployeeAttendanceComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['employeeName', 'checkInTime', 'checkOutTime', 'status', 'actions'];
+  displayedColumns: string[] = ['employeeName', 'date', 'checkInTime', 'checkOutTime', 'status', 'actions'];
 
   selectedDate: Date = new Date();
   selectedRow: any = null;
