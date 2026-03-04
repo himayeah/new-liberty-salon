@@ -1,93 +1,45 @@
-<div class="category-container">
-    <!-- Form Section -->
+<div class="container">
     <mat-card class="category-card">
-        <mat-card-header class="header-primary">
-            <mat-card-title>Service Categories</mat-card-title>
-        </mat-card-header>
+        <div class="header-section">
+            <h2>Service Category Information</h2>
+            <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon class="material-icons">refresh</mat-icon>
+            </button>
+        </div>
 
-        <mat-card-content>
-            <form [formGroup]="serviceCategoryForm" (ngSubmit)="onSubmit()" class="category-form">
-                <div class="form-grid">
-                    <!--Category Name -->
-                    <div class="grid-item">
-                        <mat-form-field appearance="outline" class="category-field">
-                            <mat-label>Category Name</mat-label>
-                            <input matInput formControlName="categoryName" placeholder="Enter category name" />
-                            <mat-error *ngIf="isInvalid('categoryName','required')">Category Name is
-                                required</mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <!--Display Order-->
-                    <div class="grid-item">
-                        <mat-form-field appearance="outline" class="category-field">
-                            <mat-label>Display Order</mat-label>
-                            <input matInput type="number" formControlName="displayOrder" min="0" placeholder="0" />
-                            <mat-error *ngIf="isInvalid('displayOrder','min')">Display order must be 0 or
-                                higher</mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <!--Category Description-->
-                    <div class="grid-item full-width">
-                        <mat-form-field appearance="outline" class="category-field">
-                            <mat-label>Description</mat-label>
-                            <textarea matInput formControlName="description" rows="3"
-                                placeholder="Enter category description"></textarea>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="isButtonDisabled">
-                        {{ saveButtonLabel }}
-                    </button>
-                    <button type="button" mat-stroked-button (click)="resetData()">Reset</button>
-                </div>
-            </form>
-        </mat-card-content>
-    </mat-card>
-
-    <!-- Table Section -->
-    <mat-card class="category-card table-card">
-        <mat-card-header class="header-secondary">
-            <div class="header-content">
-                <mat-card-title>Service Category Information</mat-card-title>
-                <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
-                    <mat-icon>refresh</mat-icon>
+        <div class="content-section">
+            <div class="actions-bar">
+                <button mat-raised-button color="primary" (click)="openAddCategoryModal()">
+                    <mat-icon class="material-icons">add</mat-icon> Add New Category
                 </button>
-            </div>
-        </mat-card-header>
 
-        <mat-card-content>
-            <div class="table-tools">
-                <mat-form-field appearance="outline" class="filter-field">
+                <mat-form-field appearance="outline" class="search-field">
                     <mat-label>Filter</mat-label>
-                    <input matInput (input)="applyFilter($event)" placeholder="Search categories" />
+                    <input matInput (input)="applyFilter($event)" placeholder="Search categories" #input />
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
             </div>
 
             <div class="table-container">
-                <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1">
+                <table mat-table [dataSource]="dataSource" matSort>
                     <!--Columns-->
                     <ng-container matColumnDef="displayOrder">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order </th>
                         <td mat-cell *matCellDef="let element">{{ element.displayOrder }}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="categoryName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Category Name</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Category Name </th>
                         <td mat-cell *matCellDef="let element">{{ element.categoryName }}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="description">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
                         <td mat-cell *matCellDef="let element" class="description-cell">{{ element.description }}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
                         <td mat-cell *matCellDef="let element">
                             <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
                                 <mat-icon>edit</mat-icon>
@@ -101,14 +53,19 @@
                     <!--Rows-->
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
-                            'row-selected': selectedRow?.id === row.id,
-                            'row-added': lastAddedRow?.id === row.id,
-                            'row-edited': lastEditedRow?.id === row.id
-                        }">
+                  'selected-row': selectedRow?.id === row.id,
+                  'added-row': lastAddedRow?.id === row.id,
+                  'edited-row': lastEditedRow?.id === row.id
+              }">
+                    </tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4" style="padding: 16px; text-align: center;">No data matching the
+                            filter "{{input.value}}"</td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
             </div>
-        </mat-card-content>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+        </div>
     </mat-card>
 </div>

@@ -51,6 +51,7 @@ import { EmployeeScheduleFormComponent } from './employee-schedule/employee-sche
 import { AppointmentFormComponent } from './appointment-schedule/appointment-form/appointment-form.component';
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { EmployeeAttendanceFormComponent } from './employee-attendance/employee-attendance-form/employee-attendance-form.component';
+import { ServiceCategoryFormComponent } from './service-category/service-category-form/service-category-form.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { EmployeeAttendanceFormComponent } from './employee-attendance/employee-
     EmployeeScheduleFormComponent,
     AppointmentFormComponent,
     EmployeeAttendanceComponent,
-    EmployeeAttendanceFormComponent
+    EmployeeAttendanceFormComponent,
+    ServiceCategoryFormComponent
   ],
 
 
