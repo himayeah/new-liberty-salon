@@ -6,9 +6,11 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper (componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { ServiceCategoryMapper.class })
 public interface ServiceMapper {
     ServiceDto toServiceDto(ServiceEntity serviceEntity);
+
     ServiceEntity toServiceEntity(ServiceDto serviceDto);
+
     List<ServiceDto> toServiceDtoList(List<ServiceEntity> serviceEntityList);
 }

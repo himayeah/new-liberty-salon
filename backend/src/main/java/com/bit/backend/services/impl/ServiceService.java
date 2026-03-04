@@ -25,7 +25,7 @@ public class ServiceService implements ServiceServiceI {
 
     @Override
     public ServiceDto addService(ServiceDto serviceDto) {
-        try{
+        try {
             ServiceEntity serviceEntity = serviceMapper.toServiceEntity(serviceDto);
             ServiceEntity savedItem = serviceRepository.save(serviceEntity);
             ServiceDto savedDto = serviceMapper.toServiceDto(savedItem);
@@ -48,19 +48,39 @@ public class ServiceService implements ServiceServiceI {
 
     @Override
     public ServiceDto updateService(long id, ServiceDto serviceDto) {
-
-        try{
+        try {
             Optional<ServiceEntity> optionalServiceEntity = serviceRepository.findById(id);
             if (!optionalServiceEntity.isPresent()) {
-                throw new AppException("Request failed with error:" + HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND);
+                throw new AppException("Service not found:" + id, HttpStatus.NOT_FOUND);
             }
-            ServiceEntity newServiceEntity = serviceMapper.toServiceEntity(serviceDto);
-            ServiceEntity serviceEntity = serviceRepository.save(newServiceEntity);
-            ServiceDto responseServiceDto = serviceMapper.toServiceDto(serviceEntity);
-            return responseServiceDto;
-        }
-        catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+            ServiceEntity existingEntity = optionalServiceEntity.get();
+
+            // Partial update: only update non-null fields from DTO
+            if (serviceDto.getServiceName() != null)
+                existingEntity.setServiceName(serviceDto.getServiceName());
+            if (serviceDto.getDuration() != null)
+                existingEntity.setDuration(serviceDto.getDuration());
+            if (serviceDto.getPrice() != null)
+                existingEntity.setPrice(serviceDto.getPrice());
+            if (serviceDto.getCommission() != null)
+                existingEntity.setCommission(serviceDto.getCommission());
+            if (serviceDto.getColorCode() != null)
+                existingEntity.setColorCode(serviceDto.getColorCode());
+            if (serviceDto.getDescription() != null)
+                existingEntity.setDescription(serviceDto.getDescription());
+            if (serviceDto.getIsActive() != null)
+                existingEntity.setIsActive(serviceDto.getIsActive());
+
+            if (serviceDto.getServiceCategory() != null) {
+                // Use mapper to convert DTO to entity and extract the category relationship
+                ServiceEntity temp = serviceMapper.toServiceEntity(serviceDto);
+                existingEntity.setServiceCategory(temp.getServiceCategory());
+            }
+
+            ServiceEntity savedEntity = serviceRepository.save(existingEntity);
+            return serviceMapper.toServiceDto(savedEntity);
+        } catch (Exception e) {
+            throw new AppException("Update failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -68,8 +88,9 @@ public class ServiceService implements ServiceServiceI {
     public ServiceDto deleteService(long id) {
         try {
             Optional<ServiceEntity> optionalServiceEntity = serviceRepository.findById(id);
-            if(!optionalServiceEntity.isPresent()){
-                throw new AppException("Request failed with error:" + HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND);
+            if (!optionalServiceEntity.isPresent()) {
+                throw new AppException("Request failed with error:" + HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND);
             }
             serviceRepository.deleteById(id);
             return serviceMapper.toServiceDto(optionalServiceEntity.get());

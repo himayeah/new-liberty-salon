@@ -58,16 +58,20 @@ public class ServiceCategoryService implements ServiceCategoryServiceI {
             if (!optionalServiceCategoryEntity.isPresent()) {
                 throw new AppException("Service Category Does Not Exist", HttpStatus.BAD_REQUEST);
             }
-            ServiceCategoryEntity newServiceCategoryEntity = serviceCategoryMapper
-                    .toServiceCategoryEntity(serviceCategoryDto);
-            newServiceCategoryEntity.setId(id);
-            ServiceCategoryEntity serviceCategoryEntity = serviceCategoryRepository.save(newServiceCategoryEntity);
-            ServiceCategoryDto savedDto = serviceCategoryMapper.toServiceCategoryDto(serviceCategoryEntity);
-            return savedDto;
-        } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
-        }
 
+            ServiceCategoryEntity existingEntity = optionalServiceCategoryEntity.get();
+            if (serviceCategoryDto.getCategoryName() != null)
+                existingEntity.setCategoryName(serviceCategoryDto.getCategoryName());
+            if (serviceCategoryDto.getDisplayOrder() != null)
+                existingEntity.setDisplayOrder(serviceCategoryDto.getDisplayOrder());
+            if (serviceCategoryDto.getDescription() != null)
+                existingEntity.setDescription(serviceCategoryDto.getDescription());
+
+            ServiceCategoryEntity savedEntity = serviceCategoryRepository.save(existingEntity);
+            return serviceCategoryMapper.toServiceCategoryDto(savedEntity);
+        } catch (Exception e) {
+            throw new AppException("Update failed: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override

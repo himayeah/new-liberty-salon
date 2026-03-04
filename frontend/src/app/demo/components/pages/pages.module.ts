@@ -52,6 +52,7 @@ import { AppointmentFormComponent } from './appointment-schedule/appointment-for
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { EmployeeAttendanceFormComponent } from './employee-attendance/employee-attendance-form/employee-attendance-form.component';
 import { ServiceCategoryFormComponent } from './service-category/service-category-form/service-category-form.component';
+import { ServiceFormComponent } from './service/service-form/service-form.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { ServiceCategoryFormComponent } from './service-category/service-categor
     AppointmentFormComponent,
     EmployeeAttendanceComponent,
     EmployeeAttendanceFormComponent,
-    ServiceCategoryFormComponent
+    ServiceCategoryFormComponent,
+    ServiceFormComponent
   ],
 
 
