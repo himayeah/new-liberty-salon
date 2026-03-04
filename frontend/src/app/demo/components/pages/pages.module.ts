@@ -27,6 +27,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
 import { MatSelectModule } from '@angular/material/select';
 import { InventoryComponent } from './inventory/inventory.component';
+import { InventoryFormComponent } from './inventory/inventory-form/inventory-form.component';
 import { ServiceCategoryComponent } from './service-category/service-category.component';
 import { ServiceComponent } from './service/service.component';
 import { EmployeeScheduleComponent } from './employee-schedule/employee-schedule.component';
@@ -58,6 +59,7 @@ import { EmployeeAttendanceFormComponent } from './employee-attendance/employee-
     AppointmentScheduleComponent,
     StylistTaskManagementComponent,
     InventoryComponent,
+    InventoryFormComponent,
     ServiceCategoryComponent,
     ServiceComponent,
     EmployeeScheduleComponent,

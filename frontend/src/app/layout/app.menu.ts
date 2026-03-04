@@ -73,13 +73,13 @@ const navigationModel = [
             // icon: 'pi pi-briefcase', // tasks/work
             // routerLink: ['/pages/stylist-task-management'],
             //},
-            {
+            /*{
                 label: 'Inventory',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-box', // inventory/storage
                 routerLink: ['/pages/inventory'],
-            }
+            }*/
         ],
     },
 
@@ -107,7 +107,7 @@ const navigationModel = [
 
     {
         label: 'Master Data',
-        isVisible: false,
+        isVisible: true,
         auth: authenticationEnum.Home,
         items: [
             {
@@ -126,21 +126,21 @@ const navigationModel = [
             },
             {
                 label: 'Product Categories',
-                isVisible: false,
+                isVisible: true,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-tags', // product categories
                 routerLink: ['/pages/product-category'],
             },
             {
                 label: 'Products',
-                isVisible: false,
+                isVisible: true,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-shopping-cart', // products
                 routerLink: ['/pages/product'],
             },
             {
                 label: 'Inventory',
-                isVisible: false,
+                isVisible: true,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-box', // inventory/storage
                 routerLink: ['/pages/inventory'],
