@@ -53,6 +53,7 @@ import { EmployeeAttendanceComponent } from './employee-attendance/employee-atte
 import { EmployeeAttendanceFormComponent } from './employee-attendance/employee-attendance-form/employee-attendance-form.component';
 import { ServiceCategoryFormComponent } from './service-category/service-category-form/service-category-form.component';
 import { ServiceFormComponent } from './service/service-form/service-form.component';
+import { ProductCategoryFormComponent } from './product-category/product-category-form/product-category-form.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { ServiceFormComponent } from './service/service-form/service-form.compon
     EmployeeAttendanceComponent,
     EmployeeAttendanceFormComponent,
     ServiceCategoryFormComponent,
-    ServiceFormComponent
+    ServiceFormComponent,
+    ProductCategoryFormComponent
   ],
 
 

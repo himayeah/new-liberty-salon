@@ -34,14 +34,13 @@ export class ProductCategoryServiceService {
   }
 
   editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/product-edit/${id}`;
+    const requestUrl = `${environment.baseUrl}/product-category/${id}`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
     return this.http.put(requestUrl, form_details, { headers: headers });
-
   }
   deleteData(id: number) {
     const requestUrl = `${environment.baseUrl}/product-category/${id}`;

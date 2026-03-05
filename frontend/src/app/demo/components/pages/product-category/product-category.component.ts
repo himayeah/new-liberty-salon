@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { ProductCategoryServiceService } from 'src/app/services/product-category/product-category-service.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductCategoryServiceService } from 'src/app/services/product-category/product-category-service.service';
+import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { ProductCategoryFormComponent } from './product-category-form/product-category-form.component';
 
 @Component({
   selector: 'app-product-category',
@@ -15,44 +16,27 @@ export class ProductCategoryComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  productCategoryForm: FormGroup;
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = ['productCategoryName', 'actions'];
 
-  isButtonDisabled = false;
-  submitted = false;
-  saveButtonLabel = 'Save';
-  mode: 'add' | 'edit' = 'add';
-  selectedData: any = null;
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
 
   constructor(
-    private fb: FormBuilder,
     private productCategoryService: ProductCategoryServiceService,
-    private messageService: MessageServiceService
-  ) {
-    this.productCategoryForm = this.fb.group({
-      productCategoryName: ['']
-    });
-    
-   }
+    private messageService: MessageServiceService,
+    private dialog: MatDialog
+  ) { }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.populateData();
-   }
-
-   get f() { return this.productCategoryForm.controls;}
-   isInvalid(controlName: string, errorType: string): boolean {
-    const control = this.productCategoryForm.get(controlName);
-    return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 
   populateData(): void {
     this.productCategoryService.getData().subscribe({
       next: (response: any[]) => {
-        this.dataSource.data = response;
+        this.dataSource = new MatTableDataSource(response || []);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -62,57 +46,44 @@ export class ProductCategoryComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    this.submitted = true;
-    
-    if (this.productCategoryForm.invalid) {
-      return;
-    }
-    this.isButtonDisabled = true;
-    
-    const formValue = this.productCategoryForm.value;
-    if (this.mode === 'add') {
-      this.productCategoryService.serviceCall(formValue).subscribe({
-        next: (response) => {
-          this.messageService.showSuccess('Product category added successfully.');
-          this.dataSource.data = [response, ...this.dataSource.data];
-          this.highlightRow('add', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    } else {
-      this.productCategoryService.editData(this.selectedData.id, formValue).subscribe({
-        next: (response) => {
-          const index = this.dataSource.data.findIndex(item => item.id === this.selectedData.id);
-          if (index > -1) this.dataSource.data[index] = response;
-          this.messageService.showSuccess('Product category updated successfully.');
-          this.highlightRow('edit', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    }
+  openAddCategoryModal(): void {
+    const dialogRef = this.dialog.open(ProductCategoryFormComponent, {
+      width: '500px',
+      data: { mode: 'add' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('add', result);
+      }
+    });
   }
 
   editData(data: any): void {
-    this.productCategoryForm.patchValue ({
-
+    const dialogRef = this.dialog.open(ProductCategoryFormComponent, {
+      width: '500px',
+      data: { mode: 'edit', category: data }
     });
-    this.selectedData = data;
-    this.mode = 'edit';
-    this.saveButtonLabel = 'Update';
-    this.isButtonDisabled = false;
+
     this.selectedRow = data;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('edit', result);
+      }
+      this.selectedRow = null;
+    });
   }
 
   deleteData(data: any): void {
     this.productCategoryService.deleteData(data.id).subscribe({
       next: () => {
-        this.messageService.showSuccess('Product category deleted successfully.');
+        this.messageService.showSuccess('Category deleted successfully.');
         this.populateData();
       },
-      error: (error) => this.messageService.showError('Failed to delete product category.')
+      error: (error) => this.messageService.showError('Failed to delete category.')
     });
   }
 
@@ -129,17 +100,6 @@ export class ProductCategoryComponent implements OnInit {
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
 
-  resetData(): void {
-    this.productCategoryForm.reset();
-    this.productCategoryForm.enable();
-    this.submitted = false;
-    this.saveButtonLabel = 'Save';
-    this.mode = 'add';
-    this.selectedRow = null;
-    this.isButtonDisabled = false;
-  }
-
-  // helpers
   private highlightRow(action: 'add' | 'edit', rowData: any): void {
     if (action === 'add') {
       this.lastAddedRow = rowData;
@@ -149,22 +109,4 @@ export class ProductCategoryComponent implements OnInit {
       setTimeout(() => this.lastEditedRow = null, 3000);
     }
   }
-  
-  private resetFormState(): void {
-    this.productCategoryForm.reset();
-    this.productCategoryForm.enable();
-    this.submitted = false;
-    this.saveButtonLabel = 'Save';
-    this.mode = 'add';
-    this.selectedData = null;
-    this.selectedRow = null;
-    this.isButtonDisabled = false;
-  }
-
-  private handleError(error: any): void {
-    this.messageService.showError('Action failed: ' + error.message);
-    this.isButtonDisabled = false;
-  } 
-
-
 }

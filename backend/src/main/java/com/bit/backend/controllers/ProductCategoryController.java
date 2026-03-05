@@ -15,14 +15,19 @@ import java.util.List;
 public class ProductCategoryController {
     private final ProductCategoryServiceI productCategoryServiceI;
 
-    public ProductCategoryController(ProductCategoryServiceI productCategoryServiceI) { this.productCategoryServiceI = productCategoryServiceI; }
+    public ProductCategoryController(ProductCategoryServiceI productCategoryServiceI) {
+        this.productCategoryServiceI = productCategoryServiceI;
+    }
 
     @PostMapping
-    public ResponseEntity<ProductCategoryDto> addForm(@RequestBody ProductCategoryDto productCategoryDto) throws AppException {
+    public ResponseEntity<ProductCategoryDto> addForm(@RequestBody ProductCategoryDto productCategoryDto)
+            throws AppException {
         try {
-            ProductCategoryDto productCategoryDtoResponse = productCategoryServiceI.addProductCategory(productCategoryDto);
-            return ResponseEntity.created(URI.create("/product-category" + productCategoryDtoResponse )).body(productCategoryDtoResponse);
-            } catch (Exception e) {
+            ProductCategoryDto productCategoryDtoResponse = productCategoryServiceI
+                    .addProductCategory(productCategoryDto);
+            return ResponseEntity.created(URI.create("/product-category/" + productCategoryDtoResponse.getId()))
+                    .body(productCategoryDtoResponse);
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -32,24 +37,25 @@ public class ProductCategoryController {
         try {
             List<ProductCategoryDto> productCategoryDtoList = productCategoryServiceI.getData();
             return ResponseEntity.ok(productCategoryDtoList);
-            } catch (Exception e) {
+        } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<ProductCategoryDto> updateProductCategory(
             @PathVariable long id,
             @RequestBody ProductCategoryDto productCategoryDto) {
         try {
-            ProductCategoryDto responseProductCategoryDto = productCategoryServiceI.updateProductCategory(id, productCategoryDto);
+            ProductCategoryDto responseProductCategoryDto = productCategoryServiceI.updateProductCategory(id,
+                    productCategoryDto);
             return ResponseEntity.ok(responseProductCategoryDto);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ProductCategoryDto> deleteProductCategory(@PathVariable long id) {
         try {
             ProductCategoryDto productCategoryDto = productCategoryServiceI.deleteProductCategory(id);
