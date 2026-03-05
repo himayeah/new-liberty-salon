@@ -52,8 +52,4 @@ public class ProductEntity {
     @Column(name = "reorder_level")
     private int reOrderLevel;
 
-    public void setId(long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

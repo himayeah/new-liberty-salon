@@ -9,7 +9,6 @@ import com.bit.backend.dtos.ProductDto;
 import com.bit.backend.entities.ProductEntity;
 
 import java.util.List;
-import java.util.Optional;
 import com.bit.backend.exceptions.AppException;
 import org.springframework.http.HttpStatus;
 
@@ -26,58 +25,64 @@ public class ProductService implements ProductServiceI {
 
     @Override
     public ProductDto addProduct(ProductDto productDto) {
+        if (productDto == null) {
+            throw new AppException("Product data cannot be null", HttpStatus.BAD_REQUEST);
+        }
         try {
+            // Ensure ID is null for a fresh save
+            productDto.setId(null);
             ProductEntity productEntity = productMapper.toProductEntity(productDto);
             ProductEntity savedItem = productRepository.save(productEntity);
-            ProductDto savedDto = productMapper.toProductDto(savedItem);
-            return savedDto;
+            return productMapper.toProductDto(savedItem);
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to add product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
     public List<ProductDto> getData() {
         try {
             List<ProductEntity> productEntityList = productRepository.findAll();
-            List<ProductDto> productDtoList = productMapper.toProductDtoList(productEntityList);
-            return productDtoList;
+            return productMapper.toProductDtoList(productEntityList);
         } catch (Exception e) {
-            throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new AppException("Failed to retrieve products: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public ProductDto updateProduct(long id, ProductDto productDto) {
+        if (productDto == null) {
+            throw new AppException("Product data cannot be null", HttpStatus.BAD_REQUEST);
+        }
         try {
-            Optional<ProductEntity> optionalProductEntity = productRepository.findById(id);
-            if (!optionalProductEntity.isPresent()) {
-                throw new AppException("Product Does Not Exist", HttpStatus.BAD_REQUEST);
+            if (!productRepository.existsById(id)) {
+                throw new AppException("Product with ID " + id + " not found", HttpStatus.NOT_FOUND);
             }
 
-            ProductEntity newProductEntity = productMapper.toProductEntity(productDto);
-            newProductEntity.setId(id);
-            ProductEntity productEntity = productRepository.save(newProductEntity);
-            ProductDto productDtoRes = productMapper.toProductDto(productEntity);
-            System.out.println("update Successfully: " + productDtoRes.getProductName());
-            return productDtoRes;
+            productDto.setId(id);
+            ProductEntity productEntityToUpdate = productMapper.toProductEntity(productDto);
+            ProductEntity updatedEntity = productRepository.save(productEntityToUpdate);
+            System.out.println("Product updated successfully: " + updatedEntity.getProductName());
+            return productMapper.toProductDto(updatedEntity);
+        } catch (AppException e) {
+            throw e;
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to update product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public ProductDto deleteProduct(long id) {
         try {
-            Optional<ProductEntity> optionalProductEntity = productRepository.findById(id);
-            if (!optionalProductEntity.isPresent()) {
-                throw new AppException("Product Does Not Exist", HttpStatus.BAD_REQUEST);
-            }
+            ProductEntity productEntity = productRepository.findById(id)
+                    .orElseThrow(() -> new AppException("Product with ID " + id + " not found", HttpStatus.NOT_FOUND));
+
             productRepository.deleteById(id);
-            return productMapper.toProductDto(optionalProductEntity.get());
+            return productMapper.toProductDto(productEntity);
+        } catch (AppException e) {
+            throw e;
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to delete product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
