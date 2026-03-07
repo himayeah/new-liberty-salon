@@ -18,6 +18,4 @@ public class SupplierDto {
     private String address;
     private String paymentTerms;
 
-    public String getSupplierName() {return supplierName;}
-
 }

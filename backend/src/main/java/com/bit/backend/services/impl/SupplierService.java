@@ -11,7 +11,6 @@ import com.bit.backend.entities.SupplierEntity;
 import com.bit.backend.dtos.SupplierDto;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SupplierService implements SupplierServiceI {
@@ -26,13 +25,16 @@ public class SupplierService implements SupplierServiceI {
 
     @Override
     public SupplierDto addSupplier(SupplierDto supplierDto) {
+        if (supplierDto == null) {
+            throw new AppException("Supplier data cannot be null", HttpStatus.BAD_REQUEST);
+        }
         try {
+            supplierDto.setId(null); // Ensure creation
             SupplierEntity supplierEntity = supplierMapper.toSupplierEntity(supplierDto);
             SupplierEntity savedItem = supplierRepository.save(supplierEntity);
-            SupplierDto savedDto = supplierMapper.toSupplierDto(savedItem);
-            return savedDto;
+            return supplierMapper.toSupplierDto(savedItem);
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to add supplier: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -40,42 +42,45 @@ public class SupplierService implements SupplierServiceI {
     public List<SupplierDto> getSupplier() {
         try {
             List<SupplierEntity> supplierEntityList = supplierRepository.findAll();
-            List<SupplierDto> supplierDtoList = supplierMapper.toSupplierDtoList(supplierEntityList);
-            return supplierDtoList;
+            return supplierMapper.toSupplierDtoList(supplierEntityList);
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to retrieve suppliers: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public SupplierDto updateSupplier(long id, SupplierDto supplierDto) {
+        if (supplierDto == null) {
+            throw new AppException("Supplier data cannot be null", HttpStatus.BAD_REQUEST);
+        }
         try {
-            Optional<SupplierEntity> optionalSupplierEntity = supplierRepository.findById(id);
-            if (!optionalSupplierEntity.isPresent()) {
-                throw new AppException("Supplier Does Not Exist", HttpStatus.BAD_REQUEST);
+            if (!supplierRepository.existsById(id)) {
+                throw new AppException("Supplier with ID " + id + " not found", HttpStatus.NOT_FOUND);
             }
-            SupplierEntity newSupplierEntity = supplierMapper.toSupplierEntity(supplierDto);
-            newSupplierEntity.setId(id);
-            SupplierEntity supplierEntity = supplierRepository.save(newSupplierEntity);
-            SupplierDto responseDto = supplierMapper.toSupplierDto(supplierEntity);
-            return responseDto;
+
+            supplierDto.setId(id);
+            SupplierEntity supplierEntityToUpdate = supplierMapper.toSupplierEntity(supplierDto);
+            SupplierEntity updatedEntity = supplierRepository.save(supplierEntityToUpdate);
+            return supplierMapper.toSupplierDto(updatedEntity);
+        } catch (AppException e) {
+            throw e;
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to update supplier: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public SupplierDto deleteSupplier(long id) {
         try {
-            Optional<SupplierEntity> optionalSupplierEntity = supplierRepository.findById(id);
-            if (!optionalSupplierEntity.isPresent()) {
-                throw new AppException("Supplier Does Not Exist", HttpStatus.BAD_REQUEST);
-            }
+            SupplierEntity supplierEntity = supplierRepository.findById(id)
+                    .orElseThrow(() -> new AppException("Supplier with ID " + id + " not found", HttpStatus.NOT_FOUND));
+
             supplierRepository.deleteById(id);
-            return supplierMapper.toSupplierDto(optionalSupplierEntity.get());
+            return supplierMapper.toSupplierDto(supplierEntity);
+        } catch (AppException e) {
+            throw e;
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Failed to delete supplier: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

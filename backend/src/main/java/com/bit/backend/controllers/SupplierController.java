@@ -33,7 +33,7 @@ public class SupplierController {
 
         try {
             SupplierDto supplierDtoResponse = supplierServiceI.addSupplier(supplierDto);
-            return ResponseEntity.created(URI.create("/supplier/" + supplierDtoResponse.getSupplierName()))
+            return ResponseEntity.created(URI.create("/api/supplier/" + supplierDtoResponse.getId()))
                     .body(supplierDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,7 +50,7 @@ public class SupplierController {
         }
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SupplierDto> updateSupplier(
             @PathVariable long id,
             @RequestBody SupplierDto supplierDto) {
@@ -62,7 +62,7 @@ public class SupplierController {
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<SupplierDto> deleteSupplier(@PathVariable long id) {
         try {
             SupplierDto supplierDto = supplierServiceI.deleteSupplier(id);

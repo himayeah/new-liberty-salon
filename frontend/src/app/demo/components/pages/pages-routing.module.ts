@@ -54,7 +54,7 @@ export const PagesRoutes: Routes = [
         { path: 'tax', component: TaxComponent },
         { path: 'supplier', component: SupplierComponent },
         { path: 'purchase-order', component: PurchaseOrderComponent },
-        { path: 'purchase-order-detail', component: PurchaseOrderDetailComponent },
+        { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'invoice', component: InvoiceComponent },
         { path: '**', redirectTo: '/notfound' },
 

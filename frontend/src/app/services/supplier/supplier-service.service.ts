@@ -11,44 +11,33 @@ export class SupplierServiceService {
 
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
+  private getHeaders() {
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
+
   serviceCall(form_details: any): Observable<any> {
     const requestUrl = `${environment.baseUrl}/api/supplier`;
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
-    if (token !== null) {
-      headers = headers.set('Authorization', 'Bearer ' + token);
-    }
-    return this.http.post(requestUrl, form_details, { headers });
+    return this.http.post(requestUrl, form_details, { headers: this.getHeaders() });
   }
 
-  getData() {
+  getData(): Observable<any> {
     const requestUrl = `${environment.baseUrl}/api/supplier`;
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
-    if (token !== null) {
-      headers = headers.set('Authorization', 'Bearer ' + token);
-    }
-    return this.http.get(requestUrl, { headers });
+    return this.http.get(requestUrl, { headers: this.getHeaders() });
   }
 
-  editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/api/supplier-edit/${id}`;
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
-    if (token !== null) {
-      headers = headers.set('Authorization', 'Bearer ' + token);
-    }
-    return this.http.put(requestUrl, form_details, { headers: headers });
-  }
-
-  deleteData(id: number) {
+  editData(id: number, form_details: any): Observable<any> {
     const requestUrl = `${environment.baseUrl}/api/supplier/${id}`;
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
-    if (token !== null) {
-      headers = headers.set('Authorization', 'Bearer ' + token);
-    }
-    return this.http.delete(requestUrl, { headers });
+    return this.http.put(requestUrl, form_details, { headers: this.getHeaders() });
+  }
+
+  deleteData(id: number): Observable<any> {
+    const requestUrl = `${environment.baseUrl}/api/supplier/${id}`;
+    return this.http.delete(requestUrl, { headers: this.getHeaders() });
   }
 
 }

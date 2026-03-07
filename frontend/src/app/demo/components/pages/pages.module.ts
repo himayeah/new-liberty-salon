@@ -17,6 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { ClientRegComponent } from './client-reg/client-reg.component';
 import { ClientFormComponent } from './client-reg/client-form/client-form.component';
@@ -55,6 +56,9 @@ import { ServiceCategoryFormComponent } from './service-category/service-categor
 import { ServiceFormComponent } from './service/service-form/service-form.component';
 import { ProductCategoryFormComponent } from './product-category/product-category-form/product-category-form.component';
 import { ProductFormComponent } from './product/product-form/product-form.component';
+import { SupplierFormComponent } from './supplier/supplier-form/supplier-form.component';
+import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
+import { PurchaseOrderFormComponent } from './purchase-order/purchase-order-form/purchase-order-form.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +95,10 @@ import { ProductFormComponent } from './product/product-form/product-form.compon
     ServiceCategoryFormComponent,
     ServiceFormComponent,
     ProductCategoryFormComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    SupplierFormComponent,
+    PurchaseOrderDetailFormComponent,
+    PurchaseOrderFormComponent
   ],
 
 
@@ -118,6 +125,7 @@ import { ProductFormComponent } from './product/product-form/product-form.compon
     MatCardModule,
     MatProgressSpinnerModule,
     MatDividerModule,
+    MatTabsModule,
 
   ]
 })
