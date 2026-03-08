@@ -1,179 +1,116 @@
-<div class="container my-4">
-   <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Salon Services</h4>
-      </div>
-      <div class="card-body">
-
-        <!--Form Fields-->
-        <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
-            <div class="row g-3 align-items-start">
-
-                <!--Service Name-->
-
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Service Name</mat-label>
-                        <input matInput formControlName="serviceName" />
-                        <mat-error *ngIf="isInvalid('serviceName','required')">
-                            Service Name is required
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
-                <!--Duration (mins) -->
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Duration (mins)</mat-label>
-                        <input matInput type="number" formControlName="duration" min="1" />
-                        <mat-error *ngIf="isInvalid('duration','min')">Duration must be 1 minute or more</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <!--Price -->
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Price</mat-label>
-                        <input matInput type="number" formControlName="price" min="0" step="0.01" />
-                        <mat-hint>In your currency</mat-hint>
-                        <mat-error *ngIf="isInvalid('price','min')">Price cannot be negative</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <!--Commission (%) -->
-                <div class="col-12 col-md-2">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Commission (%)</mat-label>
-                        <input matInput type="number" formControlName="commission" min="0" max="100" step="0.01" />
-                        <mat-hint>Percentage (0-100)</mat-hint>
-                        <mat-error *ngIf="isInvalid('commission','min') || isInvalid('commission','max')">Enter valid percentage 0–100</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <!--Color Code -->
-                <div class="col-12 col-md-3">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Color</mat-label>
-                        <input matInput type="color" formControlName="colorCode" />
-                        <mat-hint>Pick a color for this service</mat-hint>
-                    </mat-form-field>
-                </div>
-                <!--Active checkbox-->
-                <div class="col-12 col-md-2 d-flex align-items-center">
-                    <mat-checkbox formControlName="isActive" color="primary">Active</mat-checkbox>
-                </div>
-                <!--Service description-->
-                    <div class="col-12">
-                        <mat-form-field appearance="outline" class="w-100">
-                            <mat-label>Service Description</mat-label>
-                            <textarea matInput formControlName="description" rows="3" placeholder="Enter service description"></textarea>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-               
-                <!-- Buttons -->
-                <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" mat-raised-button color="primary">Save</button>
-                    <button type="button" mat-stroked-button class="ms-2" (click)="resetData()">Reset</button>
-                </div>
-            </form>
-    
-        <!--Table-->
-        <div class="card shadow-sm mt-5">
-            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Salon Services</h4>
-                <!--Refresh button-->
-                <button mat-icon-button color="light" (click)="refreshData()" matTooltip="Refresh">
-                    <mat-icon>refresh</mat-icon>
-                </button>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <!--Table filter-->
-                                <mat-label>Filter</mat-label>
-                                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Service Name" />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource" matSort class="table table-hover align-middle">
-
-                            <!--Columns-->
-                            <ng-container matColumnDef="serviceName">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Name</th>
-                                <td mat-cell *matCellDef="let element">{{ element.serviceName }}</td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="duration">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Duration</th>
-                                <td mat-cell *matCellDef="let element">{{ element.duration }}</td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="price">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Price</th>
-                                <td mat-cell *matCellDef="let element">{{ element.price }}</td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="commission">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission (%)</th>
-                                <td mat-cell *matCellDef="let element">{{ element.commission }}</td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="colorCode">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Color</th>
-                                <td mat-cell *matCellDef="let element">
-                                    <div class="color-swatch" [style.background]="element.colorCode"></div>
-                                    <span class="ms-2">{{ element.colorCode }}</span>
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="isActive">
-                                <th mat-header-cell *matHeaderCellDef>Service Status</th>
-                                <td mat-cell *matCellDef="let element">
-                                    <span class="status-badge" [ngClass]="{'status-active': element.is_active, 'status-inactive': !element.is_active}">
-                                        {{ element.is_active ? 'Active' : 'Inactive' }}
-                                    </span>
-                                    <mat-checkbox class="ms-3" [checked]="element.is_active" (change)="toggleActive(element, $event.checked)"></mat-checkbox>
-                                </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="description">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-                                <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef> Actions </th>
-                                <td mat-cell *matCellDef="let element">
-
-                                    <!--Edit Service Button-->
-                                    <button mat-icon-button color="primary" (click)="editService(element)" matTooltip="Edit">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-                                    <!--Delete Service Button-->
-                                    <button mat-icon-button color="warn" (click)="deleteService(element)" matTooltip="Delete">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-                            <!--Rows-->
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                            [ngClass]="{
-                                'table-primary': selectedRow?.id === row.id,
-                                'table-secondary': selectedRow?.id !== row.id,
-                                'table-warning': lastEditedRow?.id === row.id
-                            }">
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-                </div>
+<div class="container">
+    <mat-card class="service-card">
+        <div class="header-section">
+            <h2>Salon Services Information</h2>
+            <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon class="material-icons">refresh</mat-icon>
+            </button>
         </div>
-      </div>
-   </div>
-</div>
 
+        <div class="content-section">
+            <div class="actions-bar">
+                <button mat-raised-button color="primary" (click)="openAddServiceModal()">
+                    <mat-icon class="material-icons">add</mat-icon> Add New Service
+                </button>
+
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (input)="applyFilter($event)" placeholder="Search services" #input />
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- Service Name -->
+                    <ng-container matColumnDef="serviceName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Name </th>
+                        <td mat-cell *matCellDef="let element">{{ element.serviceName }}</td>
+                    </ng-container>
+
+                    <!-- Category -->
+                    <ng-container matColumnDef="serviceCategory">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+                        <td mat-cell *matCellDef="let element">{{ element.serviceCategory?.categoryName || 'N/A' }}</td>
+                    </ng-container>
+
+                    <!-- Duration -->
+                    <ng-container matColumnDef="duration">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Duration (min) </th>
+                        <td mat-cell *matCellDef="let element">{{ element.duration }}</td>
+                    </ng-container>
+
+                    <!-- Price -->
+                    <ng-container matColumnDef="price">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+                        <td mat-cell *matCellDef="let element">{{ element.price | currency:'LKR' }}</td>
+                    </ng-container>
+
+                    <!-- Commission -->
+                    <ng-container matColumnDef="commission">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Commission (%) </th>
+                        <td mat-cell *matCellDef="let element">{{ element.commission }}%</td>
+                    </ng-container>
+
+                    <!-- Color -->
+                    <ng-container matColumnDef="colorCode">
+                        <th mat-header-cell *matHeaderCellDef> Color </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="color-preview-row">
+                                <div class="color-swatch" [style.background]="element.colorCode"></div>
+                                <span class="color-label">{{ element.colorCode }}</span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Description -->
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                        <td mat-cell *matCellDef="let element" class="description-cell">{{ element.description }}</td>
+                    </ng-container>
+
+                    <!-- Status -->
+                    <ng-container matColumnDef="isActive">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="status-container">
+                                <span class="status-badge" [ngClass]="element.is_active ? 'active' : 'inactive'">
+                                    {{ element.is_active ? 'Active' : 'Inactive' }}
+                                </span>
+                                <mat-checkbox [checked]="element.is_active"
+                                    (change)="toggleActive(element, $event.checked)" color="primary"></mat-checkbox>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button color="primary" (click)="editService(element)" matTooltip="Edit">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteService(element)" matTooltip="Delete">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+                        'selected-row': selectedRow?.id === row.id,
+                        'added-row': lastAddedRow?.id === row.id,
+                        'edited-row': lastEditedRow?.id === row.id
+                    }">
+                    </tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="9" style="padding: 16px; text-align: center;">No data matching the
+                            filter "{{input.value}}"</td>
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>

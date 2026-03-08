@@ -30,13 +30,6 @@ const navigationModel = [
                 routerLink: ['/pages/client-reg'],
             },
             {
-                label: 'Client Notes',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-book', // notes/journal
-                routerLink: ['/pages/client-notes'],
-            },
-            {
                 label: 'Employee Registration',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
@@ -57,6 +50,8 @@ const navigationModel = [
                 icon: 'pi pi-clock', // attendance/time
                 routerLink: ['/pages/employee-attendance'],
             },
+
+
             {
                 label: 'Employee Schedule',
                 isVisible: false,
@@ -71,20 +66,20 @@ const navigationModel = [
                 icon: 'pi pi-moon', // attendance/time
                 routerLink: ['/pages/employee-leave'],
             },
-            {
-                label: 'Stylist Task Management',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-briefcase', // tasks/work
-                routerLink: ['/pages/stylist-task-management'],
-            },
-            {
+            //{
+            //label: 'Stylist Task Management',
+            //isVisible: false,
+            // auth: authenticationEnum.Home_Dashboard,
+            // icon: 'pi pi-briefcase', // tasks/work
+            // routerLink: ['/pages/stylist-task-management'],
+            //},
+            /*{
                 label: 'Inventory',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-box', // inventory/storage
                 routerLink: ['/pages/inventory'],
-            }
+            }*/
         ],
     },
 
@@ -112,7 +107,7 @@ const navigationModel = [
 
     {
         label: 'Master Data',
-        isVisible: false,
+        isVisible: true,
         auth: authenticationEnum.Home,
         items: [
             {
@@ -131,17 +126,24 @@ const navigationModel = [
             },
             {
                 label: 'Product Categories',
-                isVisible: false,
+                isVisible: true,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-tags', // product categories
                 routerLink: ['/pages/product-category'],
             },
             {
                 label: 'Products',
-                isVisible: false,
+                isVisible: true,
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-shopping-cart', // products
                 routerLink: ['/pages/product'],
+            },
+            {
+                label: 'Inventory',
+                isVisible: true,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-box', // inventory/storage
+                routerLink: ['/pages/inventory'],
             },
             {
                 label: 'Supplier',
@@ -156,13 +158,6 @@ const navigationModel = [
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-shopping-cart',
                 routerLink: ['/pages/purchase-order']
-            },
-            {
-                label: 'Purchase Order Detail',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-shopping-cart',
-                routerLink: ['/pages/purchase-order-detail']
             },
             {
                 label: 'Tax',

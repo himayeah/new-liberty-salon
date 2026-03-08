@@ -11,18 +11,14 @@ public class ProductDto {
     private Long id;
     private String productName;
     private String categoryName;
-    private String brand;
+
     private String productDescription;
-    private String Unit;
+    private String unit;
     private double purchasePrice;
     private double sellingPrice;
     private String barcode;
     private String sku;
     private boolean isTaxable;
     private int reOrderLevel;
-
-    public String getProductName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
 }

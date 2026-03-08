@@ -35,7 +35,7 @@ export class ClientNotesServiceService {
 
   //form data editing
   editData(id: number, form_details: any) {
-    const requestUrl = `${environment.baseUrl}/client-notes-edit/${id}`;
+    const requestUrl = `${environment.baseUrl}/client-notes/${id}`;
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();

@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ClientRegDto {
 
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -22,8 +23,4 @@ public class ClientRegDto {
     private int totalVisits;
     private String lastVisitedDate;
     private double lifetimeValue;
-
-    public String getFirstName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

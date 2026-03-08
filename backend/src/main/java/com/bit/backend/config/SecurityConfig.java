@@ -25,19 +25,18 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtAuthFilter(userAuthProvider), BasicAuthenticationFilter.class)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((request) ->
-                        request.requestMatchers(
-                                "/login",
-                                "/register",
-                                "/employee_reg/**",
-                                "/api/v1/client-reg/**",
-                                "/api/v1/supplier-reg/**",
-                                "/api/v1/purchase-order/**",
-                                "/api/v1/purchase-order-detail/**"
+                .authorizeHttpRequests((request) -> request.requestMatchers(
+                        "/login",
+                        "/register",
+                        "/employee_reg/**",
+                        "/api/v1/client-reg/**",
+                        "/api/v1/supplier-reg/**",
+                        "/api/v1/purchase-order/**",
+                        "/api/v1/purchase-order-detail/**",
+                        "/client-notes/**"
 
-                        ).permitAll()
-                                .anyRequest().authenticated()
-                );
+                ).permitAll()
+                        .anyRequest().authenticated());
 
         return http.build();
     }

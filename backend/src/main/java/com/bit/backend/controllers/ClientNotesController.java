@@ -25,7 +25,7 @@ public class ClientNotesController {
             throws AppException {
         try {
             ClientNotesDto clientNotesDtoResponse = clientNotesServiceI.addClientNote(clientNotesDto);
-            return ResponseEntity.created(URI.create("/client-notes/" + clientNotesDtoResponse.getFirstName()))
+            return ResponseEntity.created(URI.create("/client-notes/" + clientNotesDtoResponse.getId()))
                     .body(clientNotesDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);

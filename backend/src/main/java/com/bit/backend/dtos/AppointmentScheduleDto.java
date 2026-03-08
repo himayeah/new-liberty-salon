@@ -1,16 +1,25 @@
 package com.bit.backend.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppointmentScheduleDto {
 
-    private long id;
+    private Long id;
+    private Long clientId;
+    private Long employeeId;
+    private Long serviceId;
+
     private String clientName;
-    private String stylistName;
+    private String employeeName;
     private String serviceName;
+
     private String appointmentDate;
     private String appointmentStartTime;
     private String appointmentEndTime;
@@ -18,22 +27,11 @@ public class AppointmentScheduleDto {
     private String bookingSource;
     private String notes;
     private String cancellationReason;
+    private String createdDate;
+    private String createdBy;
+    private String cancelledDate;
 
     public String getFirstName() {
-        return "";
-    }
-
-    public AppointmentScheduleDto(long id, String clientName, String stylistName, String serviceName, String appointmentDate, String appointmentStartTime, String appointmentEndTime, String appointmentStatus, String bookingSource, String notes, String cancellationReason) {
-        this.id = id;
-        this.clientName = clientName;
-        this.stylistName = stylistName;
-        this.serviceName = serviceName;
-        this.appointmentDate = appointmentDate;
-        this.appointmentStartTime = appointmentStartTime;
-        this.appointmentEndTime = appointmentEndTime;
-        this.appointmentStatus = appointmentStatus;
-        this.bookingSource = bookingSource;
-        this.notes = notes;
-        this.cancellationReason = cancellationReason;
+        return clientName != null ? clientName : "";
     }
 }

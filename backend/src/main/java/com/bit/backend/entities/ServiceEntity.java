@@ -1,46 +1,46 @@
 package com.bit.backend.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name= "service")
+@Table(name = "service")
 public class ServiceEntity {
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   @Column(name="service_name")
+    @Column(name = "service_name")
     private String serviceName;
 
-    @Column(name="price")
+    @Column(name = "duration")
+    private Integer duration;
+
+    @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name="commission")
+    @Column(name = "commission")
     private BigDecimal commission;
 
-    @Column(name="color_code")
+    @Column(name = "color_code")
     private String colorCode;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="is_Active")
-    private String isActive;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
-    public ServiceEntity(Long id, String serviceName, BigDecimal price, BigDecimal commission, String colorCode, String description, String isActive) {
-        this.id = id;
-        this.serviceName = serviceName;
-        this.price = price;
-        this.commission = commission;
-        this.colorCode = colorCode;
-        this.description = description;
-        this.isActive = isActive;
-    }
-
+    @ManyToOne
+    @JoinColumn(name = "service_category_id")
+    private ServiceCategoryEntity serviceCategory;
 }

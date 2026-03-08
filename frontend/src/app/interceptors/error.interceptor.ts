@@ -19,11 +19,14 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error) => {
+        console.error('HTTP Error:', error);
         if (error?.status === 401) {
           this.httpService.logOut();
           this.router.navigate(['/login']);
         }
-        return throwError(() => error?.error?.message);
+        // Return the error message if available, otherwise return a default message
+        const errorMessage = error?.error?.message || error?.message || 'An error occurred';
+        return throwError(() => new Error(errorMessage));
       })
     );
   }

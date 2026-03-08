@@ -18,6 +18,11 @@ import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { ClientProfileComponent } from './client-profile/client-profile.component';
+import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
+import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
+
+
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -31,10 +36,13 @@ export const PagesRoutes: Routes = [
         { path: 'empty', loadChildren: () => import('./empty/emptydemo.module').then(m => m.EmptyDemoModule) },
         { path: 'timeline', loadChildren: () => import('./timeline/timelinedemo.module').then(m => m.TimelineDemoModule) },
         { path: 'client-reg', component: ClientRegComponent }, // need to include the path here for form demo component
-        { path: 'client-notes', component: ClientNotesComponent },
+        { path: 'client-profile/:id', component: ClientProfileComponent },
         { path: 'employee-reg', component: EmployeeRegComponent },
+        { path: 'employee-profile/:id', component: EmployeeProfileComponent },
+
+        { path: 'client-notes', component: ClientNotesComponent },
         { path: 'appointment-schedule', component: AppointmentScheduleComponent },
-        { path: 'employee-attendance', loadChildren: () => import('./employee-attendance/employee-attendance.module').then(m => m.EmployeeAttendanceModule) },
+        { path: 'employee-attendance', component: EmployeeAttendanceComponent },
         { path: 'stylist-task-management', component: StylistTaskManagementComponent },
         { path: 'inventory', component: InventoryComponent },
         { path: 'service-category', component: ServiceCategoryComponent },
@@ -46,7 +54,7 @@ export const PagesRoutes: Routes = [
         { path: 'tax', component: TaxComponent },
         { path: 'supplier', component: SupplierComponent },
         { path: 'purchase-order', component: PurchaseOrderComponent },
-        { path: 'purchase-order-detail', component: PurchaseOrderDetailComponent },
+        { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'invoice', component: InvoiceComponent },
         { path: '**', redirectTo: '/notfound' },
 

@@ -48,13 +48,6 @@ public class ClientRegEntity {
 
     @Column(name = "lifetime_value")
     private double lifetimeValue;
-
-    public String getFirstName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-     public void setId(long id) {
-    }
 }
 
 

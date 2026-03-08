@@ -12,7 +12,8 @@
                             <mat-label>Client Name</mat-label>
                             <mat-select formControlName="clientName">
                                 <mat-option *ngFor="let client of clients"
-                                    [value]="client.id">{{client.clientName}}</mat-option>
+                                    [value]="client.firstName + ' ' + client.lastName">{{client.firstName}}
+                                    {{client.lastName}}</mat-option>
                             </mat-select>
                             <mat-error *ngIf="isInvalid('clientName','required')">Client Name is required</mat-error>
                         </mat-form-field>
@@ -21,11 +22,11 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Stylist Name</mat-label>
-                            <mat-select formControlName="staffName">
+                            <mat-select formControlName="stylistName">
                                 <mat-option *ngFor="let stylist of stylists"
-                                    [value]="stylist.id">{{stylist.employeeName}}</mat-option>
+                                    [value]="stylist.employeeName">{{stylist.employeeName}}</mat-option>
                             </mat-select>
-                            <mat-error *ngIf="isInvalid('staffName','required')">Stylist Name is required</mat-error>
+                            <mat-error *ngIf="isInvalid('stylistName','required')">Stylist Name is required</mat-error>
                         </mat-form-field>
                     </div>
                     <!--Note Type Field-->
@@ -52,12 +53,12 @@
                     <!--Created Date Field-->
                     <div class="col-md-6">
                         <mat-form-field appearance="outline" class="w-100">
-                            <mat-label>Created Date</mat-label>
-                            <input matInput [matDatepicker]="createdDatePicker" formControlName="createdDate"
-                                placeholder="Created Date">
-                            <mat-datepicker-toggle matSuffix [for]="createdDatePicker"></mat-datepicker-toggle>
-                            <mat-datepicker #createdDatePicker></mat-datepicker>
-                            <mat-error *ngIf="isInvalid('createdDate','required')">Created Date is required</mat-error>
+                            <mat-label>Note Date</mat-label>
+                            <input matInput [matDatepicker]="noteDatePicker" formControlName="noteDate"
+                                placeholder="Note Date">
+                            <mat-datepicker-toggle matSuffix [for]="noteDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #noteDatePicker></mat-datepicker>
+                            <mat-error *ngIf="isInvalid('noteDate','required')">Note Date is required</mat-error>
                         </mat-form-field>
                     </div>
                     <!--Buttons-->
@@ -96,9 +97,9 @@
                         <td mat-cell *matCellDef="let element">{{element.clientName}}</td>
                     </ng-container>
                     <!--Staff Name Column-->
-                    <ng-container matColumnDef="staffName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Staff Name</th>
-                        <td mat-cell *matCellDef="let element">{{element.staffName}}</td>
+                    <ng-container matColumnDef="stylistName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stylist Name</th>
+                        <td mat-cell *matCellDef="let element">{{element.stylistName}}</td>
                     </ng-container>
                     <!--Note Type Column-->
                     <ng-container matColumnDef="noteType">
@@ -111,9 +112,9 @@
                         <td mat-cell *matCellDef="let element">{{element.noteContent}}</td>
                     </ng-container>
                     <!--Created Date Column-->
-                    <ng-container matColumnDef="createdDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Date</th>
-                        <td mat-cell *matCellDef="let element">{{element.createdDate | date}}</td>
+                    <ng-container matColumnDef="noteDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Note Date</th>
+                        <td mat-cell *matCellDef="let element">{{element.noteDate | date}}</td>
                     </ng-container>
                     <!--Actions Column-->
                     <ng-container matColumnDef="actions">

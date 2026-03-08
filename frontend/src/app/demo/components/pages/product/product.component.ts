@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { ProductServiceService } from 'src/app/services/product/product-service.service';
-import { ProductCategoryServiceService } from 'src/app/services/product-category/product-category-service.service';
+import { ProductFormComponent } from './product-form/product-form.component';
 
 @Component({
   selector: 'app-product',
@@ -16,63 +16,20 @@ export class ProductComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  productManagementForm: FormGroup;
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['productName', 'categoryName', 'brand', 'productDescription', 'unit', 'purchasePrice', 'sellingPrice', 'barcode', 'sku', 'isTaxable', 'reOrderLevel', 'actions'];
-
-  categories: any[] = [];
-
-  isButtonDisabled = false;
-  submitted = false;
-  saveButtonLabel = 'Save';
-  mode: 'add' | 'edit' = 'add';
-  selectedData: any = null;
+  displayedColumns: string[] = ['productName', 'categoryName', 'unit', 'purchasePrice', 'sellingPrice', 'barcode', 'sku', 'productDescription', 'reOrderLevel', 'isTaxable', 'actions'];
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
 
   constructor(
-    private fb: FormBuilder,
     private productService: ProductServiceService,
     private messageService: MessageServiceService,
-    private productCategoryService: ProductCategoryServiceService
-  ) {
-    this.productManagementForm = this.fb.group({
-      productName: ['', Validators.required],
-      categoryName: ['', Validators.required],
-      brand: [''],
-      productDescription: [''],
-      unit: ['', Validators.required],
-      purchasePrice: [''],
-      sellingPrice: [''],
-      barcode: [''],
-      sku: [''],
-      isTaxable: [false],
-      reOrderLevel: [''],
-    });
-  }
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.populateData();
-    this.fetchCategories();
-  }
-
-  fetchCategories() {
-    this.productCategoryService.getData().subscribe({
-      next: (response: any[]) => {
-        this.categories = response || [];
-      },
-      error: (error) => {
-        this.messageService.showError('Failed to fetch categories.');
-      }
-    });
-  }
-
-  get f() { return this.productManagementForm.controls; }
-
-  isInvalid(controlName: string, errorType: string): boolean {
-    const control = this.f[controlName];
-    return (control.touched || this.submitted) && control.hasError(errorType);
   }
 
   populateData(): void {
@@ -89,53 +46,40 @@ export class ProductComponent implements OnInit {
 
   }
 
-  onSubmit(): void {
-    this.submitted = true;
+  openAddProductModal(): void {
+    const dialogRef = this.dialog.open(ProductFormComponent, {
+      width: '700px',
+      data: { mode: 'add' }
+    });
 
-    if (this.productManagementForm.invalid) return;
-
-    this.isButtonDisabled = true;
-    const formValue = this.productManagementForm.value;
-
-    if (this.mode === 'add') {
-      this.productService.serviceCall(formValue).subscribe({
-        next: (response) => {
-          this.dataSource.data = [response, ...this.dataSource.data];
-          this.messageService.showSuccess('Saved Successfully!');
-          this.highlightRow('add', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    } else {
-      this.productService.editData(this.selectedData?.id, formValue).subscribe({
-        next: (response) => {
-          const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
-          if (index > -1) this.dataSource.data[index] = response;
-          this.messageService.showSuccess('Updated Successfully!');
-          this.highlightRow('edit', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('add', result);
+      }
+    });
   }
 
   editProduct(data: any): void {
-    this.productManagementForm.patchValue({
-      ...data,
+    const dialogRef = this.dialog.open(ProductFormComponent, {
+      width: '700px',
+      data: { mode: 'edit', product: data }
     });
-    this.selectedData = data;
-    this.saveButtonLabel = 'Update';
-    this.mode = 'edit';
-    this.isButtonDisabled = false;
+
     this.selectedRow = data;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('edit', result);
+      }
+      this.selectedRow = null;
+    });
   }
 
   deleteProduct(data: any): void {
     this.productService.deleteData(data.id).subscribe({
       next: () => {
-        this.dataSource.data = this.dataSource.data.filter(item => item.id !== data.id);
         this.messageService.showSuccess('Deleted Successfully!');
         this.populateData();
       },
@@ -159,19 +103,10 @@ export class ProductComponent implements OnInit {
     if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
   }
 
-  resetData(): void {
-    this.productManagementForm.reset();
-    this.submitted = false;
-    this.saveButtonLabel = 'Save';
-    this.mode = 'add';
-    this.selectedData = null;
-    this.isButtonDisabled = false;
-  }
 
   //helpers
   private handleError(error: any): void {
     this.messageService.showError('Action failed:' + error.message);
-    this.isButtonDisabled = false;
   }
 
   private highlightRow(action: 'add' | 'edit', rowData: any): void {
@@ -182,11 +117,5 @@ export class ProductComponent implements OnInit {
       this.lastEditedRow = rowData;
       setTimeout(() => this.lastEditedRow = null, 3000);
     }
-  }
-
-  private resetFormState(): void {
-    this.resetData();
-    this.isButtonDisabled = false;
-    this.populateData();
   }
 }

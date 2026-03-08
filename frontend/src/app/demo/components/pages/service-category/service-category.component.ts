@@ -6,13 +6,15 @@ import { MessageServiceService } from 'src/app/services/message-service/message-
 import { ServiceCategoryService } from 'src/app/services/service-category/service-category.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { filter } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ServiceCategoryFormComponent } from './service-category-form/service-category-form.component';
 
 @Component({
   selector: 'app-service-category',
   templateUrl: './service-category.component.html',
   styleUrls: ['./service-category.component.scss']
 })
-export class ServiceCategoryComponent implements OnInit{
+export class ServiceCategoryComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -20,30 +22,24 @@ export class ServiceCategoryComponent implements OnInit{
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = ['displayOrder', 'categoryName', 'description', 'actions'];
 
-    isButtonDisabled = false;
-    submitted = false;
-    saveButtonLabel = 'Save';
-    mode: 'add' | 'edit' = 'add';
-    selectedData: any = null;
-    selectedRow: any = null;
-    lastAddedRow: any = null;
-    lastEditedRow: any = null;
+  isButtonDisabled = false;
+  submitted = false;
+  saveButtonLabel = 'Save';
+  mode: 'add' | 'edit' = 'add';
+  selectedData: any = null;
+  selectedRow: any = null;
+  lastAddedRow: any = null;
+  lastEditedRow: any = null;
 
-    constructor(
-        private fb: FormBuilder,
-        private serviceCategoryService: ServiceCategoryService,
-        private messageService: MessageServiceService
-    ){
-      this.serviceCategoryForm = this.fb.group({
-        categoryName: ['', Validators.required],
-        displayOrder: [0, Validators.min(0)],
-        description: [''],
-      });
-    }
+  constructor(
+    private serviceCategoryService: ServiceCategoryService,
+    private messageService: MessageServiceService,
+    private dialog: MatDialog
+  ) { }
 
   //ngOnInit's populateData() method runs when the page first loads
   ngOnInit(): void {
-    this.populateData(); 
+    this.populateData();
   }
 
   //convenience getter
@@ -68,49 +64,37 @@ export class ServiceCategoryComponent implements OnInit{
     })
   }
 
-  //onSubmit() -> when the form is submitted through "Save" button in the UI (POST request)
-  onSubmit(): void {
-    this.submitted = true;
-    if (this.serviceCategoryForm.invalid) {
-      return;
-    }
+  //Add New Category pop-up
+  openAddCategoryModal(): void {
+    const dialogRef = this.dialog.open(ServiceCategoryFormComponent, {
+      width: '600px',
+      data: { mode: 'add' }
+    });
 
-    this.isButtonDisabled = true;
-    const formValue = this.serviceCategoryForm.value;
-
-    if (this.mode === 'add') {
-      this.serviceCategoryService.serviceCall(formValue).subscribe ({
-        next: (response) => {
-          this.dataSource.data = [response, ...this.dataSource.data];
-          this.messageService.showSuccess('Saved Successfully!');
-          this.highlightRow('add', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    } else {
-      //editData()
-      this.serviceCategoryService.editData(this.selectedData?.id, formValue).subscribe ({
-        next: (response) => {
-          const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
-          if (index > -1) this.dataSource.data[index] = response;
-          this.messageService.showSuccess('Updated Successfully!');
-          this.highlightRow('edit', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('add', result);
+      }
+    });
   }
 
   //html Table edit method
   editData(data: any): void {
-    this.serviceCategoryForm.patchValue(data);
-    this.selectedData = data;
-    this.saveButtonLabel = 'Update';
-    this.mode = 'edit';
-    this.isButtonDisabled = false;
+    const dialogRef = this.dialog.open(ServiceCategoryFormComponent, {
+      width: '600px',
+      data: { mode: 'edit', category: data }
+    });
+
     this.selectedRow = data;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('edit', result);
+      }
+      this.selectedRow = null;
+    });
   }
 
   //deleteData() method
@@ -170,9 +154,9 @@ export class ServiceCategoryComponent implements OnInit{
   }
 
 }
-      
-    
 
-    
-  
+
+
+
+
 

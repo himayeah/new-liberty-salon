@@ -1,14 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import {FormBuilder,FormGroup,FormControl,AbstractControl, Validators} from '@angular/forms';
-
-import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { MatSort } from '@angular/material/sort';
-import { ServiceService } from 'src/app/services/service/service.service';
-
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
+import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { EmployeeFormComponent } from './employee-form/employee-form.component';
 
 @Component({
     selector: 'app-employee-reg',
@@ -20,7 +19,6 @@ export class EmployeeRegComponent implements OnInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
-    employeeRegForm: FormGroup;
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [
         'employeeName',
@@ -34,64 +32,24 @@ export class EmployeeRegComponent implements OnInit {
         'actions'
     ];
 
-    services: any[] = [];
-
     // state
-    isButtonDisabled = false;
-    submitted = false;
-    saveButtonLabel = 'Save';
-    mode: 'add' | 'edit' = 'add';
-    selectedData: any = null;
     selectedRow: any = null;
     lastAddedRow: any = null;
     lastEditedRow: any = null;
 
     constructor(
-        private fb: FormBuilder,
         private employeeRegService: EmployeeRegServicesService,
         private messageService: MessageServiceService,
-        private serviceService: ServiceService
-    ) {
-        this.employeeRegForm = this.fb.group({
-            employeeName: new FormControl('', [Validators.required]),
-            dateJoined: new FormControl('', [Validators.required]),
-            designation: new FormControl('', [Validators.required]),
-            specializations: new FormControl({ value: '', disabled: true }), // Initially disabled
-            hourlyRate: new FormControl('', [Validators.required, Validators.min(0.01)]),
-            commissionRate: new FormControl('', [Validators.required, Validators.min(0), Validators.max(100)]),
-            weeklyOffDays: new FormControl('', [Validators.required]),
-            maxAppointmentsPerDay: new FormControl('', [Validators.required]),
-        });
-
-        // Listen for changes in designation to enable/disable specializations
-        this.employeeRegForm.get('designation')?.valueChanges.subscribe(designation => {
-            const specializationsControl = this.employeeRegForm.get('specializations');
-            if (designation === 'Bridal stylist' || designation === 'Groom stylist') {
-                specializationsControl?.enable();
-                specializationsControl?.setValidators(Validators.required);
-            } else {
-                specializationsControl?.disable();
-                specializationsControl?.clearValidators();
-                specializationsControl?.setValue('');
-            }
-            specializationsControl?.updateValueAndValidity();
-        });
-    }
+        private dialog: MatDialog,
+        private router: Router
+    ) { }
 
     ngOnInit(): void {
         this.populateData();
-        this.fetchServices();
     }
 
-    fetchServices(): void {
-        this.serviceService.getData().subscribe({
-            next: (response: any) => {
-                this.services = response;
-            },
-            error: (error) => {
-                this.messageService.showError('Error fetching services: ' + error.message);
-            }
-        });
+    viewData(data: any): void {
+        this.router.navigate(['/pages/employee-profile', data.id]);
     }
 
     populateData(): void {
@@ -107,57 +65,49 @@ export class EmployeeRegComponent implements OnInit {
         });
     }
 
-    onSubmit(): void {
-        this.submitted = true;
-        if (this.employeeRegForm.invalid) return;
+    openAddEmployeeModal(): void {
+        const dialogRef = this.dialog.open(EmployeeFormComponent, {
+            width: '600px',
+            data: { mode: 'add' }
+        });
 
-        this.isButtonDisabled = true;
-        const formValue = this.employeeRegForm.value;
-
-        if (this.mode === 'add') {
-            this.employeeRegService.serviceCall(formValue).subscribe({
-                next: (response) => {
-                    this.dataSource.data = [response, ...this.dataSource.data];
-                    this.messageService.showSuccess('Saved Successfully!');
-                    this.highlightRow('add', response);
-                    this.resetFormState();
-                },
-                error: (error) => this.handleError(error)
-            });
-        } else {
-            this.employeeRegService.editData(this.selectedData?.id, formValue).subscribe({
-                next: (response) => {
-                    const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
-                    if (index > -1) this.dataSource.data[index] = response;
-                    this.messageService.showSuccess('Updated Successfully!');
-                    this.highlightRow('edit', response);
-                    this.resetFormState();
-                },
-                error: (error) => this.handleError(error)
-            });
-        }
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.dataSource.data = [result, ...this.dataSource.data];
+                this.highlightRow('add', result);
+            }
+        });
     }
 
     editData(data: any): void {
-        this.employeeRegForm.patchValue({
-            ...data,
-            specializations: data.specializations ? data.specializations.map((s: any) => s.id) : []
-        });
-        this.selectedData = data;
-        this.saveButtonLabel = 'Update';
-        this.mode = 'edit';
-        this.isButtonDisabled = false;
         this.selectedRow = data;
+        const dialogRef = this.dialog.open(EmployeeFormComponent, {
+            width: '600px',
+            data: { mode: 'edit', employee: data }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                const index = this.dataSource.data.findIndex(item => item.id === data.id);
+                if (index > -1) {
+                    this.dataSource.data[index] = result;
+                    this.dataSource.data = [...this.dataSource.data]; // Trigger change detection
+                    this.highlightRow('edit', result);
+                }
+            }
+        });
     }
 
     deleteData(data: any): void {
-        this.employeeRegService.deleteData(data.id).subscribe({
-            next: () => {
-                this.messageService.showSuccess('Deleted Successfully!');
-                this.populateData();
-            },
-            error: (error) => this.messageService.showError('Delete failed: ' + error.message)
-        });
+        if (confirm(`Are you sure you want to delete ${data.employeeName}?`)) {
+            this.employeeRegService.deleteData(data.id).subscribe({
+                next: () => {
+                    this.messageService.showSuccess('Deleted Successfully!');
+                    this.populateData();
+                },
+                error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+            });
+        }
     }
 
     applyFilter(event: Event): void {
@@ -173,23 +123,7 @@ export class EmployeeRegComponent implements OnInit {
         if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
     }
 
-    resetData(): void {
-        this.employeeRegForm.reset();
-        this.employeeRegForm.enable();
-        this.submitted = false;
-        this.saveButtonLabel = 'Save';
-        this.mode = 'add';
-        this.selectedRow = null;
-        this.isButtonDisabled = false;
-        this.employeeRegForm.get('specializations')?.disable(); // Re-disable after reset
-    }
-
     // helpers
-    private handleError(error: any): void {
-        this.messageService.showError('Action failed: ' + error.message);
-        this.isButtonDisabled = false;
-    }
-
     private highlightRow(type: 'add' | 'edit', response: any): void {
         if (type === 'add') this.lastAddedRow = response;
         else this.lastEditedRow = response;
@@ -197,11 +131,5 @@ export class EmployeeRegComponent implements OnInit {
             this.lastAddedRow = null;
             this.lastEditedRow = null;
         }, 3000);
-    }
-
-    private resetFormState(): void {
-        this.resetData();
-        this.isButtonDisabled = false;
-        this.populateData();
     }
 }

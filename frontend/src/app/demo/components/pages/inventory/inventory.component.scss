@@ -2,99 +2,88 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
-    padding: 20px;
+    padding: 24px;
     box-sizing: border-box;
+    background-color: #f8f9fa;
+    min-height: 100%;
 }
 
-.form-section,
-.table-section {
-    // width: 100%;
-    // padding: 20px;
-    // box-sizing: border-box;
-    background: white;
+.inventory-card {
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    background-color: white;
 }
 
-.form-section {
-    // border-bottom: 1px solid #ccc;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-}
-
-.full-width {
-    width: 100%;
-}
-
-.form-button {
-    margin-right: 1%;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-mat-form-field {
-    width: 100%;
-}
-
-.button-group {
+.header-section {
     display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #6c757d;
+    color: white;
 
-    button {
-        min-width: 120px;
-        padding: 0.5rem 1.5rem;
+    h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    .refresh-btn {
+        color: white;
     }
 }
 
-.refresh-filter-section {
+.content-section {
+    padding: 20px 24px 8px;
+}
+
+.actions-bar {
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .search-field {
+        width: 300px;
+    }
 }
 
-.refresh-button {
-    margin: 1%;
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 8px;
 
+    table {
+        width: 100%;
+    }
 }
 
-.filter {
-    
-    width: 100%;
+// Row highlight states
+.selected-row {
+    background-color: #e3f2fd !important;
 }
 
-.highlight-row {
-  background-color: rgb(249, 249, 157);
+.added-row {
+    background-color: #e8f5e9 !important;
 }
 
-.last-added-row {
-  background-color: rgb(117, 232, 140);
+.edited-row {
+    background-color: #fff9c4 !important;
 }
 
-.last-edited-row{
-    background-color: rgb(117, 232, 140);
-}
-
-// Responsive Design
+// Responsive
 @media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
+    .container {
+        padding: 12px;
+    }
 
-  .form-section {
-    padding: 1rem;
-  }
+    .actions-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
 
-  .item-container {
-    grid-template-columns: 1fr;
-  }
+        .search-field {
+            width: 100%;
+        }
+    }
 }
