@@ -59,6 +59,7 @@ import { ProductFormComponent } from './product/product-form/product-form.compon
 import { SupplierFormComponent } from './supplier/supplier-form/supplier-form.component';
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
 import { PurchaseOrderFormComponent } from './purchase-order/purchase-order-form/purchase-order-form.component';
+import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { PurchaseOrderFormComponent } from './purchase-order/purchase-order-form
     ProductFormComponent,
     SupplierFormComponent,
     PurchaseOrderDetailFormComponent,
-    PurchaseOrderFormComponent
+    PurchaseOrderFormComponent,
+    GrnFormComponent
   ],
 
 

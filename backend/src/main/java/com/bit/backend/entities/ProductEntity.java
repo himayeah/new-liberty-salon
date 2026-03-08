@@ -25,9 +25,6 @@ public class ProductEntity {
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "brand")
-    private String brand;
-
     @Column(name = "product_description")
     private String productDescription;
 

@@ -17,7 +17,7 @@ export class ProductComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['productName', 'categoryName', 'brand', 'unit', 'purchasePrice', 'sellingPrice', 'barcode', 'sku', 'productDescription', 'reOrderLevel', 'isTaxable', 'actions'];
+  displayedColumns: string[] = ['productName', 'categoryName', 'unit', 'purchasePrice', 'sellingPrice', 'barcode', 'sku', 'productDescription', 'reOrderLevel', 'isTaxable', 'actions'];
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
