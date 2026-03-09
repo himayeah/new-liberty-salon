@@ -7,9 +7,6 @@ import { environment } from 'src/app/environments/environment';
     providedIn: 'root',
 })
 export class InventoryServiceService {
-    deleteclient(client: any) {
-        throw new Error('Method not implemented.');
-    }
     constructor(private http: HttpClient, private httpService: HttpService) { }
 
     private getHeaders() {
