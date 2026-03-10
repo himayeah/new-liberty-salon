@@ -19,8 +19,6 @@ export class InventoryComponent implements OnInit {
 
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [
-        'id',
-        'productId',
         'productName',
         'currentStock',
         'minimumStock',

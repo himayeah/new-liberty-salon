@@ -177,6 +177,21 @@ const navigationModel = [
     },
 
     {
+        label: 'Reports',
+        isVisible: true,
+        auth: authenticationEnum.Home,
+        items: [
+            {
+                label: 'Client Registration',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-user-plus', // client registration
+                routerLink: ['/pages/report-client-reg'],
+            },
+        ],
+    },
+
+    {
         label: 'UI Components',
         isVisible: true,
         items: [

@@ -31,7 +31,4 @@ public class AppointmentScheduleDto {
     private String createdBy;
     private String cancelledDate;
 
-    public String getFirstName() {
-        return clientName != null ? clientName : "";
-    }
 }

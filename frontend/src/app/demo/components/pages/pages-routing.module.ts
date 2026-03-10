@@ -21,6 +21,7 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { ClientProfileComponent } from './client-profile/client-profile.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
+import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 
 
 
@@ -56,6 +57,7 @@ export const PagesRoutes: Routes = [
         { path: 'purchase-order', component: PurchaseOrderComponent },
         { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'invoice', component: InvoiceComponent },
+        { path: 'report-client-reg', component: ReportClientRegComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],

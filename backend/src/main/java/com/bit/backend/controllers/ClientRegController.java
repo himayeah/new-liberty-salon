@@ -1,8 +1,10 @@
 package com.bit.backend.controllers;
 
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ClientRegReportDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.ClientRegServiceI;
+import com.bit.backend.services.ReportClientRegService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,11 @@ import java.util.List;
 public class ClientRegController {
 
     private final ClientRegServiceI clientRegServiceI;
+    private final ReportClientRegService reportClientRegService;
 
-    public ClientRegController(ClientRegServiceI clientRegServiceI) {
+    public ClientRegController(ClientRegServiceI clientRegServiceI, ReportClientRegService reportClientRegService) {
         this.clientRegServiceI = clientRegServiceI;
+        this.reportClientRegService = reportClientRegService;
     }
 
     // ResponseEntity<ClientRegDto> : The response body will contain a ClientRegDto
@@ -48,6 +52,16 @@ public class ClientRegController {
         try {
             List<ClientRegDto> clientRegDtoList = clientRegServiceI.getData();
             return ResponseEntity.ok(clientRegDtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/registrations")
+    public ResponseEntity<List<ClientRegReportDto>> getRegistrationsByYear() {
+        try {
+            List<ClientRegReportDto> reportData = reportClientRegService.getRegistrationsByYear();
+            return ResponseEntity.ok(reportData);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -95,3 +109,4 @@ public class ClientRegController {
     }
 
 }
+

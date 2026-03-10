@@ -76,4 +76,19 @@ export class ClientRegServiceService {
 
     return this.http.delete(requestUrl, { headers });
   }
+
+  //get Client Registrations for Report
+  getClientRegistrations() {
+    const requestUrl = `${environment.baseUrl}/api/v1/client-reg/registrations`;
+
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    
+    return this.http.get(requestUrl, { headers });
+  }
+
+
 }
