@@ -1,7 +1,6 @@
 package com.bit.backend.controllers;
 
 import com.bit.backend.dtos.ClientRegDto;
-import com.bit.backend.dtos.ClientRegReportDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.ClientRegServiceI;
 import com.bit.backend.services.ReportClientRegService;
@@ -57,10 +56,11 @@ public class ClientRegController {
         }
     }
 
+    // GET CLIENT REGISTRATIONS FOR THE REPORT
     @GetMapping("/registrations")
-    public ResponseEntity<List<ClientRegReportDto>> getRegistrationsByYear() {
+    public ResponseEntity<List<ClientRegDto>> getRegistrationsByYear() {
         try {
-            List<ClientRegReportDto> reportData = reportClientRegService.getRegistrationsByYear();
+            List<ClientRegDto> reportData = reportClientRegService.getRegistrationsByYear();
             return ResponseEntity.ok(reportData);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -109,4 +109,3 @@ public class ClientRegController {
     }
 
 }
-

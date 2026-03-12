@@ -24,4 +24,8 @@ public class ClientRegDto {
     private String lastVisitedDate;
     private double lifetimeValue;
 
+    // Fields for Reports
+    private Integer registrationYear;
+    private Long totalRegistrations;
+
 }
