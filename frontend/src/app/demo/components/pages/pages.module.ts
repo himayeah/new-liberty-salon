@@ -37,6 +37,7 @@ import { ClientNotesComponent } from './client-notes/client-notes.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductComponent } from './product/product.component';
 import { TaxComponent } from './tax/tax.component';
+import { TaxFormComponent } from './tax/tax-form/tax-form.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
@@ -78,6 +79,7 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     ProductCategoryComponent,
     ProductComponent,
     TaxComponent,
+    TaxFormComponent,
     SupplierComponent,
     PurchaseOrderComponent,
     PurchaseOrderDetailComponent,
