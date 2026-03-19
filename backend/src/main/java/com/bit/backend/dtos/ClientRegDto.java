@@ -27,9 +27,4 @@ public class ClientRegDto {
     // Fields for Reports
     private Integer registrationYear;
     private Long totalRegistrations;
-
-    public String getFirstName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

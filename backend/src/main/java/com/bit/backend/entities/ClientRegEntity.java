@@ -62,12 +62,4 @@ public class ClientRegEntity {
         }
     }
 
-    public void setId(long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public String getFirstName() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }
