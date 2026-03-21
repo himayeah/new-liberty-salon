@@ -12,4 +12,6 @@ public interface AppointmentScheduleServiceI {
     AppointmentScheduleDto deleteAppointment(long id);
 
     List<AppointmentScheduleDto> getAppointments();
+
+    long countAppointmentsLast30Days();
 }

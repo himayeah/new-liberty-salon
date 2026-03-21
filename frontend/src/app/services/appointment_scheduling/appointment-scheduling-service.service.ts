@@ -64,4 +64,15 @@ export class AppointmentSchedulingServiceService {
     return this.http.put(requestUrl, form_details, { headers });
     }
 
+  getAppointmentCountLast30Days(): Observable<number> {
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/count-last-30-days`;
+
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get<number>(requestUrl, { headers });
+  }
+
 }

@@ -4,9 +4,11 @@ import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     items!: MenuItem[];
@@ -19,9 +21,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription!: Subscription;
 
+    appointmentCountLast30Days: number = 0;
+
     constructor(
         private productService: ProductService,
-        public layoutService: LayoutService
+        public layoutService: LayoutService,
+        private appointmentService: AppointmentSchedulingServiceService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -40,6 +45,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },
             { label: 'Remove', icon: 'pi pi-fw pi-minus' },
         ];
+
+        this.loadAppointmentCount();
+    }
+
+    loadAppointmentCount() {
+        this.appointmentService.getAppointmentCountLast30Days().subscribe({
+            next: (count) => {
+                this.appointmentCountLast30Days = count;
+            },
+            error: (err) => {
+                console.error('Failed to load appointment count', err);
+            },
+        });
     }
 
     initChart() {

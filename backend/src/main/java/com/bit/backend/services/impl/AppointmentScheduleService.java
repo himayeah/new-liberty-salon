@@ -158,4 +158,11 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
         return "system";
     }
+
+    @Override
+    public long countAppointmentsLast30Days() {
+        String sinceDate = LocalDateTime.now().minusDays(30)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return appointmentScheduleRepository.countAppointmentsAfter(sinceDate);
+    }
 }

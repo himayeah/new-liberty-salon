@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -60,6 +59,16 @@ public class AppointmentScheduleController {
         try {
             AppointmentScheduleDto appointmentScheduleDto = appointmentScheduleServiceI.deleteAppointment(id);
             return ResponseEntity.ok(appointmentScheduleDto);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/appointment-schedule-form/count-last-30-days")
+    public ResponseEntity<Long> countAppointmentsLast30Days() {
+        try {
+            long count = appointmentScheduleServiceI.countAppointmentsLast30Days();
+            return ResponseEntity.ok(count);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
