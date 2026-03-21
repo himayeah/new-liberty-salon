@@ -86,9 +86,20 @@ export class ClientRegServiceService {
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
-    
+
     return this.http.get(requestUrl, { headers });
   }
 
+  // Dashboard card (New Clients within last 30 days)
+  getNewClientRegistrationCountLast30Days() {
+    const requestUrl = `${environment.baseUrl}/api/v1/client-reg/count-last-30-days`;
+
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get<number>(requestUrl, { headers });
+  }
 
 }

@@ -5,6 +5,7 @@ import { ProductService } from '../../service/product.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
+import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -23,10 +24,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     appointmentCountLast30Days: number = 0;
 
+    newClientCountLast30Days: number = 0;
+
     constructor(
         private productService: ProductService,
         public layoutService: LayoutService,
-        private appointmentService: AppointmentSchedulingServiceService
+        private appointmentService: AppointmentSchedulingServiceService,
+        private clientRegService: ClientRegServiceService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -47,15 +51,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
         ];
 
         this.loadAppointmentCount();
+        this.loadNewClientCount();
     }
 
+    //Dashboard card (Get Appointments in Last 30 Days)
     loadAppointmentCount() {
         this.appointmentService.getAppointmentCountLast30Days().subscribe({
             next: (count) => {
                 this.appointmentCountLast30Days = count;
             },
-            error: (err) => {
-                console.error('Failed to load appointment count', err);
+            error: (error) => {
+                console.error('Failed to load appointment count', error);
+            },
+        });
+    }
+
+    //Dashboard Card (Get New Clients in Last 30 Days)
+    loadNewClientCount() {
+        this.clientRegService.getNewClientRegistrationCountLast30Days().subscribe({
+            next: (count) => {
+                this.newClientCountLast30Days = count;
+            },
+            error: (error) => {
+                console.error('Failed to load Client Registration Count', error);
             },
         });
     }

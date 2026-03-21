@@ -15,8 +15,23 @@
         </div>
     </div>
 
-    <!-- Placeholder wrappers for remaining 4 cards (same width) -->
-    <div class="dashboard-card-wrapper"></div>
+    <!--Card 2: New Clients in Last 30 Days -->
+    <div class="dashboard-card-wrapper">
+        <div class="dashboard-card dashboard-card--new-clients">
+            <div class="dashboard-card__header">
+                <div>
+                    <span class="dashboard-card__label">New Clients</span>
+                    <div class="dashboard-card__value">{{ newClientCountLast30Days }}</div>
+                </div>
+                <div class="dashboard-card__icon dashboard-card__icon--new-clients">
+                    <i class="pi pi-user"></i>
+                </div>
+            </div>
+            <span class="dashboard-card__subtitle">Last 30 days</span>
+        </div>
+    </div>
+
+
     <div class="dashboard-card-wrapper"></div>
     <div class="dashboard-card-wrapper"></div>
     <div class="dashboard-card-wrapper"></div>

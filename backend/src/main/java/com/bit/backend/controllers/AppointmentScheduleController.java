@@ -64,6 +64,7 @@ public class AppointmentScheduleController {
         }
     }
 
+    // Dashboard card (Get last 30 Days appointments)
     @GetMapping("/appointment-schedule-form/count-last-30-days")
     public ResponseEntity<Long> countAppointmentsLast30Days() {
         try {

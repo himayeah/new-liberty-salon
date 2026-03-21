@@ -67,6 +67,17 @@ public class ClientRegController {
         }
     }
 
+    // Dashboard card (New Clients within last 30 days)
+    @GetMapping("/count-last-30-days")
+    public ResponseEntity<Long> countClientRegistrationsLast30Days() {
+        try {
+            long count = clientRegServiceI.countClientRegistrationsLast30Days();
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ClientRegDto> getById(@PathVariable long id) {
         try {

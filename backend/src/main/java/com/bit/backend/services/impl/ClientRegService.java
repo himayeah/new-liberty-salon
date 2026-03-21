@@ -107,4 +107,10 @@ public class ClientRegService implements ClientRegServiceI {
         }
     }
 
+    // Dashboard card (New Clients within last 30 days)
+    @Override
+    public long countClientRegistrationsLast30Days() {
+        return clientRegRepository.countClientRegistrationsLast30Days();
+    }
+
 }
