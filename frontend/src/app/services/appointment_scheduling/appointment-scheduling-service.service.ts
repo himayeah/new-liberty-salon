@@ -77,14 +77,14 @@ export class AppointmentSchedulingServiceService {
   }
 
   //Dashboard card (getMostUsedService)
-  getMostUsedService(): Observable<String> {
+  getMostUsedService(): Observable<string> {
     const requestUrl = `${environment.baseUrl}/appointment-schedule-form/get-most-used-service`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
-      headers = headers.set('Authorization', 'Bearer' + token);
+      headers = headers.set('Authorization', 'Bearer ' + token);
     }
-    return this.http.get<String>(requestUrl, { headers });
+    return this.http.get(requestUrl, { headers, responseType: 'text' }) as Observable<string>;
   }
 
 }
