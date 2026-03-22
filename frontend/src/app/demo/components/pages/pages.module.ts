@@ -18,6 +18,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
+import { TableModule } from 'primeng/table';
+import { ChartModule } from 'primeng/chart';
 
 import { ClientRegComponent } from './client-reg/client-reg.component';
 import { ClientFormComponent } from './client-reg/client-form/client-form.component';
@@ -118,6 +120,8 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     MatProgressSpinnerModule,
     MatDividerModule,
     MatTabsModule,
+    TableModule,
+    ChartModule,
 
   ]
 })
