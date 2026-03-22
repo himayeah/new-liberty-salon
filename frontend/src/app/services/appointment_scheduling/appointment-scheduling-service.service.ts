@@ -15,9 +15,9 @@ export class AppointmentSchedulingServiceService {
   ) { }
 
   serviceCall(form_details: any): Observable<any> {
-  
+
     const requestUrl = `${environment.baseUrl}/appointment-schedule-form`;
-   
+
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
@@ -34,18 +34,18 @@ export class AppointmentSchedulingServiceService {
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token !== null) {
-        headers = headers.set('Authorization', 'Bearer ' + token);
+      headers = headers.set('Authorization', 'Bearer ' + token);
     }
     return this.http.get(requestUrl, { headers });
   }
 
-  deleteData(id: number){
+  deleteData(id: number) {
 
     const requestUrl = `${environment.baseUrl}/appointment-schedule-form/${id}`;
 
-    let headers = new HttpHeaders ();
+    let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
-    if(token !== null){
+    if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
     return this.http.delete(requestUrl, { headers });
@@ -58,12 +58,13 @@ export class AppointmentSchedulingServiceService {
 
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
-    if (token !==null){
+    if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
     return this.http.put(requestUrl, form_details, { headers });
-    }
+  }
 
+  //Dashoard card
   getAppointmentCountLast30Days(): Observable<number> {
     const requestUrl = `${environment.baseUrl}/appointment-schedule-form/count-last-30-days`;
 
@@ -73,6 +74,17 @@ export class AppointmentSchedulingServiceService {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
     return this.http.get<number>(requestUrl, { headers });
+  }
+
+  //Dashboard card (getMostUsedService)
+  getMostUsedService(): Observable<String> {
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/get-most-used-service`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer' + token);
+    }
+    return this.http.get<String>(requestUrl, { headers });
   }
 
 }

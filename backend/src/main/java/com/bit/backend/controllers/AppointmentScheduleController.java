@@ -75,4 +75,14 @@ public class AppointmentScheduleController {
         }
     }
 
+    // Dashboard card (Get most used service name)
+    @GetMapping("/appointment-schedule-form/get-most-used-service")
+    public ResponseEntity<String> getMostUsedService() {
+        try {
+            String result = appointmentScheduleServiceI.getMostUsedService();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

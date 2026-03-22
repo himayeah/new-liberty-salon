@@ -166,4 +166,17 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return appointmentScheduleRepository.countAppointmentsAfter(sinceDate);
     }
+
+    // Dashboard card (get mostly used service name)
+    @Override
+    public String getMostUsedService() {
+        try {
+            String result = appointmentScheduleRepository.getMostUsedService();
+            return result != null ? result : "Female Haircut";
+        } catch (Exception e) {
+            throw new AppException("Failed to load mostly used Service: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 }

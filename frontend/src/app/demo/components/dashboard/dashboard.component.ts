@@ -26,6 +26,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     newClientCountLast30Days: number = 0;
 
+    mostUsedService: string;
+
     constructor(
         private productService: ProductService,
         public layoutService: LayoutService,
