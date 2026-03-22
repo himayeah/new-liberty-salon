@@ -40,4 +40,8 @@ public class EmployeeRegEntity {
     @Column(name = "max_appointments_per_day")
     private String maxAppointmentsPerDay;
 
+    @Lob
+    @Column(name = "profile_image", columnDefinition = "LONGTEXT")
+    private String profileImage;
+
 }

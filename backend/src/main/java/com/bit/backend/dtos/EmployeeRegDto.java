@@ -21,5 +21,6 @@ public class EmployeeRegDto {
     private String weeklyOffDays;
     private String maxAppointmentsPerDay;
     private String actions;
+    private String profileImage;
 
 }
