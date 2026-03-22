@@ -37,6 +37,7 @@ import { ClientNotesComponent } from './client-notes/client-notes.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductComponent } from './product/product.component';
 import { TaxComponent } from './tax/tax.component';
+import { TaxFormComponent } from './tax/tax-form/tax-form.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
@@ -60,6 +61,7 @@ import { SupplierFormComponent } from './supplier/supplier-form/supplier-form.co
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
 import { PurchaseOrderFormComponent } from './purchase-order/purchase-order-form/purchase-order-form.component';
 import { GrnFormComponent } from './grn/grn-form/grn-form.component';
+import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +79,7 @@ import { GrnFormComponent } from './grn/grn-form/grn-form.component';
     ProductCategoryComponent,
     ProductComponent,
     TaxComponent,
+    TaxFormComponent,
     SupplierComponent,
     PurchaseOrderComponent,
     PurchaseOrderDetailComponent,
@@ -100,7 +103,8 @@ import { GrnFormComponent } from './grn/grn-form/grn-form.component';
     SupplierFormComponent,
     PurchaseOrderDetailFormComponent,
     PurchaseOrderFormComponent,
-    GrnFormComponent
+    GrnFormComponent,
+    ReportClientRegComponent
   ],
 
 

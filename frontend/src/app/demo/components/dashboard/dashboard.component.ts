@@ -4,9 +4,12 @@ import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
+import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     items!: MenuItem[];
@@ -19,9 +22,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription!: Subscription;
 
+    appointmentCountLast30Days: number = 0;
+
+    newClientCountLast30Days: number = 0;
+
+    mostUsedService: string;
+
     constructor(
         private productService: ProductService,
-        public layoutService: LayoutService
+        public layoutService: LayoutService,
+        private appointmentService: AppointmentSchedulingServiceService,
+        private clientRegService: ClientRegServiceService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -40,6 +51,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
             { label: 'Add New', icon: 'pi pi-fw pi-plus' },
             { label: 'Remove', icon: 'pi pi-fw pi-minus' },
         ];
+
+        this.loadAppointmentCount();
+        this.loadNewClientCount();
+    }
+
+    //Dashboard card (Get Appointments in Last 30 Days)
+    loadAppointmentCount() {
+        this.appointmentService.getAppointmentCountLast30Days().subscribe({
+            next: (count) => {
+                this.appointmentCountLast30Days = count;
+            },
+            error: (error) => {
+                console.error('Failed to load appointment count', error);
+            },
+        });
+    }
+
+    //Dashboard Card (Get New Clients in Last 30 Days)
+    loadNewClientCount() {
+        this.clientRegService.getNewClientRegistrationCountLast30Days().subscribe({
+            next: (count) => {
+                this.newClientCountLast30Days = count;
+            },
+            error: (error) => {
+                console.error('Failed to load Client Registration Count', error);
+            },
+        });
     }
 
     initChart() {

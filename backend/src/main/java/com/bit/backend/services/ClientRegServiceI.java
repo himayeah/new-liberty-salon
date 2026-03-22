@@ -11,7 +11,12 @@ public interface ClientRegServiceI {
     List<ClientRegDto> getData();
 
     ClientRegDto updateClientReg(long id, ClientRegDto clientRegDto);
+
     ClientRegDto getById(long id);
+
     ClientRegDto deleteClientReg(long id);
+
+    // Dashboard card (New Clients within last 30 days)
+    long countClientRegistrationsLast30Days();
 
 }

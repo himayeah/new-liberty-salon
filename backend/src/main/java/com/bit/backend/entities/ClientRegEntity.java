@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -48,6 +50,16 @@ public class ClientRegEntity {
 
     @Column(name = "lifetime_value")
     private double lifetimeValue;
+
+    // client-reg report
+    @Column(name = "registration_date")
+    private LocalDate registrationDate;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.registrationDate == null) {
+            this.registrationDate = LocalDate.now();
+        }
+    }
+
 }
-
-

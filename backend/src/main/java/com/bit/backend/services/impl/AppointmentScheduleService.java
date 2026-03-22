@@ -158,4 +158,25 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
         return "system";
     }
+
+    // Dashboard card (Total Appointments in lat 30 days)
+    @Override
+    public long countAppointmentsLast30Days() {
+        String sinceDate = LocalDateTime.now().minusDays(30)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return appointmentScheduleRepository.countAppointmentsAfter(sinceDate);
+    }
+
+    // Dashboard card (get mostly used service name)
+    @Override
+    public String getMostUsedService() {
+        try {
+            String result = appointmentScheduleRepository.getMostUsedService();
+            return result != null ? result : "Female Haircut";
+        } catch (Exception e) {
+            throw new AppException("Failed to load mostly used Service: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 }

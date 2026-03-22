@@ -51,12 +51,13 @@ public class AppointmentScheduleEntity {
     @Column(name = "cancellation_reason")
     private String cancellationReason;
 
+    @Column(name = "cancelled_date")
+    private String cancelledDate;
+
     @Column(name = "created_date")
     private String createdDate;
 
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "cancelled_date")
-    private String cancelledDate;
 }

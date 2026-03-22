@@ -8,6 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TaxFormComponent } from './tax-form/tax-form.component';
 
 @Component({
   selector: 'app-tax',
@@ -30,6 +32,7 @@ export class TaxComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
+  dialog: any;
 
   constructor(
     private fb: FormBuilder,
@@ -97,6 +100,14 @@ export class TaxComponent implements OnInit {
         error: (error) => this.handleError(error)
       });
     }
+  }
+
+  //open pop-up modal
+  openAddTaxModal(): void {
+    const dialogRef = this.dialog.open(TaxFormComponent, {
+      width: '600px',
+      data: { mode: 'add' }
+    });
   }
 
   editData(data: any): void {

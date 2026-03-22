@@ -33,7 +33,8 @@ public class SecurityConfig {
                         "/api/v1/supplier-reg/**",
                         "/api/v1/purchase-order/**",
                         "/api/v1/purchase-order-detail/**",
-                        "/client-notes/**"
+                        "/client-notes/**",
+                        "/report-client-controller/**"
 
                 ).permitAll()
                         .anyRequest().authenticated());

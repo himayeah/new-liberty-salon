@@ -13,13 +13,11 @@ public class AppointmentScheduleDto {
 
     private Long id;
     private Long clientId;
-    private Long employeeId;
-    private Long serviceId;
-
     private String clientName;
+    private Long employeeId;
     private String employeeName;
+    private Long serviceId;
     private String serviceName;
-
     private String appointmentDate;
     private String appointmentStartTime;
     private String appointmentEndTime;
@@ -27,11 +25,8 @@ public class AppointmentScheduleDto {
     private String bookingSource;
     private String notes;
     private String cancellationReason;
+    private String cancelledDate;
     private String createdDate;
     private String createdBy;
-    private String cancelledDate;
 
-    public String getFirstName() {
-        return clientName != null ? clientName : "";
-    }
 }
