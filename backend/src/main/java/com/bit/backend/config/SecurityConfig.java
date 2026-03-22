@@ -29,6 +29,7 @@ public class SecurityConfig {
                         "/login",
                         "/register",
                         "/employee_reg/**",
+                        "/employee_leave/**",
                         "/api/v1/client-reg/**",
                         "/api/v1/supplier-reg/**",
                         "/api/v1/purchase-order/**",
