@@ -25,7 +25,6 @@ import { EmployeeRegComponent } from './employee-reg/employee-reg.component';
 import { AppointmentScheduleComponent } from './appointment-schedule/appointment-schedule.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { StylistTaskManagementComponent } from './stylist-task-management/stylist-task-management.component';
 import { MatSelectModule } from '@angular/material/select';
 import { InventoryComponent } from './inventory/inventory.component';
 import { InventoryFormComponent } from './inventory/inventory-form/inventory-form.component';
@@ -36,9 +35,6 @@ import { EmployeeLeaveComponent } from './employee-leave/employee-leave.componen
 import { ClientNotesComponent } from './client-notes/client-notes.component';
 import { ProductCategoryComponent } from './product-category/product-category.component';
 import { ProductComponent } from './product/product.component';
-import { TaxComponent } from './tax/tax.component';
-import { TaxFormComponent } from './tax/tax-form/tax-form.component';
-import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
 import { InvoiceComponent } from './invoice/invoice.component';
@@ -57,10 +53,7 @@ import { ServiceCategoryFormComponent } from './service-category/service-categor
 import { ServiceFormComponent } from './service/service-form/service-form.component';
 import { ProductCategoryFormComponent } from './product-category/product-category-form/product-category-form.component';
 import { ProductFormComponent } from './product/product-form/product-form.component';
-import { SupplierFormComponent } from './supplier/supplier-form/supplier-form.component';
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
-import { PurchaseOrderFormComponent } from './purchase-order/purchase-order-form/purchase-order-form.component';
-import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 
 @NgModule({
@@ -68,7 +61,6 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     ClientRegComponent,
     EmployeeRegComponent,
     AppointmentScheduleComponent,
-    StylistTaskManagementComponent,
     InventoryComponent,
     InventoryFormComponent,
     ServiceCategoryComponent,
@@ -78,9 +70,6 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     ClientNotesComponent,
     ProductCategoryComponent,
     ProductComponent,
-    TaxComponent,
-    TaxFormComponent,
-    SupplierComponent,
     PurchaseOrderComponent,
     PurchaseOrderDetailComponent,
     InvoiceComponent,
@@ -100,10 +89,7 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     ServiceFormComponent,
     ProductCategoryFormComponent,
     ProductFormComponent,
-    SupplierFormComponent,
     PurchaseOrderDetailFormComponent,
-    PurchaseOrderFormComponent,
-    GrnFormComponent,
     ReportClientRegComponent
   ],
 
@@ -135,4 +121,4 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
 
   ]
 })
-export class PagesModule { }
+export class PagesModule { } // Trigger re-compilation

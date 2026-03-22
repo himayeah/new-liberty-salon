@@ -1,18 +1,41 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule, FormsModule, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TaxFormComponent } from './tax-form/tax-form.component';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { TaxServiceService } from 'src/app/services/tax/tax-service.service';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { FormGroup } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { TaxFormComponent } from './tax-form/tax-form.component';
 
 @Component({
   selector: 'app-tax',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCardModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    TaxFormComponent
+  ],
   templateUrl: './tax.component.html',
   styleUrl: './tax.component.scss'
 })
@@ -32,12 +55,11 @@ export class TaxComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
-  dialog: any;
-
   constructor(
     private fb: FormBuilder,
     private taxService: TaxServiceService,
-    private messageService: MessageServiceService
+    private messageService: MessageServiceService,
+    private dialog: MatDialog
   ) {
     this.taxForm = this.fb.group({
       taxName: ['', Validators.required],
