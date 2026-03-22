@@ -105,7 +105,7 @@ export class EmployeeAttendanceComponent implements OnInit {
   editData(data: any): void {
     const dialogRef = this.dialog.open(EmployeeAttendanceFormComponent, {
       width: '500px',
-      data: { attendance: data }
+      data: { attendance: data, selectedDate: this.selectedDate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
