@@ -72,7 +72,6 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     ClientNotesComponent,
     ProductCategoryComponent,
     ProductComponent,
-    PurchaseOrderComponent,
     PurchaseOrderDetailComponent,
     InvoiceComponent,
     InvoiceItemModalComponent,
