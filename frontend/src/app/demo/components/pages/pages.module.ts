@@ -56,6 +56,7 @@ import { ServiceFormComponent } from './service/service-form/service-form.compon
 import { ProductCategoryFormComponent } from './product-category/product-category-form/product-category-form.component';
 import { ProductFormComponent } from './product/product-form/product-form.component';
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
+import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 
 @NgModule({
@@ -121,6 +122,7 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     MatTabsModule,
     TableModule,
     ChartModule,
+    GrnFormComponent
 
   ]
 })

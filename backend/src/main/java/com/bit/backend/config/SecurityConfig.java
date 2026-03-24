@@ -33,7 +33,8 @@ public class SecurityConfig {
                         "/api/v1/client-reg/**",
                         "/api/supplier/**",
                         "/api/purchase-orders/**",
-                        "/api/v1/purchase-order-detail/**",
+                        "/api/purchase-order-details/**",
+                        "/api/grn/**",
                         "/client-notes/**",
                         "/report-client-controller/**",
                         "/api/v1/employee-schedule/**"
