@@ -33,8 +33,4 @@ public class TaxEntity {
     @Column(name = "is_active")
     private String isActive;
 
-    public void setId(long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

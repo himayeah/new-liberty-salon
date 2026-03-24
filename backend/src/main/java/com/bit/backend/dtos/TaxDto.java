@@ -10,13 +10,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaxDto {
-
+    private Long id;
     private String taxName;
     private String taxRate;
     private String effectiveDate;
     private String isActive;
-
-    public String getTaxName() {return taxName;}
-
 
 }
