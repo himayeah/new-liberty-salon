@@ -45,7 +45,7 @@ export class TaxComponent implements OnInit {
 
   taxForm: FormGroup;
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['taxName', 'taxRate', 'effectiveDate', 'isActive', 'action'];
+  displayedColumns: string[] = ['taxName', 'taxRate', 'effectiveDate', 'isActive', 'actions'];
 
   isButtonDisabled = false;
   submitted = false;
@@ -142,6 +142,10 @@ export class TaxComponent implements OnInit {
     this.mode = 'edit';
     this.isButtonDisabled = false;
     this.selectedRow = data;
+  }
+
+  viewData(data: any): void {
+    // view logic here or can open a dialog
   }
 
   deleteData(data: any): void {
