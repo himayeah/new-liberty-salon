@@ -14,6 +14,9 @@ public interface ProductServiceI {
     ProductDto deleteProduct(long id);
 
     // product sales report
-    List<Object[]> productSales();
+    // <Object[]> getProductSales(); -- Don't write object[] as a return type. It's
+    // a raw database result. Keep as it is (Object[]) in the Repo. it's fine.
+    // fix the service method as below
+    List<ProductDto> getProductSales();
 
 }

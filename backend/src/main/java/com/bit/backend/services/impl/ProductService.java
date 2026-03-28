@@ -8,6 +8,7 @@ import com.bit.backend.mappers.ProductMapper;
 import com.bit.backend.dtos.ProductDto;
 import com.bit.backend.entities.ProductEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.bit.backend.exceptions.AppException;
 import org.springframework.http.HttpStatus;
@@ -86,10 +87,24 @@ public class ProductService implements ProductServiceI {
         }
     }
 
-    // Product sales Report
+    // Product sales Report. This returns a result of 2 rows. So it should be a List
+    // type Return
     @Override
-    public List<Object[]> productSales() {
-        return productRepository.productSales();
-    }
+    public List<ProductDto> getProductSales() {
 
+        List<Object[]> results = productRepository.getProductSales();
+
+        List<ProductDto> list = new ArrayList<>();
+
+        for (Object[] row : results) {
+            ProductDto dto = new ProductDto();
+
+            dto.setProductName((String) row[0]);
+            dto.setTotal(((Number) row[1]).longValue());
+
+            list.add(dto);
+        }
+
+        return list;
+    }
 }

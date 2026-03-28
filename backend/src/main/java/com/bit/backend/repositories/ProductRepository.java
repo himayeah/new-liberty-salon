@@ -18,6 +18,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             "WHERE g.received_date BETWEEN '2026-01-01' AND '2026-03-31' " +
             "AND p.product_name = 'Shampoo(1L)- Dreamron' " +
             "GROUP BY p.product_name", nativeQuery = true)
-    List<Object[]> productSales();
+    List<Object[]> getProductSales();
 
 }
