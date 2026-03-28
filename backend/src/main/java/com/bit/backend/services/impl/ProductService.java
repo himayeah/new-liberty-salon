@@ -85,4 +85,11 @@ public class ProductService implements ProductServiceI {
             throw new AppException("Failed to delete product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // Product sales Report
+    @Override
+    public List<Object[]> productSales() {
+        return productRepository.productSales();
+    }
+
 }

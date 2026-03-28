@@ -13,4 +13,7 @@ public interface ProductServiceI {
 
     ProductDto deleteProduct(long id);
 
+    // product sales report
+    List<Object[]> productSales();
+
 }
