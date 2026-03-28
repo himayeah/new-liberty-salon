@@ -23,6 +23,7 @@ import { EmployeeProfileComponent } from './employee-profile/employee-profile.co
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
+import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 
 
 
@@ -61,6 +62,7 @@ export const PagesRoutes: Routes = [
         { path: 'invoice', component: InvoiceComponent },
         { path: 'report-client-reg', component: ReportClientRegComponent },
         { path: 'report-product-sales', component: ProductSalesReportComponent },
+        { path: 'report-appointment-status', component: ReportAppointmentStatusComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],

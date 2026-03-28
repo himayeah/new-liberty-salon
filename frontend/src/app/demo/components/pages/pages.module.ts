@@ -59,6 +59,7 @@ import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purcha
 import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
+import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { ProductSalesReportComponent } from './report/product-sales-report/produ
     ProductFormComponent,
     PurchaseOrderDetailFormComponent,
     ReportClientRegComponent,
-    ProductSalesReportComponent
+    ProductSalesReportComponent,
+    ReportAppointmentStatusComponent
   ],
 
   imports: [
