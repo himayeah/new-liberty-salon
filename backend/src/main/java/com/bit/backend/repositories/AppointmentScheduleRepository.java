@@ -18,4 +18,10 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
             "ORDER BY COUNT(*) DESC LIMIT 1", nativeQuery = true)
     String getMostUsedService();
 
+    // Appointment Status Report- Cancelled appointments in a given date range
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM appointment_schedule " +
+            "WHERE appointment_status = 'CANCELLED' AND appointment_date BETWEEN '2026-01-01' AND '2026-03-31' ", nativeQuery = true)
+    long countCancelledAppointments();
+
 }
