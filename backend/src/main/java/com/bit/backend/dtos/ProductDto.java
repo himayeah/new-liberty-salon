@@ -21,4 +21,6 @@ public class ProductDto {
     private boolean isTaxable;
     private int reOrderLevel;
 
+    // product sales report's setTotal should be defined in the DTO
+    private long total;
 }

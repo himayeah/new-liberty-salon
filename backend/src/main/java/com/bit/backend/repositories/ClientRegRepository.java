@@ -17,7 +17,7 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
     List<Object[]> countRegistrationsByYear();
 
     // Dashboard card (New Clients within last 30 days)
-    @Query(value = "SELECT COUNT(*) FROM client_registration WHERE registration_date >= CURRENT_DATE - INTERVAL 30 DAY", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM client_registration WHERE registration_date BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
     long countClientRegistrationsLast30Days();
 
 }

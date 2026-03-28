@@ -22,7 +22,7 @@ export class EmployeeLeaveServiceService {
     return this.http.post(requestUrl, form_details, { headers: headers });
   }
 
-  getData() {
+  getData(): Observable<any[]> {
     const requestUrl = `${environment.baseUrl}/employee_leave/employee-leave-get`;
 
     let headers = new HttpHeaders();
@@ -30,7 +30,7 @@ export class EmployeeLeaveServiceService {
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
-    return this.http.get(requestUrl, { headers: headers });
+    return this.http.get<any[]>(requestUrl, { headers: headers });
   }
 
   editData(id: number, form_details: any) {

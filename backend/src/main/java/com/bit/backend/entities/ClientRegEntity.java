@@ -51,6 +51,10 @@ public class ClientRegEntity {
     @Column(name = "lifetime_value")
     private double lifetimeValue;
 
+    @Lob
+    @Column(name = "photo", columnDefinition = "LONGTEXT")
+    private String photo;
+
     // client-reg report
     @Column(name = "registration_date")
     private LocalDate registrationDate;

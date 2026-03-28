@@ -1,18 +1,41 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule, FormsModule, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TaxFormComponent } from './tax-form/tax-form.component';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { TaxServiceService } from 'src/app/services/tax/tax-service.service';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { FormGroup } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { TaxFormComponent } from './tax-form/tax-form.component';
 
 @Component({
   selector: 'app-tax',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCardModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    TaxFormComponent
+  ],
   templateUrl: './tax.component.html',
   styleUrl: './tax.component.scss'
 })
@@ -20,9 +43,8 @@ export class TaxComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  taxForm: FormGroup;
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['taxName', 'taxRate', 'effectiveDate', 'isActive', 'action'];
+  displayedColumns: string[] = ['taxName', 'taxRate', 'effectiveDate', 'isActive', 'actions'];
 
   isButtonDisabled = false;
   submitted = false;
@@ -32,31 +54,17 @@ export class TaxComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
-  dialog: any;
-
   constructor(
-    private fb: FormBuilder,
     private taxService: TaxServiceService,
-    private messageService: MessageServiceService
-  ) {
-    this.taxForm = this.fb.group({
-      taxName: ['', Validators.required],
-      taxRate: ['', Validators.required],
-      effectiveDate: ['', Validators.required],
-      isActive: ['']
-    });
-  }
+    private messageService: MessageServiceService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.populateData();
   }
 
-  get f() { return this.taxForm.controls; }
 
-  isInvalid(controlName: string, errorType: string): boolean {
-    const control = this.f[controlName];
-    return (control.touched || this.submitted) && control.hasError(errorType);
-  }
 
   populateData(): void {
     this.taxService.getData().subscribe({
@@ -71,55 +79,39 @@ export class TaxComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    this.submitted = true;
-    if (this.taxForm.invalid) return;
-
-    this.isButtonDisabled = true;
-    const formValue = this.taxForm.value;
-
-    if (this.mode === 'add') {
-      this.taxService.serviceCall(formValue).subscribe({
-        next: (response) => {
-          this.dataSource.data = [response, ...this.dataSource.data];
-          this.messageService.showSuccess('Saved Successfully!');
-          this.highlightRow('add', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    } else {
-      this.taxService.editData(this.selectedData?.id, formValue).subscribe({
-        next: (response) => {
-          const index = this.dataSource.data.findIndex(item => item.id === this.selectedData?.id);
-          if (index > -1) this.dataSource.data[index] = response;
-          this.messageService.showSuccess('Updated Successfully!');
-          this.highlightRow('edit', response);
-          this.resetFormState();
-        },
-        error: (error) => this.handleError(error)
-      });
-    }
-  }
-
-  //open pop-up modal
   openAddTaxModal(): void {
     const dialogRef = this.dialog.open(TaxFormComponent, {
       width: '600px',
       data: { mode: 'add' }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('add', result);
+      }
+    });
   }
 
   editData(data: any): void {
-    this.taxForm.patchValue({
-      ...data,
-
+    const dialogRef = this.dialog.open(TaxFormComponent, {
+      width: '600px',
+      data: { mode: 'edit', tax: data }
     });
-    this.selectedData = data;
-    this.saveButtonLabel = 'Update';
-    this.mode = 'edit';
-    this.isButtonDisabled = false;
+
     this.selectedRow = data;
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('edit', result);
+      }
+      this.selectedRow = null;
+    });
+  }
+
+  viewData(data: any): void {
+    // view logic here or can open a dialog
   }
 
   deleteData(data: any): void {
@@ -146,8 +138,6 @@ export class TaxComponent implements OnInit {
   }
 
   resetData(): void {
-    this.taxForm.reset();
-    this.taxForm.enable();
     this.submitted = false;
     this.saveButtonLabel = 'Save';
     this.mode = 'add';

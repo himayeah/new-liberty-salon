@@ -1,43 +1,39 @@
 <div class="dashboard-row">
+
     <!-- Card 1: Appointments in Last 30 Days -->
-    <div class="dashboard-card-wrapper">
-        <div class="dashboard-card dashboard-card--appointments">
-            <div class="dashboard-card__header">
-                <div>
-                    <span class="dashboard-card__label">Appointments</span>
-                    <div class="dashboard-card__value">{{ appointmentCountLast30Days }}</div>
-                </div>
-                <div class="dashboard-card__icon dashboard-card__icon--appointments">
-                    <i class="pi pi-calendar"></i>
-                </div>
+    <div class="dashboard-card dashboard-card--appointments">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label">Appointments</span>
+                <div class="dashboard-card__value">{{ appointmentCountLast30Days }}</div>
             </div>
-            <span class="dashboard-card__subtitle">Last 30 days</span>
+            <div class="dashboard-card__icon dashboard-card__icon--appointments">
+                <i class="pi pi-calendar"></i>
+            </div>
         </div>
+        <span class="dashboard-card__subtitle">Last 30 days</span>
     </div>
 
     <!--Card 2: New Clients in Last 30 Days -->
-    <div class="dashboard-card-wrapper">
-        <div class="dashboard-card dashboard-card--new-clients">
-            <div class="dashboard-card__header">
-                <div>
-                    <span class="dashboard-card__label">New Clients</span>
-                    <div class="dashboard-card__value">{{ newClientCountLast30Days }}</div>
-                </div>
-                <div class="dashboard-card__icon dashboard-card__icon--new-clients">
-                    <i class="pi pi-user"></i>
-                </div>
+    <div class="dashboard-card dashboard-card--new-clients">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label">New Clients</span>
+                <div class="dashboard-card__value">{{ newClientCountLast30Days }}</div>
             </div>
-            <span class="dashboard-card__subtitle">Last 30 days</span>
+            <div class="dashboard-card__icon dashboard-card__icon--new-clients">
+                <i class="pi pi-user"></i>
+            </div>
         </div>
+        <span class="dashboard-card__subtitle">Last 30 days</span>
     </div>
 
- <!--Card 3: Mostly used Service in Last 30 Days -->
-<div class="dashboard-card-wrapper">
+    <!--Card 3: Mostly used Service in Last 30 Days -->
     <div class="dashboard-card dashboard-card--mostly-used-service">
         <div class="dashboard-card__header">
             <div>
-                <span class="dashboard-card__label">Most Used Service</span>
-                <div class="dashboard-card__value">{{ mostUsedService }}</div>
+                <span class="dashboard-card__label">Top Service</span>
+                <div class="dashboard-card__value" style="font-size: 1.25rem;">{{ mostUsedService }}</div>
             </div>
             <div class="dashboard-card__icon dashboard-card__icon--mostly-used-service">
                 <i class="pi pi-star-fill"></i>
@@ -45,9 +41,33 @@
         </div>
         <span class="dashboard-card__subtitle">Last 30 days</span>
     </div>
-</div>
 
+    <!--Card 4: Total Revenue (Placeholder) -->
+    <div class="dashboard-card dashboard-card--revenue">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label">Est. Revenue</span>
+                <div class="dashboard-card__value">$12.4K</div>
+            </div>
+            <div class="dashboard-card__icon dashboard-card__icon--revenue">
+                <i class="pi pi-wallet"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle">Last 30 days</span>
+    </div>
 
-<div class="dashboard-card-wrapper"></div>
+    <!--Card 5: Active Tasks (Placeholder) -->
+    <div class="dashboard-card dashboard-card--tasks">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label">Active Tasks</span>
+                <div class="dashboard-card__value">14</div>
+            </div>
+            <div class="dashboard-card__icon dashboard-card__icon--tasks">
+                <i class="pi pi-list"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle">Pending completion</span>
+    </div>
 
 </div>

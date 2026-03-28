@@ -162,9 +162,7 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     // Dashboard card (Total Appointments in lat 30 days)
     @Override
     public long countAppointmentsLast30Days() {
-        String sinceDate = LocalDateTime.now().minusDays(30)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return appointmentScheduleRepository.countAppointmentsAfter(sinceDate);
+        return appointmentScheduleRepository.countAppointmentsLast30Days();
     }
 
     // Dashboard card (get mostly used service name)

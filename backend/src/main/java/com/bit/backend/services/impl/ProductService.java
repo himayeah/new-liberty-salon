@@ -8,6 +8,7 @@ import com.bit.backend.mappers.ProductMapper;
 import com.bit.backend.dtos.ProductDto;
 import com.bit.backend.entities.ProductEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.bit.backend.exceptions.AppException;
 import org.springframework.http.HttpStatus;

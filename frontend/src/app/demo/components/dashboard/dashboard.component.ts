@@ -54,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.loadAppointmentCount();
         this.loadNewClientCount();
+        this.loadMostUsedService();
     }
 
     //Dashboard card (Get Appointments in Last 30 Days)
@@ -64,6 +65,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error('Failed to load appointment count', error);
+            },
+        });
+    }
+
+    //Dashboard card (Get Most Used Service)
+    loadMostUsedService() {
+        this.appointmentService.getMostUsedService().subscribe({
+            next: (serviceName) => {
+                this.mostUsedService = serviceName;
+            },
+            error: (error) => {
+                console.error('Failed to load most used service', error);
             },
         });
     }

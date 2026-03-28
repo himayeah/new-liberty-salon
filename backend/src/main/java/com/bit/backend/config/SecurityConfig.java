@@ -29,12 +29,15 @@ public class SecurityConfig {
                         "/login",
                         "/register",
                         "/employee_reg/**",
+                        "/employee_leave/**",
                         "/api/v1/client-reg/**",
-                        "/api/v1/supplier-reg/**",
-                        "/api/v1/purchase-order/**",
-                        "/api/v1/purchase-order-detail/**",
+                        "/api/supplier/**",
+                        "/api/purchase-orders/**",
+                        "/api/purchase-order-details/**",
+                        "/api/grn/**",
                         "/client-notes/**",
-                        "/report-client-controller/**"
+                        "/report-client-controller/**",
+                        "/api/v1/employee-schedule/**"
 
                 ).permitAll()
                         .anyRequest().authenticated());

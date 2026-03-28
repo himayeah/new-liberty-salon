@@ -23,6 +23,7 @@ public class ClientRegDto {
     private int totalVisits;
     private String lastVisitedDate;
     private double lifetimeValue;
+    private String photo;
 
     // Fields for Reports
     private Integer registrationYear;

@@ -182,11 +182,18 @@ const navigationModel = [
         auth: authenticationEnum.Home,
         items: [
             {
-                label: 'Client Registration',
-                isVisible: false,
+                label: 'Client Registration Report',
+                isVisible: true,
                 auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-user-plus', // client registration
+                icon: 'pi pi-file', // report icon
                 routerLink: ['/pages/report-client-reg'],
+            },
+            {
+                label: 'Product Sales Report',
+                isVisible: true,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-file', // report icon
+                routerLink: ['/pages/report-product-sales'],
             },
         ],
     },
