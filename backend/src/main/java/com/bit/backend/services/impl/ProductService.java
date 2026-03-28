@@ -86,25 +86,4 @@ public class ProductService implements ProductServiceI {
             throw new AppException("Failed to delete product: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // Product sales Report. This returns a result of 2 rows. So it should be a List
-    // type Return
-    @Override
-    public List<ProductDto> getProductSales() {
-
-        List<Object[]> results = productRepository.getProductSales();
-
-        List<ProductDto> list = new ArrayList<>();
-
-        for (Object[] row : results) {
-            ProductDto dto = new ProductDto();
-
-            dto.setProductName((String) row[0]);
-            dto.setTotal(((Number) row[1]).longValue());
-
-            list.add(dto);
-        }
-
-        return list;
-    }
 }

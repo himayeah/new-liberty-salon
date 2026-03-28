@@ -22,6 +22,7 @@ import { ClientProfileComponent } from './client-profile/client-profile.componen
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
+import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 
 
 
@@ -59,6 +60,7 @@ export const PagesRoutes: Routes = [
         { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'invoice', component: InvoiceComponent },
         { path: 'report-client-reg', component: ReportClientRegComponent },
+        { path: 'report-product-sales', component: ProductSalesReportComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],

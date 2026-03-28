@@ -188,6 +188,13 @@ const navigationModel = [
                 icon: 'pi pi-file', // report icon
                 routerLink: ['/pages/report-client-reg'],
             },
+            {
+                label: 'Product Sales Report',
+                isVisible: true,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-file', // report icon
+                routerLink: ['/pages/report-product-sales'],
+            },
         ],
     },
 

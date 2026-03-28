@@ -58,6 +58,7 @@ import { ProductFormComponent } from './product/product-form/product-form.compon
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
 import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
+import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 
 @NgModule({
   declarations: [
@@ -92,10 +93,9 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
     ProductCategoryFormComponent,
     ProductFormComponent,
     PurchaseOrderDetailFormComponent,
-    ReportClientRegComponent
+    ReportClientRegComponent,
+    ProductSalesReportComponent
   ],
-
-
 
   imports: [
     CommonModule,
