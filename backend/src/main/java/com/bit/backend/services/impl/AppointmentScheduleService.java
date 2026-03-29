@@ -95,11 +95,17 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             // Update cancelled date if status changed to CANCELLED
-            if ("CANCELLED".equals(entity.getAppointmentStatus())
-                    && !"CANCELLED".equals(existingEntity.getAppointmentStatus())) {
-                entity.setCancelledDate(now);
+            if ("CANCELLED".equals(entity.getAppointmentStatus())) {
+                if (!"CANCELLED".equals(existingEntity.getAppointmentStatus())) {
+                    // Status just changed to CANCELLED
+                    entity.setCancelledDate(now);
+                } else {
+                    // Status was already CANCELLED, preserve the original date
+                    entity.setCancelledDate(existingEntity.getCancelledDate());
+                }
             } else {
-                entity.setCancelledDate(existingEntity.getCancelledDate());
+                // Status is not CANCELLED, clear the date
+                entity.setCancelledDate(null);
             }
 
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);

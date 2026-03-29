@@ -79,7 +79,12 @@
 
           <ng-container matColumnDef="cancellationReason">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cancel Reason </th>
-            <td mat-cell *matCellDef="let element">{{ element.notes }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.cancellationReason }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cancelledDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cancel Date </th>
+            <td mat-cell *matCellDef="let element">{{ element.cancelledDate }}</td>
           </ng-container>
 
           <!--Action column -->
@@ -103,7 +108,7 @@
           }"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="12" style="padding: 16px; text-align: center;">No data matching the filter
+            <td class="mat-cell" colspan="13" style="padding: 16px; text-align: center;">No data matching the filter
               "{{input.value}}"</td>
           </tr>
         </table>
