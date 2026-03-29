@@ -2,7 +2,6 @@ package com.bit.backend.controllers;
 
 import com.bit.backend.dtos.CommonDataDto;
 import com.bit.backend.dtos.CommonDataListDto;
-import com.bit.backend.entities.CommonDataEntity;
 import com.bit.backend.services.CommonDataServiceI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
