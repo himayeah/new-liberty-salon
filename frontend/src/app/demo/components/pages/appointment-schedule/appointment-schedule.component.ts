@@ -27,8 +27,8 @@ export class AppointmentScheduleComponent implements OnInit {
         'appointmentEndTime',
         'appointmentStatus',
         'bookingSource',
-        'notes',
         'cancellationReason',
+        'cancelledDate',
         'actions',
     ];
 
