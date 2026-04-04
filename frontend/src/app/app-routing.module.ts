@@ -6,7 +6,7 @@ import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
     //{ path: 'pages/form-demo', component: FormDemoComponent } // Check this line
-  ];
+];
 
 @NgModule({
     imports: [
@@ -86,12 +86,12 @@ const routes: Routes = [
 
                         {
                             path: 'rest-reg-root', // localhost:4200/rest-reg-root
-                            loadChildren: () => 
+                            loadChildren: () =>
                                 import(
                                     './demo/components/register/register.module'
                                 ).then((m) => m.RegisterModule),
-                            
-                            }
+
+                        }
 
 
                     ],
@@ -115,4 +115,4 @@ const routes: Routes = [
     ],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
