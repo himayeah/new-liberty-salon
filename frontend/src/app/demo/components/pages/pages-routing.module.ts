@@ -17,7 +17,6 @@ import { TaxComponent } from './tax/tax.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
-import { InvoiceComponent } from './invoice/invoice.component';
 import { ClientProfileComponent } from './client-profile/client-profile.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
@@ -25,6 +24,7 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
+import { BillingComponent } from './billing/billing.component';
 
 
 
@@ -60,8 +60,8 @@ export const PagesRoutes: Routes = [
         { path: 'purchase-order', component: PurchaseOrderComponent },
         { path: 'purchase-order-detail/:id', component: PurchaseOrderDetailComponent },
         { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
-        { path: 'invoice', component: InvoiceComponent },
-        { path: 'report-client-reg', component: ReportClientRegComponent },
+        { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
+        { path: 'billing', component: BillingComponent },
         { path: 'report-product-sales', component: ProductSalesReportComponent },
         { path: 'report-appointment-status', component: ReportAppointmentStatusComponent },
         { path: 'report-procurement', component: ReportProcurementComponent },
