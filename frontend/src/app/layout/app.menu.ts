@@ -202,6 +202,13 @@ const navigationModel = [
                 icon: 'pi pi-file', // report icon
                 routerLink: ['/pages/report-appointment-status'],
             },
+            {
+                label: 'Procurement Report',
+                isVisible: true,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-file', // report icon
+                routerLink: ['/pages/report-procurement'],
+            },
         ],
     },
 
