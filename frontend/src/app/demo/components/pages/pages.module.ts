@@ -39,9 +39,6 @@ import { ProductCategoryComponent } from './product-category/product-category.co
 import { ProductComponent } from './product/product.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { PurchaseOrderDetailComponent } from './purchase-order-detail/purchase-order-detail.component';
-import { InvoiceComponent } from './invoice/invoice.component';
-import { InvoiceItemModalComponent } from './invoice/invoice-item-modal/invoice-item-modal.component';
-import { InvoicePaymentModalComponent } from './invoice/invoice-payment-modal/invoice-payment-modal.component';
 import { ClientProfileComponent } from './client-profile/client-profile.component';
 import { ClientAdditionalNotesComponent } from './client-profile/client-additional-notes/client-additional-notes.component';
 import { EmployeeFormComponent } from './employee-reg/employee-form/employee-form.component';
@@ -57,6 +54,7 @@ import { ProductCategoryFormComponent } from './product-category/product-categor
 import { ProductFormComponent } from './product/product-form/product-form.component';
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
 import { GrnFormComponent } from './grn/grn-form/grn-form.component';
+import { BillingComponent } from './billing/billing.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
@@ -77,9 +75,6 @@ import { ReportProcurementComponent } from './report/report-procurement/report-p
     ProductCategoryComponent,
     ProductComponent,
     PurchaseOrderDetailComponent,
-    InvoiceComponent,
-    InvoiceItemModalComponent,
-    InvoicePaymentModalComponent,
     ClientFormComponent,
     ClientProfileComponent,
     ClientAdditionalNotesComponent,
@@ -95,6 +90,7 @@ import { ReportProcurementComponent } from './report/report-procurement/report-p
     ProductCategoryFormComponent,
     ProductFormComponent,
     PurchaseOrderDetailFormComponent,
+    BillingComponent,
     ReportClientRegComponent,
     ProductSalesReportComponent,
     ReportAppointmentStatusComponent,
@@ -126,7 +122,6 @@ import { ReportProcurementComponent } from './report/report-procurement/report-p
     MatTabsModule,
     TableModule,
     ChartModule,
-    GrnFormComponent
 
   ]
 })

@@ -66,6 +66,13 @@ const navigationModel = [
                 icon: 'pi pi-moon', // attendance/time
                 routerLink: ['/pages/employee-leave'],
             },
+            {
+                label: 'Billing',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-calendar-plus', // scheduling
+                routerLink: ['/pages/billing'],
+            },
             //{
             //label: 'Stylist Task Management',
             //isVisible: false,
@@ -165,13 +172,6 @@ const navigationModel = [
                 auth: authenticationEnum.Home_Dashboard,
                 icon: 'pi pi-shopping-cart',
                 routerLink: ['pages/tax']
-            },
-            {
-                label: 'Invoice',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-shopping-cart',
-                routerLink: ['pages/invoice']
             }
         ],
     },
