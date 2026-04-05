@@ -1,0 +1,22 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-top: 8px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.full-column {
+    grid-column: 1 / -1;
+}
+
+mat-dialog-content {
+    padding-top: 20px !important;
+}
+
+mat-dialog-actions {
+    padding-bottom: 20px !important;
+}

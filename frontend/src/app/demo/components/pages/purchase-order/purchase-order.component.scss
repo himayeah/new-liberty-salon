@@ -1,0 +1,121 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    min-height: 100%;
+}
+
+.purchase-order-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background-color: white;
+    margin-bottom: 24px;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #546e7a; // Slate blue/grey header
+    color: white;
+
+    h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    button {
+        color: white;
+    }
+}
+
+.content-section {
+    padding: 24px;
+}
+
+.actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.search-field {
+    width: 350px;
+    max-width: 100%;
+
+    @media (max-width: 600px) {
+        width: 100%;
+    }
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+
+    table {
+        width: 100%;
+    }
+}
+
+// Status Badges
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+
+    &.pending {
+        background-color: #fff9c4;
+        color: #f57f17;
+    }
+
+    &.received {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    &.cancelled {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    &.partial {
+        background-color: #e3f2fd;
+        color: #1565c0;
+    }
+
+    &.ordered {
+        background-color: #e3f2fd;
+        color: #1565c0;
+    }
+}
+
+// Row Highlighting
+.selected-row {
+    background-color: #e3f2fd !important;
+}
+
+.added-row {
+    background-color: #e8f5e9 !important;
+}
+
+.edited-row {
+    background-color: #fff9c4 !important;
+}
+
+.mat-row:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}

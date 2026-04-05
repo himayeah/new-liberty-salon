@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{ data.mode === 'add' ? 'Add New Product Category' : 'Edit Product Category' }}</h2>
+<mat-dialog-content>
+    <form [formGroup]="categoryForm">
+        <div class="form-grid">
+            <div class="form-field full-column">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Category Name</mat-label>
+                    <input matInput formControlName="productCategoryName" />
+                    <mat-error *ngIf="isInvalid('productCategoryName', 'required')">Category Name is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="resetForm()">Reset</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isButtonDisabled">
+        {{ data.mode === 'add' ? 'Save' : 'Update' }}
+    </button>
+</mat-dialog-actions>

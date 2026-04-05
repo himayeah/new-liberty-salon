@@ -1,0 +1,60 @@
+<div class="report-container">
+    <div class="report-header">
+        <div class="title-label-container">
+            <h2 class="report-title">
+                <mat-icon>assessment</mat-icon>
+                Product Sales Report
+            </h2>
+            <span class="report-subtitle">Product performance overview</span>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <mat-card class="report-card">
+                <mat-card-header>
+                    <mat-card-title>Product Sales</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-wrapper">
+                        <p-chart type="bar" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <mat-card class="report-card">
+                <mat-card-header>
+                    <mat-card-title>Detailed Stats</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="table-container">
+                        <table mat-table [dataSource]="productSalesData" class="full-width-table">
+                            <ng-container matColumnDef="productName">
+                                <th mat-header-cell *matHeaderCellDef> Product Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="total">
+                                <th mat-header-cell *matHeaderCellDef> Total Sales </th>
+                                <td mat-cell *matCellDef="let element"> {{element.total}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="['productName', 'total']"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['productName', 'total'];"></tr>
+
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="2" style="text-align: center; padding: 20px;">
+                                    No sales data available.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

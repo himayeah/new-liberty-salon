@@ -1,0 +1,93 @@
+<div class="container">
+    <mat-card class="employee-leave-card">
+        <div class="header-section">
+            <h4>Employee Leave Information</h4>
+            <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+
+        <div class="content-section">
+            <div class="actions-bar">
+                <button mat-raised-button color="primary" (click)="openAddEmployeeLeaveModal()">
+                    <mat-icon>add</mat-icon> Add Leave
+                </button>
+
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Search Employee Leaves" #input />
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!--Employee Name-->
+                    <ng-container matColumnDef="employeeName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee Name</th>
+                        <td mat-cell *matCellDef="let element">{{element.employeeName}}</td>
+                    </ng-container>
+
+                    <!--Leave Type-->
+                    <ng-container matColumnDef="leaveType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Leave Type </th>
+                        <td mat-cell *matCellDef="let element"> {{element.leaveType}} </td>
+                    </ng-container>
+
+                    <!--Start Date-->
+                    <ng-container matColumnDef="startDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.startDate | date:'yyyy-MM-dd'}} </td>
+                    </ng-container>
+
+                    <!--End Date-->
+                    <ng-container matColumnDef="endDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.endDate | date:'yyyy-MM-dd'}} </td>
+                    </ng-container>
+
+                    <!--Reason-->
+                    <ng-container matColumnDef="reason">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Reason </th>
+                        <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <!--<button mat-icon-button color="accent" (click)="viewData(element)" matTooltip="View Profile">
+                            <mat-icon>visibility</mat-icon>
+                        </button>-->
+                            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!--Rows-->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+                        'highlight-row': selectedRow && selectedRow.id === row.id,
+                        'last-added-row': lastAddedRow && lastAddedRow.id === row.id,
+                        'last-edited-row': lastEditedRow && lastEditedRow.id === row.id
+                        }">
+                    </tr>
+
+                    <!-- No Data row -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="9" style="padding: 16px; text-align: center;">
+                            No data matching the filter "{{input.value}}"
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons aria-label="Select page of leaves">
+            </mat-paginator>
+        </div>
+    </mat-card>
+</div>

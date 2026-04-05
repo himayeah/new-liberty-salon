@@ -1,0 +1,89 @@
+<h2 mat-dialog-title>{{ data.mode === 'add' ? 'Add New Purchase Order' : 'Edit Purchase Order' }}</h2>
+<mat-dialog-content>
+    <form [formGroup]="purchaseOrderForm">
+        <div class="form-grid">
+            <!-- Order Number -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Order Number</mat-label>
+                    <input matInput formControlName="orderNumber" placeholder="PO-XXXX" />
+                    <mat-error *ngIf="isInvalid('orderNumber', 'required')">Order Number is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Supplier -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Supplier</mat-label>
+                    <mat-select formControlName="supplierId">
+                        <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                            {{ supplier.supplierName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('supplierId', 'required')">Supplier is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Order Date -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Order Date</mat-label>
+                    <input matInput [matDatepicker]="orderPicker" formControlName="orderDate" />
+                    <mat-datepicker-toggle matSuffix [for]="orderPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #orderPicker></mat-datepicker>
+                    <mat-error *ngIf="isInvalid('orderDate', 'required')">Order Date is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Expected Delivery Date -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Expected Delivery Date</mat-label>
+                    <input matInput [matDatepicker]="deliveryPicker" formControlName="expectedDeliveryDate" />
+                    <mat-datepicker-toggle matSuffix [for]="deliveryPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #deliveryPicker></mat-datepicker>
+                    <mat-error *ngIf="isInvalid('expectedDeliveryDate', 'required')">Expected Delivery Date is
+                        required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Status -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option value="pending">PENDING</mat-option>
+                        <mat-option value="partial">PARTIAL</mat-option>
+                        <mat-option value="received">RECEIVED</mat-option>
+                        <mat-option value="cancelled">CANCELLED</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('status', 'required')">Status is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Total Amount -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Total Amount</mat-label>
+                    <input matInput type="number" formControlName="totalAmount" placeholder="0.00" />
+                    <mat-error *ngIf="isInvalid('totalAmount', 'required')">Total Amount is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-field full-column">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Notes</mat-label>
+                    <textarea matInput formControlName="notes" placeholder="Additional notes..." rows="3"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="resetForm()">Reset</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isButtonDisabled">
+        {{ data.mode === 'add' ? 'Save' : 'Update' }}
+    </button>
+</mat-dialog-actions>

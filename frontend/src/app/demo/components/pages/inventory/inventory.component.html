@@ -1,0 +1,92 @@
+<div class="container">
+  <mat-card class="inventory-card">
+
+    <div class="header-section">
+      <h2>Inventory</h2>
+      <button mat-icon-button (click)="refreshData()" matTooltip="Refresh" class="refresh-btn">
+        <mat-icon class="material-icons">refresh</mat-icon>
+      </button>
+    </div>
+
+    <div class="content-section">
+      <div class="actions-bar">
+        <button mat-raised-button color="primary" (click)="openAddStockModal()">
+          <mat-icon class="material-icons">add</mat-icon> Add New Stock
+        </button>
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search inventory" #input />
+          <mat-icon matSuffix class="material-icons">search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+
+
+          <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+            <td mat-cell *matCellDef="let element"> {{ element.product?.productName }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="currentStock">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Current Stock </th>
+            <td mat-cell *matCellDef="let element"> {{ element.currentStock }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="minimumStock">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Min Stock </th>
+            <td mat-cell *matCellDef="let element"> {{ element.minimumStock }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="maximumStock">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Max Stock </th>
+            <td mat-cell *matCellDef="let element"> {{ element.maximumStock }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="lastRestockedDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Restocked </th>
+            <td mat-cell *matCellDef="let element"> {{ element.lastRestockedDate | date:'yyyy/MM/dd' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="shelfLocation">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Shelf Location </th>
+            <td mat-cell *matCellDef="let element"> {{ element.shelfLocation }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                <mat-icon class="material-icons">edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                <mat-icon class="material-icons">delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+              'selected-row': selectedRow?.id === row.id,
+              'added-row':    lastAddedRow?.id === row.id,
+              'edited-row':   lastEditedRow?.id === row.id
+            }">
+          </tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="7" style="padding: 16px; text-align: center;">
+              No data matching the filter "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of inventory records">
+      </mat-paginator>
+    </div>
+
+  </mat-card>
+</div>

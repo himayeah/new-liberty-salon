@@ -1,0 +1,101 @@
+<div class="container">
+    <mat-card class="purchase-order-card">
+        <div class="header-section">
+            <h2>Purchase Order Information</h2>
+            <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+
+        <div class="content-section">
+            <div class="actions-bar">
+                <button mat-raised-button color="primary" (click)="openAddPurchaseOrderModal()">
+                    <mat-icon>add</mat-icon> Add New Purchase Order
+                </button>
+
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (input)="applyFilter($event)" placeholder="Search purchase orders" #input />
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- Order Number Column -->
+                    <ng-container matColumnDef="orderNumber">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Number </th>
+                        <td mat-cell *matCellDef="let element"> {{element.orderNumber}} </td>
+                    </ng-container>
+
+                    <!-- Supplier Column -->
+                    <ng-container matColumnDef="supplier">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Supplier </th>
+                        <td mat-cell *matCellDef="let element"> {{element.supplier?.supplierName || 'N/A'}} </td>
+                    </ng-container>
+
+                    <!-- Order Date Column -->
+                    <ng-container matColumnDef="orderDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.orderDate | date:'mediumDate'}} </td>
+                    </ng-container>
+
+                    <!-- Expected Delivery Date Column -->
+                    <ng-container matColumnDef="expectedDeliveryDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Expected Delivery </th>
+                        <td mat-cell *matCellDef="let element"> {{element.expectedDeliveryDate | date:'mediumDate'}} </td>
+                    </ng-container>
+
+                    <!-- Total Amount Column -->
+                    <ng-container matColumnDef="totalAmount">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Amount (LKR) </th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalAmount | number:'1.2-2'}} </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="status-badge" [ngClass]="element.status?.toLowerCase()">
+                                {{element.status}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button style="color: #673ab7;" (click)="goToDetails(element)" matTooltip="Purchase Order Detail">
+                                <mat-icon>note</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+                            'selected-row': selectedRow?.id === row.id,
+                            'added-row': lastAddedRow?.id === row.id,
+                            'edited-row': lastEditedRow?.id === row.id
+                        }">
+                    </tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" [attr.colspan]="displayedColumns.length"
+                            style="padding: 16px; text-align: center;">
+                            No data matching the filter "{{input.value}}"
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>

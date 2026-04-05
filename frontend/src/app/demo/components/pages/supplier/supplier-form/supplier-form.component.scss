@@ -1,0 +1,29 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding-top: 10px;
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.full-column {
+    grid-column: 1 / -1;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+mat-dialog-content {
+    padding-top: 10px !important;
+    max-height: 70vh;
+}
+
+mat-dialog-actions {
+    padding: 16px 24px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    gap: 12px;
+}

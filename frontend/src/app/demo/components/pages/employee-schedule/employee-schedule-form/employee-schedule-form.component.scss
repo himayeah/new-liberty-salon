@@ -1,0 +1,17 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+
+    @media (max-width: 540px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.checkbox-row {
+    margin: 4px 0 8px;
+}

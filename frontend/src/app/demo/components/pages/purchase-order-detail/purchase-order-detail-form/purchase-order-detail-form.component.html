@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Item' : 'Add New Item' }}</h2>
+<mat-dialog-content>
+    <form [formGroup]="itemForm" class="mt-2">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Order Number</mat-label>
+                    <input matInput formControlName="orderNumber" readonly>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product Name</mat-label>
+                    <mat-select formControlName="productId">
+                        <mat-option *ngFor="let product of products" [value]="product.id">
+                            {{product.productName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Quantity Ordered</mat-label>
+                    <input matInput type="number" formControlName="quantityOrdered">
+                </mat-form-field>
+            </div>
+            <div class="col-md-6 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Unit Price</mat-label>
+                    <input matInput type="number" formControlName="unitPrice">
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="itemForm.invalid">{{ isEditMode ? 'Update' : 'Add' }}</button>
+</mat-dialog-actions>

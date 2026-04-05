@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Stock' : 'Add New Stock' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="inventoryForm" class="inventory-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Product</mat-label>
+        <mat-select formControlName="productId">
+          <mat-option *ngFor="let product of products" [value]="product.id">
+            {{ product.productName }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="inventoryForm.get('productId')?.hasError('required')">
+          Product is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row flex-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Current Stock</mat-label>
+        <input matInput type="number" formControlName="currentStock" placeholder="Current quantity">
+        <mat-error *ngIf="inventoryForm.get('currentStock')?.invalid">
+          Please enter a valid stock value
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Shelf Location</mat-label>
+        <input matInput formControlName="shelfLocation" placeholder="e.g. A-12">
+        <mat-error *ngIf="inventoryForm.get('shelfLocation')?.invalid">
+          Location is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row flex-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Min Stock Level</mat-label>
+        <input matInput type="number" formControlName="minimumStock">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Max Stock Level</mat-label>
+        <input matInput type="number" formControlName="maximumStock">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Last Restocked Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="lastRestockedDate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="inventoryForm.invalid" (click)="onSave()">
+    {{ isEditMode ? 'Update' : 'Save' }}
+  </button>
+</mat-dialog-actions>

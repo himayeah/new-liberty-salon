@@ -1,0 +1,97 @@
+<div class="container">
+    <mat-card class="supplier-card">
+        <div class="header-section">
+            <h2>Supplier Information</h2>
+            <button mat-icon-button (click)="refreshData()" matTooltip="Refresh">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+
+        <div class="content-section">
+            <div class="actions-bar">
+                <button mat-raised-button color="primary" (click)="openAddSupplierModal()">
+                    <mat-icon>person_add</mat-icon> Add New Supplier
+                </button>
+
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (input)="applyFilter($event)" placeholder="Search suppliers" #input />
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+
+                    <!-- Supplier Name Column -->
+                    <ng-container matColumnDef="supplierName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Supplier Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.supplierName}} </td>
+                    </ng-container>
+
+                    <!-- Contact Person Column -->
+                    <ng-container matColumnDef="contactName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Contact Person </th>
+                        <td mat-cell *matCellDef="let element"> {{element.contactName}} </td>
+                    </ng-container>
+
+                    <!-- Phone Number Column -->
+                    <ng-container matColumnDef="phoneNumber">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number </th>
+                        <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
+                    </ng-container>
+
+                    <!-- Email Address Column -->
+                    <ng-container matColumnDef="emailAddress">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                        <td mat-cell *matCellDef="let element"> {{element.emailAddress}} </td>
+                    </ng-container>
+
+                    <!-- Address Column -->
+                    <ng-container matColumnDef="address">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
+                        <td mat-cell *matCellDef="let element" matTooltip="{{element.address}}">
+                            {{(element.address?.length > 30) ? (element.address | slice:0:30) + '...' :
+                            element.address}}
+                        </td>
+                    </ng-container>
+
+                    <!-- Payment Terms Column -->
+                    <ng-container matColumnDef="paymentTerms">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Payment Terms </th>
+                        <td mat-cell *matCellDef="let element"> {{element.paymentTerms}} </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+                            'selected-row': selectedRow?.id === row.id,
+                            'added-row': lastAddedRow?.id === row.id,
+                            'edited-row': lastEditedRow?.id === row.id
+                        }">
+                    </tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" [attr.colspan]="displayedColumns.length"
+                            style="padding: 16px; text-align: center;">
+                            No data matching the filter "{{input.value}}"
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+        </div>
+    </mat-card>
+</div>
