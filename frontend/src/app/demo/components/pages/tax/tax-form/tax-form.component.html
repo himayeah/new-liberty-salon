@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ data?.mode === 'edit' ? 'Edit Tax Details' : 'Add New Tax' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="taxForm" class="form-container">
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Tax Name</mat-label>
+        <input matInput formControlName="taxName" placeholder="Enter Tax Name" />
+        <mat-error *ngIf="taxForm.get('taxName')?.invalid && taxForm.get('taxName')?.touched">
+          Tax Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tax Rate</mat-label>
+        <input matInput type="number" formControlName="taxRate" placeholder="0.0" />
+        <mat-error *ngIf="taxForm.get('taxRate')?.invalid && taxForm.get('taxRate')?.touched">
+          Tax Rate is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row align-items-center">
+      <mat-form-field appearance="outline">
+        <mat-label>Effective Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="effectiveDate" placeholder="Choose effective date" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="taxForm.get('effectiveDate')?.invalid && taxForm.get('effectiveDate')?.touched">
+          Effective Date is required
+        </mat-error>
+      </mat-form-field>
+      
+      <div class="checkbox-container">
+        <mat-checkbox formControlName="isActive">Is Active</mat-checkbox>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="taxForm.invalid">
+    {{ data?.mode === 'edit' ? 'Update' : 'Save' }}
+  </button>
+</mat-dialog-actions>

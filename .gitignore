@@ -1,34 +1,59 @@
-/frontend
-/node_modules
-# Source specific
-.DS_Store
-.checkstyle
-.classpath
-.project
-.settings/
-.idea/
+# /frontend
+# /node_modules
+# # Source specific
+# .DS_Store
+# .checkstyle
+# .classpath
+# .project
+# .settings/
+# .idea/
 
-# Node modules
-/node_modules
+# # Node modules
+# /node_modules
+
+# # Angular
+# .angular/
+# dist/
+# tmp/
+# out-tsc/
+# bazel-out/
+# test-output/
+
+# # Logs
+# *-debug.log
+# *-error.log
+
+# /backend
+# # Default ignored files
+# /shelf/
+# /workspace.xml
+# # Editor-based HTTP Client requests
+# /httpRequests/
+# # Backend Maven/Java
+# backend/target/
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.settings/
+.project
+.classpath
+
+# Node
+node_modules/
 
 # Angular
 .angular/
 dist/
 tmp/
 out-tsc/
-bazel-out/
-test-output/
 
 # Logs
 *-debug.log
 *-error.log
 
-/backend
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Backend Maven/Java
+# Backend (Java)
 backend/target/
 

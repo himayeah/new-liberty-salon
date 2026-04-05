@@ -1,0 +1,129 @@
+<h2 mat-dialog-title>{{ mode === 'add' ? 'Add New Appointment' : 'Edit Appointment' }}</h2>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="mat-typography mt-3">
+    <form [formGroup]="appointmentScheduleForm" class="appointment-form-modal">
+        <div class="form-grid">
+            <!-- Client Name -->
+            <mat-form-field appearance="outline">
+                <mat-label>Client Name</mat-label>
+                <mat-select formControlName="clientId">
+                    <mat-option *ngFor="let client of clients" [value]="client.id">
+                        {{ client.firstName }} {{ client.lastName }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && appointmentScheduleForm.get('clientId')?.hasError('required')">
+                    Client is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Employee Name -->
+            <mat-form-field appearance="outline">
+                <mat-label>Employee Name</mat-label>
+                <mat-select formControlName="employeeId">
+                    <mat-option *ngFor="let employee of employees" [value]="employee.id">
+                        {{ employee.employeeName || (employee.firstName + ' ' + (employee.lastName || '')) }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && appointmentScheduleForm.get('employeeId')?.hasError('required')">
+                    Employee is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Service -->
+            <mat-form-field appearance="outline">
+                <mat-label>Service</mat-label>
+                <mat-select formControlName="serviceId">
+                    <mat-option *ngFor="let service of services" [value]="service.id">
+                        {{ service.serviceName }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && appointmentScheduleForm.get('serviceId')?.hasError('required')">
+                    Service is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Appointment Date -->
+            <mat-form-field appearance="outline">
+                <mat-label>Appointment Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="appointmentDate"
+                    placeholder="Choose a date" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentDate')?.hasError('required')">
+                    Date is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Start Time -->
+            <mat-form-field appearance="outline">
+                <mat-label>Start Time</mat-label>
+                <input matInput type="time" formControlName="appointmentStartTime" />
+                <mat-error
+                    *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('required')">
+                    Start Time is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- End Time -->
+            <mat-form-field appearance="outline">
+                <mat-label>End Time</mat-label>
+                <input matInput type="time" formControlName="appointmentEndTime" />
+                <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentEndTime')?.hasError('required')">
+                    End Time is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Status -->
+            <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="appointmentStatus">
+                    <mat-option *ngFor="let s of appointmentStatuses" [value]="s.value">
+                        {{ s.viewValue }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Booking Source -->
+            <mat-form-field appearance="outline">
+                <mat-label>Booking Source</mat-label>
+                <mat-select formControlName="bookingSource">
+                    <mat-option *ngFor="let s of bookingSources" [value]="s.value">
+                        {{ s.viewValue }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && appointmentScheduleForm.get('bookingSource')?.hasError('required')">
+                    Source is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Notes -->
+            <mat-form-field appearance="outline" class="span-6">
+                <mat-label>Notes</mat-label>
+                <textarea matInput formControlName="notes" rows="2"></textarea>
+            </mat-form-field>
+
+            <!-- Cancellation Reason -->
+            <mat-form-field appearance="outline" class="span-6"
+                *ngIf="appointmentScheduleForm.get('appointmentStatus')?.value === 'CANCELLED'">
+                <mat-label>Cancellation Reason</mat-label>
+                <textarea matInput formControlName="cancellationReason" rows="2"></textarea>
+            </mat-form-field>
+
+            <!-- Cancelled Date (Read-only) -->
+            <mat-form-field appearance="outline" class="span-6"
+                *ngIf="appointmentScheduleForm.get('appointmentStatus')?.value === 'CANCELLED' && appointmentScheduleForm.get('cancelledDate')?.value">
+                <mat-label>Cancelled Date</mat-label>
+                <input matInput formControlName="cancelledDate" readonly>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="p-3">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="isButtonDisabled" (click)="onSubmit()">
+        {{ mode === 'add' ? 'Save Appointment' : 'Update Appointment' }}
+    </button>
+</mat-dialog-actions>

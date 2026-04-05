@@ -1,0 +1,30 @@
+.inventory-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    min-width: 500px;
+}
+
+.form-row {
+    width: 100%;
+}
+
+.flex-row {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+
+    mat-form-field {
+        flex: 1;
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+mat-dialog-content {
+    max-height: 80vh;
+    overflow-y: auto;
+}

@@ -1,0 +1,36 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    
+    mat-form-field {
+        flex: 1;
+    }
+}
+
+.full-width {
+    width: 100%;
+    flex: none !important;
+}
+
+.checkbox-container {
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-bottom: 22px; /* aligns with baseline of adjacent form field */
+}
+
+.dialog-actions {
+    padding: 16px;
+    margin-bottom: 0;
+}
+
+.align-items-center {
+    align-items: center;
+}

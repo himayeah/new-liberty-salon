@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{ data.mode === 'add' ? 'Add New Category' : 'Edit Category' }}</h2>
+<mat-dialog-content>
+    <form [formGroup]="serviceCategoryForm">
+        <div class="form-grid">
+            <!--Category Name -->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Category Name</mat-label>
+                    <input matInput formControlName="categoryName" placeholder="Enter category name" />
+                    <mat-error *ngIf="isInvalid('categoryName','required')">Category Name is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Display Order-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Display Order</mat-label>
+                    <input matInput type="number" formControlName="displayOrder" min="0" placeholder="0" />
+                    <mat-error *ngIf="isInvalid('displayOrder','min')">Display order must be 0 or higher</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Category Description-->
+            <div class="form-field full-column">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" rows="3"
+                        placeholder="Enter category description"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="resetForm()">Reset</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isButtonDisabled">
+        {{ data.mode === 'add' ? 'Save' : 'Update' }}
+    </button>
+</mat-dialog-actions>

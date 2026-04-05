@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>{{ data.mode === 'add' ? 'Supplier Registration' : 'Edit Supplier' }}</h2>
+<mat-dialog-content>
+    <form [formGroup]="supplierForm">
+        <div class="form-grid">
+            <!--Supplier Name-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Supplier Name</mat-label>
+                    <input matInput formControlName="supplierName" placeholder="Enter supplier name" />
+                    <mat-error *ngIf="isInvalid('supplierName', 'required')">
+                        Supplier Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Contact Person-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Contact Person Name</mat-label>
+                    <input matInput formControlName="contactName" placeholder="Enter contact name" />
+                    <mat-error *ngIf="isInvalid('contactName', 'required')">
+                        Contact Person Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Phone Number-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Contact Phone Number</mat-label>
+                    <input matInput formControlName="phoneNumber" placeholder="Enter phone number" />
+                    <mat-error *ngIf="isInvalid('phoneNumber', 'required')">Phone number is required</mat-error>
+                    <mat-error *ngIf="isInvalid('phoneNumber', 'pattern')">Invalid phone number</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Email Address-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Contact Email Address</mat-label>
+                    <input matInput formControlName="emailAddress" placeholder="Enter email address" />
+                    <mat-error *ngIf="isInvalid('emailAddress', 'required')">Email is required</mat-error>
+                    <mat-error *ngIf="isInvalid('emailAddress', 'email')">Invalid email address</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Payment Terms-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Payment Terms</mat-label>
+                    <mat-select formControlName="paymentTerms">
+                        <mat-option value="Cash">Cash</mat-option>
+                        <mat-option value="Net 30">Net 30</mat-option>
+                        <mat-option value="Net 60">Net 60</mat-option>
+                        <mat-option value="Net 90">Net 90</mat-option>
+                        <mat-option value="Advanced">Advanced</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('paymentTerms', 'required')">
+                        Payment Terms is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Address-->
+            <div class="form-field full-column">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput formControlName="address" rows="3" placeholder="Enter full address"></textarea>
+                    <mat-error *ngIf="isInvalid('address', 'required')">Address is required</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="resetForm()">Reset</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isButtonDisabled">
+        {{ data.mode === 'add' ? 'Save' : 'Update' }}
+    </button>
+</mat-dialog-actions>

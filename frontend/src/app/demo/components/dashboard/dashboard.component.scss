@@ -1,0 +1,158 @@
+/* Dashboard Grid Layout layout for 5 cards */
+.dashboard-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Base Card Styling */
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 140px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #f0f0f0;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Header layout */
+.dashboard-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Card Typography */
+.dashboard-card__label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.dashboard-card__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.dashboard-card__subtitle {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+/* Icon Styling */
+.dashboard-card__icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+
+    i {
+        font-size: inherit;
+    }
+}
+
+.dashboard-card--appointments {
+    background-color: #B6C687 !important;
+    border-color: #B6C687;
+
+    .dashboard-card__label,
+    .dashboard-card__value {
+        color: #1f2937;
+    }
+
+    .dashboard-card__subtitle {
+        color: #4b5563;
+    }
+
+    .dashboard-card__icon {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: #3f4a21;
+    }
+}
+
+.dashboard-card--new-clients {
+    background-color: #F7DFDF !important;
+    border-color: #F7DFDF;
+
+    .dashboard-card__label,
+    .dashboard-card__value {
+        color: #1f2937;
+    }
+
+    .dashboard-card__subtitle {
+        color: #4b5563;
+    }
+
+    .dashboard-card__icon {
+        background-color: rgba(255, 255, 255, 0.5);
+        color: #991b1b;
+    }
+}
+
+.dashboard-card--mostly-used-service {
+    background-color: #BBB7E5 !important;
+    border-color: #BBB7E5;
+
+    .dashboard-card__label,
+    .dashboard-card__value,
+    .dashboard-card__subtitle {
+        color: #ffffff;
+    }
+
+    .dashboard-card__icon {
+        background-color: rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+    }
+}
+
+.dashboard-card--revenue {
+    .dashboard-card__icon {
+        background-color: #FEF3C7;
+        color: #D97706;
+    }
+}
+
+.dashboard-card--tasks {
+    .dashboard-card__icon {
+        background-color: #FEE2E2;
+        color: #DC2626;
+    }
+}
+
+/* Responsive adjustment */
+@media screen and (max-width: 1400px) {
+    .dashboard-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .dashboard-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .dashboard-row {
+        grid-template-columns: 1fr;
+    }
+}

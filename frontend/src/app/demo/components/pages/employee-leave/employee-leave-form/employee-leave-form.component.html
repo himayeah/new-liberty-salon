@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{ mode === 'add' ? 'Add New Leave' : 'Edit Leave '}}</h2>
+<!--Angular decides which title to show-->
+<mat-dialog-content>
+    <form [formGroup]="employeeLeaveForm">
+        <div class="form-grid">
+
+            <!--Employee Name-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Employee Name</mat-label>
+                    <mat-select formControlName="employeeName">
+                        <mat-option *ngFor="let emp of employees" [value]="emp.employeeName">{{ emp.employeeName
+                            }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('employeeName','required')">
+                        Employee Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Leave Type-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Leave Type</mat-label>
+                    <mat-select formControlName="leaveType">
+                        <mat-option value="Sick leave">Sick Leave</mat-option>
+                        <mat-option value="Annual leave">Annual Leave</mat-option>
+                        <mat-option value="Casual leave">Casual Leave</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('leaveType','required')">Leave Type is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Start Date-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="startDatePicker" formControlName="startDate"
+                        placeholder="Start Date">
+                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                    <mat-error *ngIf="isInvalid('startDate','required')">Start Date is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--End Date-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" placeholder="End Date">
+                    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                    <mat-error *ngIf="isInvalid('endDate','required')">End Date is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Reason-->
+            <div class="form-field full-column">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Reason</mat-label>
+                    <textarea matInput formControlName="reason" placeholder="Enter reason for leave"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="resetForm()">Reset</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isButtonDisabled">
+        {{ mode === 'add' ? 'Save' : 'Update' }}
+    </button>
+</mat-dialog-actions>

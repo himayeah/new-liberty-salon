@@ -1,0 +1,79 @@
+<div class="report-container">
+    <div class="report-header">
+        <div class="title-label-container">
+            <h2 class="report-title">
+                <mat-icon>assessment</mat-icon>
+                Appointment Status Report
+            </h2>
+            <span class="report-subtitle">Appointment Cancellation Overview</span>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <mat-card class="report-card">
+                <mat-card-header>
+                    <mat-card-title>Cancellation Trend</mat-card-title>
+                    <span class="time-label">last 30 days</span>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-wrapper">
+                        <p-chart type="bar" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!--Client Name | Service Name | Cancelled Date | Cancelled Reason of Cancelled Appointments within last 3 Months-->
+        <!--Table-->
+        <div class="table-section" style="grid-column: 1 / -1;">
+            <mat-card class="report-card">
+                <mat-card-header>
+                    <mat-card-title>Cancelled Appointment Summary</mat-card-title>
+                    <span class="time-label">last 30 days</span>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="table-container">
+                        <table mat-table [dataSource]="appointmentCancellationData" class="full-width-table">
+
+                            <ng-container matColumnDef="clientName">
+                                <th mat-header-cell *matHeaderCellDef> Client Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="serviceName">
+                                <th mat-header-cell *matHeaderCellDef> Service Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.serviceName}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="cancelledDate">
+                                <th mat-header-cell *matHeaderCellDef> Cancelled Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cancelledDate}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="cancellationReason">
+                                <th mat-header-cell *matHeaderCellDef> Cancellation Reason </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cancellationReason}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row
+                                *matHeaderRowDef="['clientName', 'serviceName', 'cancelledDate', 'cancellationReason']">
+                            </tr>
+                            <tr mat-row
+                                *matRowDef="let row; columns: ['clientName', 'serviceName', 'cancelledDate', 'cancellationReason'];">
+                            </tr>
+
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4" style="text-align: center; padding: 20px;">
+                                    No appointment cancellation data available.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+    </div>
+</div>

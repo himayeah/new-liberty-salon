@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Edit Employee Attendance</h2>
+<mat-dialog-content>
+    <form [formGroup]="attendanceForm" class="form-container">
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label>Employee Name</mat-label>
+                <input matInput formControlName="employeeName" readonly>
+            </mat-form-field>
+        </div>
+
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label>Check-in Time</mat-label>
+                <input matInput type="datetime-local" formControlName="checkInTime">
+            </mat-form-field>
+        </div>
+
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label>Check-out Time</mat-label>
+                <input matInput type="datetime-local" formControlName="checkOutTime">
+            </mat-form-field>
+        </div>
+
+        <div class="form-row">
+            <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                    <mat-option value="Present">Present</mat-option>
+                    <mat-option value="Absent">Absent</mat-option>
+                    <mat-option value="Late">Late</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="onCancel()" color="warn">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="attendanceForm.invalid">Update</button>
+</mat-dialog-actions>

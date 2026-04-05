@@ -1,0 +1,36 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    
+    mat-form-field {
+        flex: 1;
+    }
+}
+
+.flex-60 {
+    flex: 3 !important;
+}
+
+.flex-40 {
+    flex: 2 !important;
+}
+
+.flex-50 {
+    flex: 1 !important;
+}
+
+.full-width {
+    width: 100%;
+    flex: none !important;
+}
+
+.dialog-actions {
+    padding: 16px;
+    margin-bottom: 0;
+}

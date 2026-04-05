@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>{{ data.mode === 'add' ? 'Add New Product' : 'Edit Product' }}</h2>
+<mat-dialog-content>
+    <form [formGroup]="productManagementForm">
+        <div class="form-grid">
+            <!--Product Name-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product Name</mat-label>
+                    <input matInput formControlName="productName" placeholder="Enter product name" />
+                    <mat-error *ngIf="isInvalid('productName', 'required')">
+                        Product Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Category Name-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Category Name</mat-label>
+                    <mat-select formControlName="categoryName">
+                        <mat-option *ngFor="let category of categories" [value]="category.productCategoryName">
+                            {{ category.productCategoryName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('categoryName', 'required')">
+                        Category Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+
+            <!--Unit of Measurement-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Unit of Measurement</mat-label>
+                    <mat-select formControlName="unit">
+                        <mat-option value="ml">ml</mat-option>
+                        <mat-option value="g">g</mat-option>
+                        <mat-option value="kg">kg</mat-option>
+                        <mat-option value="oz">oz</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="isInvalid('unit', 'required')">Unit is required</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!--Description-->
+            <div class="form-field full-column">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Product Description</mat-label>
+                    <textarea matInput formControlName="productDescription" rows="2"
+                        placeholder="Additional details..."></textarea>
+                </mat-form-field>
+            </div>
+
+            <!--Purchase price-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Purchase Price</mat-label>
+                    <input matInput type="number" formControlName="purchasePrice" />
+                </mat-form-field>
+            </div>
+
+            <!--Selling price-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Selling Price</mat-label>
+                    <input matInput type="number" formControlName="sellingPrice" />
+                </mat-form-field>
+            </div>
+
+            <!--Barcode-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Barcode</mat-label>
+                    <input matInput formControlName="barcode" />
+                </mat-form-field>
+            </div>
+
+            <!--SKU-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>SKU (Stock Keeping Unit)</mat-label>
+                    <input matInput formControlName="sku" />
+                </mat-form-field>
+            </div>
+
+            <!--Re-Order Level-->
+            <div class="form-field">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Re-Order Level</mat-label>
+                    <input matInput type="number" formControlName="reOrderLevel" />
+                </mat-form-field>
+            </div>
+
+            <!--Taxable-->
+            <div class="form-field">
+                <mat-checkbox formControlName="isTaxable">Is Taxable</mat-checkbox>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button (click)="resetForm()">Reset</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isButtonDisabled">
+        {{ data.mode === 'add' ? 'Save' : 'Update' }}
+    </button>
+</mat-dialog-actions>
