@@ -91,12 +91,22 @@
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Actions </th>
             <td mat-cell *matCellDef="let element">
-              <button mat-button color="primary" (click)="editData(element)" matTooltip="Edit">
-                <mat-icon class="material-icons">edit</mat-icon> Edit
-              </button>
-              <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
-                <mat-icon class="material-icons">delete</mat-icon>
-              </button>
+              <div class="action-buttons">
+                <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit Appointment">
+                  <mat-icon class="material-icons">edit</mat-icon>
+                </button>
+
+                <button *ngIf="element.appointmentStatus === 'READY FOR BILLING'" 
+                        mat-icon-button color="accent"
+                        (click)="proceedToBilling(element)" 
+                        matTooltip="Proceed to Billing">
+                  <mat-icon class="material-icons">payments</mat-icon>
+                </button>
+
+                <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete Appointment">
+                  <mat-icon class="material-icons">delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 

@@ -1,1 +1,127 @@
-<p>billing-form does ot work works!</p>xcxcxcxcxc
+<h2 mat-dialog-title>
+    <!--A nested ternary operator-->
+    {{ mode === 'edit' ? 'Edit Billing' : (mode === 'view' ? 'Invoice Details' : 'Add New Billing') }}
+</h2>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="mat-typography mt-3">
+    <form [formGroup]="billingForm" class="billing-form-modal">
+        <div class="form-grid">
+            <!-- Client Name -->
+            <mat-form-field appearance="outline">
+                <mat-label>Client Name</mat-label>
+                <input matInput formControlName="clientName" placeholder="Enter client name" />
+                <mat-error *ngIf="submitted && billingForm.get('clientName')?.hasError('required')">
+                    Client Name is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Billing Date -->
+            <mat-form-field appearance="outline">
+                <mat-label>Billing Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="billingDate" placeholder="Choose a date" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <!-- Billing Category -->
+            <mat-form-field appearance="outline">
+                <mat-label>Billing Category</mat-label>
+                <mat-select formControlName="billingCategory">
+                    <mat-option *ngFor="let cat of billingCategories" [value]="cat.value">
+                        {{ cat.viewValue }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Client Type -->
+            <mat-form-field appearance="outline">
+                <mat-label>Client Type</mat-label>
+                <mat-select formControlName="clientType">
+                    <mat-option *ngFor="let type of clientTypes" [value]="type.value">
+                        {{ type.viewValue }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="purchases-section mt-4">
+            <div class="section-header d-flex justify-content-between align-items-center mb-2">
+                <h3 class="mb-0">Purchases</h3>
+                <button *ngIf="mode !== 'view'" mat-stroked-button color="primary" type="button"
+                    (click)="addPurchase()">
+                    <mat-icon>add</mat-icon> Add Item
+                </button>
+            </div>
+
+            <table mat-table [dataSource]="purchaseDataSource" class="purchases-table mat-elevation-z0">
+                <!-- Category Column -->
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef> Category </th>
+                    <td mat-cell *matCellDef="let ctrl; let i = index" [formGroup]="ctrl">
+                        <mat-select formControlName="category" class="category-select">
+                            <mat-option value="SERVICE">SERVICE</mat-option>
+                            <mat-option value="PRODUCT PURCHASE">PRODUCT PURCHASE</mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Service / Product Name </th>
+                    <td mat-cell *matCellDef="let ctrl; let i = index" [formGroup]="ctrl">
+                        <input matInput formControlName="name" placeholder="Search..." [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getItemLabel.bind(this)"
+                            (optionSelected)="onOptionSelected($event, i)">
+                            <mat-option *ngFor="let option of filteredOptions[i]" [value]="option">
+                                {{ getItemLabel(option) }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </td>
+                </ng-container>
+
+                <!-- Quantity Column -->
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef> Qty </th>
+                    <td mat-cell *matCellDef="let ctrl; let i = index" [formGroup]="ctrl">
+                        <input matInput type="number" formControlName="quantity" class="qty-input">
+                    </td>
+                </ng-container>
+
+                <!-- Price Column -->
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> Price </th>
+                    <td mat-cell *matCellDef="let ctrl; let i = index" [formGroup]="ctrl">
+                        <input matInput type="number" formControlName="price" class="price-input">
+                    </td>
+                </ng-container>
+
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let ctrl; let i = index">
+                        <button *ngIf="mode !== 'view'" mat-icon-button color="warn" (click)="removePurchase(i)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="purchaseColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: purchaseColumns;"></tr>
+            </table>
+
+            <div *ngIf="purchases.length === 0" class="no-data-msg p-3 text-center border">
+                No purchases added yet.
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="p-3">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button *ngIf="mode !== 'view'" mat-raised-button color="primary" [disabled]="isButtonDisabled"
+        (click)="onSubmit()">
+        {{ mode === 'add' ? 'Save Billing' : 'Update Billing' }}
+    </button>
+</mat-dialog-actions>

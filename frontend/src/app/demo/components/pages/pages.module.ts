@@ -55,6 +55,7 @@ import { ProductFormComponent } from './product/product-form/product-form.compon
 import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purchase-order-detail-form/purchase-order-detail-form.component';
 import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 import { BillingComponent } from './billing/billing.component';
+import { BillingFormComponent } from './billing/billing-form/billing-form.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
@@ -122,7 +123,7 @@ import { ReportProcurementComponent } from './report/report-procurement/report-p
     MatTabsModule,
     TableModule,
     ChartModule,
-
+    BillingFormComponent
   ]
 })
 export class PagesModule { } // Trigger re-compilation

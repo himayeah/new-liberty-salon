@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { Router } from '@angular/router';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 import { AppointmentFormComponent } from './appointment-form/appointment-form.component';
 
@@ -40,7 +41,8 @@ export class AppointmentScheduleComponent implements OnInit {
     constructor(
         private appointmentService: AppointmentSchedulingServiceService,
         private messageService: MessageServiceService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -88,6 +90,26 @@ export class AppointmentScheduleComponent implements OnInit {
                 this.highlightRow('edit', result);
             }
             this.selectedRow = null;
+        });
+    }
+
+    //preparing some data and redirecting the user to the billing page.
+    proceedToBilling(appointment: any): void {
+        const clientName = appointment.clientName || (appointment.client ? (appointment.client.firstName + ' ' + appointment.client.lastName) : '');
+        const billingData = {
+            clientName: clientName,
+            billingCategory: 'SALON_SERVICE',
+            clientType: 1, // Registered
+            billingDate: appointment.appointmentDate,
+            serviceId: appointment.serviceId || (appointment.service ? appointment.service.id : null),
+            serviceName: appointment.serviceName || (appointment.service ? (appointment.service.serviceName || appointment.service.name) : ''),
+            autoOpen: true
+        };
+
+        this.router.navigate(['/pages/billing'], {
+            queryParams: {
+                data: JSON.stringify(billingData)
+            }
         });
     }
 
