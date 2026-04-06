@@ -1,1 +1,84 @@
-<p>billing-form does ot work works!</p>xcxcxcxcxc
+<h2 mat-dialog-title>{{ mode === 'add' ? 'Add New Billing' : 'Edit Billing' }}</h2>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="mat-typography mt-3">
+    <form [formGroup]="billingForm" class="billing-form-modal">
+        <div class="form-grid">
+            <!-- Client Name -->
+            <mat-form-field appearance="outline">
+                <mat-label>Client Name</mat-label>
+                <input matInput formControlName="clientName" placeholder="Enter client name" />
+                <mat-error *ngIf="submitted && billingForm.get('clientName')?.hasError('required')">
+                    Client Name is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Billing Category -->
+            <mat-form-field appearance="outline">
+                <mat-label>Billing Category</mat-label>
+                <mat-select formControlName="billingCategory">
+                    <mat-option *ngFor="let cat of billingCategories" [value]="cat.value">
+                        {{ cat.viewValue }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && billingForm.get('billingCategory')?.hasError('required')">
+                    Category is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Client Type -->
+            <mat-form-field appearance="outline">
+                <mat-label>Client Type</mat-label>
+                <input matInput type="number" formControlName="clientType" />
+                <mat-error *ngIf="submitted && billingForm.get('clientType')?.hasError('required')">
+                    Client Type is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Payment Status -->
+            <mat-form-field appearance="outline">
+                <mat-label>Payment Status</mat-label>
+                <mat-select formControlName="paymentStatus">
+                    <mat-option *ngFor="let status of paymentStatuses" [value]="status.value">
+                        {{ status.viewValue }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && billingForm.get('paymentStatus')?.hasError('required')">
+                    Status is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Billing Date -->
+            <mat-form-field appearance="outline">
+                <mat-label>Billing Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="billingDate" placeholder="Choose a date" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="submitted && billingForm.get('billingDate')?.hasError('required')">
+                    Date is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Payment Method -->
+            <mat-form-field appearance="outline">
+                <mat-label>Payment Method</mat-label>
+                <mat-select formControlName="paymentMethod">
+                    <mat-option *ngFor="let method of paymentMethods" [value]="method.value">
+                        {{ method.viewValue }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="submitted && billingForm.get('paymentMethod')?.hasError('required')">
+                    Method is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="p-3">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="isButtonDisabled" (click)="onSubmit()">
+        {{ mode === 'add' ? 'Save Billing' : 'Update Billing' }}
+    </button>
+</mat-dialog-actions>

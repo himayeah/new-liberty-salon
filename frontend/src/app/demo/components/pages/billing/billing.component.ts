@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { BillingService } from 'src/app/services/billing/billing.service';
+import { BillingFormComponent } from './billing-form/billing-form.component';
 
 @Component({
   selector: 'app-billing',
@@ -57,17 +58,17 @@ export class BillingComponent implements OnInit {
   }
 
   openAddModal(): void {
-    // const dialogRef = this.dialog.open(BillingFormComponent, {
-    //     width: '800px',
-    //     data: { mode: 'add' }
-    // });
+    const dialogRef = this.dialog.open(BillingFormComponent, {
+      width: '800px',
+      data: { mode: 'add' }
+    });
 
-    // dialogRef.afterClosed().subscribe(result => {
-    //     if (result) {
-    //         this.populateData();
-    //         this.highlightRow('add', result);
-    //     }
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.populateData();
+        this.highlightRow('add', result);
+      }
+    });
   }
 
   viewInvoiceDetails(data: any): void {
@@ -75,9 +76,9 @@ export class BillingComponent implements OnInit {
   }
 
   editData(data: any): void {
-    const dialogRef = this.dialog.open(BillingComponent, {
+    const dialogRef = this.dialog.open(BillingFormComponent, {
       width: '800px',
-      data: { mode: 'edit', appointment: data }
+      data: { mode: 'edit', billing: data }
     });
 
     this.selectedRow = data;
