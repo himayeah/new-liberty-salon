@@ -37,7 +37,9 @@
 
                     <ng-container matColumnDef="clientType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Type </th>
-                        <td mat-cell *matCellDef="let element">{{ element.clientType }}</td>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.clientType == 1 ? 'REGISTERED' : (element.clientType == 2 ? 'WALK-IN' : element.clientType) }}
+                        </td>
                     </ng-container>
 
                     <ng-container matColumnDef="paymentStatus">
@@ -51,7 +53,7 @@
 
                     <ng-container matColumnDef="billingDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-                        <td mat-cell *matCellDef="let element">{{ element.billingDate }}</td>
+                        <td mat-cell *matCellDef="let element">{{ element.billingDate | date:'mediumDate' }}</td>
                     </ng-container>
 
                     <ng-container matColumnDef="paymentMethod">

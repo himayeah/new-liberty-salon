@@ -23,3 +23,62 @@ mat-form-field {
 .p-3 {
     padding: 1rem;
 }
+.purchases-section {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+
+    h3 {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0;
+    }
+}
+
+.purchases-table {
+    width: 100%;
+    margin-top: 1rem;
+    
+    th {
+        font-weight: 600;
+        background-color: #f8f9fa;
+        color: #444;
+        padding: 12px 8px;
+    }
+
+    td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .qty-input {
+        width: 60px;
+    }
+
+    .price-input {
+        width: 100px;
+    }
+
+    .category-select {
+        min-width: 180px;
+    }
+
+    mat-select {
+        width: 100%;
+    }
+}
+
+.no-data-msg {
+    color: #888;
+    background-color: #fafafa;
+    border-radius: 4px;
+    font-style: italic;
+    border: 1px solid #e0e0e0;
+}
+
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.mb-2 { margin-bottom: 0.5rem; }
+.text-center { text-align: center; }
+.mt-4 { margin-top: 1.5rem; }

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -37,11 +38,33 @@ export class BillingComponent implements OnInit {
   constructor(
     private billingService: BillingService,
     private messageService: MessageServiceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.populateData();
+    this.checkQueryParams();
+  }
+
+  //listening for the data passed from the appointment schedule page (Billing data related to a specific client)
+  checkQueryParams(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['data']) {
+        try {
+          //turns the string back to a usable object
+          const billingData = JSON.parse(params['data']);
+          if (billingData.autoOpen) {
+            // Slight delay to ensure page is loaded
+            setTimeout(() => {
+              this.openAddModal(billingData);
+            }, 500);
+          }
+        } catch (e) {
+          console.error('Error parsing billing data', e);
+        }
+      }
+    });
   }
 
   populateData(): void {
@@ -57,10 +80,13 @@ export class BillingComponent implements OnInit {
     });
   }
 
-  openAddModal(): void {
+  openAddModal(preFillData?: any): void {
     const dialogRef = this.dialog.open(BillingFormComponent, {
       width: '800px',
-      data: { mode: 'add' }
+      data: {
+        mode: 'add',
+        preFill: preFillData
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -72,7 +98,19 @@ export class BillingComponent implements OnInit {
   }
 
   viewInvoiceDetails(data: any): void {
-      // TODO: Implement view invoice details logic
+    const dialogRef = this.dialog.open(BillingFormComponent, {
+      width: '1000px',
+      data: { 
+        mode: 'view', 
+        billing: data 
+      }
+    });
+
+    this.selectedRow = data;
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.selectedRow = null;
+    });
   }
 
   editData(data: any): void {
