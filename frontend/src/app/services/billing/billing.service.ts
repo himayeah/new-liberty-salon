@@ -51,18 +51,18 @@ export class BillingService {
     return this.http.delete(requestUrl, { headers });
   }
 
-  // editData(id: number, form_details: any) {
-  //   console.log('In Edit Data');
+  editData(id: number, form_details: any) {
+    console.log('In Edit Data');
 
-  //   const requestUrl = `${environment.baseUrl}/appointment-schedule-form/${id}`;
+    const requestUrl = `${environment.baseUrl}/billing/${id}`;
 
-  //   let headers = new HttpHeaders();
-  //   const token = this.httpService.getAuthToken();
-  //   if (token !== null) {
-  //     headers = headers.set('Authorization', 'Bearer ' + token);
-  //   }
-  //   return this.http.put(requestUrl, form_details, { headers });
-  // }
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.put(requestUrl, form_details, { headers });
+  }
 
 
 }

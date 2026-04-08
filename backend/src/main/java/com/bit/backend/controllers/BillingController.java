@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.bit.backend.exceptions.AppException;
@@ -38,6 +39,16 @@ public class BillingController {
             return ResponseEntity.ok(billingDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BillingDto> updateBilling(@PathVariable long id, @RequestBody BillingDto billingDto) {
+        try {
+            BillingDto updatedBilling = billingService.updateBilling(id, billingDto);
+            return ResponseEntity.ok(updatedBilling);
+        } catch (Exception e) {
+            throw new AppException("Update failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

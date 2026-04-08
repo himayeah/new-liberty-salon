@@ -18,5 +18,6 @@ public class BillingDto {
     private String paymentStatus;
     private Long billingDate;
     private String paymentMethod;
+    private java.util.List<BillingPurchaseDto> purchases;
 
 }
