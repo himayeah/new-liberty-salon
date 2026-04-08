@@ -107,9 +107,7 @@ export class AppointmentScheduleComponent implements OnInit {
         };
 
         this.router.navigate(['/pages/billing'], {
-            queryParams: {
-                data: JSON.stringify(billingData)
-            }
+            state: { data: billingData }
         });
     }
 

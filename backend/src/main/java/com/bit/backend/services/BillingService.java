@@ -13,6 +13,8 @@ public interface BillingService {
 
     List<BillingDto> getBilling();
 
+    BillingDto updateBilling(long id, BillingDto billingDto);
+
     BillingDto deleteBilling(long id);
 
 }

@@ -87,7 +87,7 @@ export class BillingFormComponent implements OnInit {
       if (this.data.billing.billingDate) {
         this.billingForm.get('billingDate')?.setValue(new Date(this.data.billing.billingDate));
       }
-      
+
       // Load purchases if they existed on the object
       if (this.data.billing.purchases && Array.isArray(this.data.billing.purchases)) {
         this.purchases.clear();
@@ -127,7 +127,10 @@ export class BillingFormComponent implements OnInit {
   }
 
   addPurchase(data?: any) {
+    // If we have data from backend, 'name' is a string. 
+    // We keep it as a string or object; getItemLabel handles both.
     const purchaseGroup = this.fb.group({
+      id: [data?.id || null],
       category: [data?.category || 'SERVICE', Validators.required],
       name: [data?.name || '', Validators.required],
       quantity: [data?.quantity || 1, [Validators.required, Validators.min(1)]],
@@ -136,72 +139,86 @@ export class BillingFormComponent implements OnInit {
 
     const index = this.purchases.length;
     this.filteredOptions[index] = [];
-    
+
     // Listen for category changes to reset name and update options
     purchaseGroup.get('category')?.valueChanges.subscribe(() => {
-        purchaseGroup.get('name')?.setValue('');
-        this.updateFilteredOptions(index, purchaseGroup);
+      purchaseGroup.get('name')?.setValue('');
+      this.updateFilteredOptions(index, purchaseGroup);
     });
 
     // Listen for name changes to filter options
     purchaseGroup.get('name')?.valueChanges.subscribe(val => {
-        this.updateFilteredOptions(index, purchaseGroup, val);
+      const filterValue = typeof val === 'string' ? val : (this.getItemLabel(val));
+      this.updateFilteredOptions(index, purchaseGroup, filterValue);
     });
 
     this.purchases.push(purchaseGroup);
     this.purchaseDataSource.data = [...this.purchases.controls];
     this.billingForm.updateValueAndValidity();
-    
+
     // Initial update
-    this.updateFilteredOptions(index, purchaseGroup);
+    this.updateFilteredOptions(index, purchaseGroup, data?.name || '');
   }
 
   updateFilteredOptions(index: number, group: FormGroup, filterValue: string = '') {
     const category = group.get('category')?.value;
     const items = category === 'SERVICE' ? this.allServices : this.allProducts;
     const filter = filterValue ? (typeof filterValue === 'string' ? filterValue.toLowerCase() : '') : '';
-    
+
     this.filteredOptions[index] = items.filter(item => {
-        const name = item.name || item.serviceName || '';
-        return name.toLowerCase().includes(filter);
+      const name = item.name || item.serviceName || item.productName || '';
+      return name.toLowerCase().includes(filter);
     });
   }
 
   onOptionSelected(event: any, index: number) {
-      const selectedItem = event.option.value;
-      const group = this.purchases.at(index) as FormGroup;
-      const name = selectedItem.name || selectedItem.serviceName || '';
-      const price = selectedItem.price || selectedItem.servicePrice || 0;
-      
-      group.patchValue({
-          name: name,
-          price: price
-      });
+    const selectedItem = event.option.value;
+    const group = this.purchases.at(index) as FormGroup;
+    const category = group.get('category')?.value;
+
+    let price = 0;
+    if (category === 'SERVICE') {
+      price = selectedItem.price || selectedItem.servicePrice || 0;
+    } else if (category === 'PRODUCT PURCHASE') {
+      price = selectedItem.sellingPrice || 0;
+    }
+
+    group.patchValue({
+      name: selectedItem, // Save the whole object; getItemLabel and submission logic handle it
+      price: price
+    });
   }
 
   getItemLabel(item: any): string {
     if (!item) return '';
     if (typeof item === 'string') return item;
-    return item.name || item.serviceName || '';
+    return item.name || item.serviceName || item.productName || '';
   }
 
   removePurchase(index: number) {
     this.purchases.removeAt(index);
+    // Re-index filteredOptions
+    const newFilteredOptions: { [key: number]: any[] } = {};
+    for (let i = 0; i < this.purchases.length; i++) {
+      newFilteredOptions[i] = this.filteredOptions[i >= index ? i + 1 : i];
+    }
+    this.filteredOptions = newFilteredOptions;
+
     this.purchaseDataSource.data = [...this.purchases.controls];
     this.billingForm.updateValueAndValidity();
   }
 
   loadServiceAndAddPurchase(serviceId: number, serviceName: string) {
     this.serviceService.getData().subscribe((response: any) => {
-        const services = Array.isArray(response) ? response : (response?.data || []);
-        const service = services.find((s: any) => s.id === serviceId);
-        const price = service ? service.price || service.servicePrice || 0 : 0;
-        this.addPurchase({
-            category: 'SERVICE',
-            name: serviceName,
-            quantity: 1,
-            price: price
-        });
+      const services = Array.isArray(response) ? response : (response?.data || []);
+      const service = services.find((s: any) => s.id === serviceId);
+      const price = service ? service.price || service.servicePrice || 0 : 0;
+      this.addPurchase({
+        category: 'SERVICE',
+        name: serviceName,
+        quantity: 1,
+        price: price
+      });
     });
   }
 
@@ -211,6 +228,14 @@ export class BillingFormComponent implements OnInit {
 
     this.isButtonDisabled = true;
     const formValue = { ...this.billingForm.value };
+
+    // Convert 'name' from object/string to string for backend
+    if (formValue.purchases && Array.isArray(formValue.purchases)) {
+      formValue.purchases = formValue.purchases.map((p: any) => ({
+        ...p,
+        name: typeof p.name === 'string' ? p.name : this.getItemLabel(p.name)
+      }));
+    }
 
     // Convert date to timestamp for backend
     if (formValue.billingDate instanceof Date) {
@@ -229,8 +254,16 @@ export class BillingFormComponent implements OnInit {
         }
       });
     } else {
-      // Edit logic could go here if implemented in the service
-      this.isButtonDisabled = false;
+      this.billingService.editData(this.data.billing.id, formValue).subscribe({
+        next: (response) => {
+          this.messageService.showSuccess('Billing updated successfully!');
+          this.dialogRef.close(response);
+        },
+        error: (error) => {
+          this.messageService.showError('Error updating billing: ' + (error.message || 'Unknown error'));
+          this.isButtonDisabled = false;
+        }
+      });
     }
   }
 

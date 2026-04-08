@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,37 +34,34 @@ export class BillingComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
+  preFillData: any = null;
 
   constructor(
     private billingService: BillingService,
     private messageService: MessageServiceService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.populateData();
-    this.checkQueryParams();
+    this.checkNavigationState();
   }
 
   //listening for the data passed from the appointment schedule page (Billing data related to a specific client)
-  checkQueryParams(): void {
-    this.route.queryParams.subscribe(params => {
-      if (params['data']) {
-        try {
-          //turns the string back to a usable object
-          const billingData = JSON.parse(params['data']);
-          if (billingData.autoOpen) {
-            // Slight delay to ensure page is loaded
-            setTimeout(() => {
-              this.openAddModal(billingData);
-            }, 500);
-          }
-        } catch (e) {
-          console.error('Error parsing billing data', e);
-        }
-      }
-    });
+  checkNavigationState(): void {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state || (window.history.state as any);
+    
+    if (state && state.data && state.data.autoOpen) {
+      this.preFillData = state.data;
+      setTimeout(() => {
+        this.openAddModal(this.preFillData);
+        // Clear the autoOpen state so it doesn't open again on window focus or other triggers if any
+        if (window.history.state) window.history.state.data.autoOpen = false;
+      }, 500);
+    }
   }
 
   populateData(): void {
@@ -81,11 +78,12 @@ export class BillingComponent implements OnInit {
   }
 
   openAddModal(preFillData?: any): void {
+    const dataToUse = preFillData || this.preFillData;
     const dialogRef = this.dialog.open(BillingFormComponent, {
       width: '800px',
       data: {
         mode: 'add',
-        preFill: preFillData
+        preFill: dataToUse
       }
     });
 
