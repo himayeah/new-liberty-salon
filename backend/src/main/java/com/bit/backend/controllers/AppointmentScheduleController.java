@@ -1,13 +1,20 @@
 package com.bit.backend.controllers;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.AppointmentScheduleServiceI;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class AppointmentScheduleController {
@@ -32,10 +39,13 @@ public class AppointmentScheduleController {
     }
 
     @GetMapping("/appointment-schedule-form")
-    public ResponseEntity<List<AppointmentScheduleDto>> getAppoinyment() {
+    public ResponseEntity<List<AppointmentScheduleDto>> getAppointments() {
         try {
             List<AppointmentScheduleDto> appointmentScheduleDtoList = appointmentScheduleServiceI.getAppointments();
+            appointmentScheduleDtoList.forEach(System.out::println);
+            // convert into string so i can get a readable output in the terminal
             return ResponseEntity.ok(appointmentScheduleDtoList);
+
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

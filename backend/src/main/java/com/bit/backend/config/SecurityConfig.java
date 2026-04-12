@@ -23,7 +23,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtAuthFilter(userAuthProvider), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthFilter(userAuthProvider),
+                        org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> request.requestMatchers(
                         "/login",
@@ -35,6 +36,8 @@ public class SecurityConfig {
                         "/api/purchase-orders/**",
                         "/api/purchase-order-details/**",
                         "/api/grn/**",
+                        "/appointment-schedule-form",
+                        "/appointment-schedule-form/**",
                         "/client-notes/**",
                         "/report-client-controller/**",
                         "/api/v1/employee-schedule/**"
