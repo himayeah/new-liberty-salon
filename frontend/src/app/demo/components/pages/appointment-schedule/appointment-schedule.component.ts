@@ -47,14 +47,36 @@ export class AppointmentScheduleComponent implements OnInit {
 
     ngOnInit(): void {
         this.populateData();
+        //code test
     }
 
     populateData(): void {
+        //calls backend, Gets a list of appointments, Displays them in a Table, Logs specific values to the console
         this.appointmentService.getData().subscribe({
             next: (response: any[]) => {
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
+
+                // //code test 1 (Log the First client name and the service name)
+                // console.log(response[0].clientName);
+                // console.log(response[0].serviceName);
+
+                // //code test 2 (Log a list of all the clients and their services)
+                // response.forEach(appoinment => {
+                //     console.log(appoinment.clientName);
+                //     console.log(appoinment.serviceName);
+                // });
+
+                // //code test 4 (Log only the service Name of the second appointment)
+                // console.log(response[1].serviceName);
+
+                //code test 5 (Log the cient name of the appointment where service was "Haircut")
+                response.forEach(appointment => {
+                    if (appointment.serviceName === "Female Haircut") {
+                        console.log(appointment.clientName);
+                    }
+                });
             },
             error: (error) => {
                 this.messageService.showError('Error fetching data: ' + error.message);
