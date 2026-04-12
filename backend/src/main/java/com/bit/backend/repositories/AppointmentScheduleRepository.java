@@ -41,4 +41,13 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "AND a.cancelled_date >= CURRENT_DATE - INTERVAL 3 MONTH ", nativeQuery = true)
         List<Object[]> getCancelledAppointmentDetails();
 
+        // Dashboard chart (getAppointmentCountsByMonth)
+        @Query(value = "SELECT " +
+                        "DATE_FORMAT(STR_TO_DATE(appointment_date, '%Y-%m-%d'), '%M') AS month_name, " +
+                        "COUNT(*) AS appointment_count " +
+                        "FROM appointment_schedule " +
+                        "WHERE STR_TO_DATE(appointment_date, '%Y-%m-%d') >= CURRENT_DATE - INTERVAL 6 MONTH " +
+                        "GROUP BY month_name, MONTH(STR_TO_DATE(appointment_date, '%Y-%m-%d')) " +
+                        "ORDER BY MONTH(STR_TO_DATE(appointment_date, '%Y-%m-%d'))", nativeQuery = true)
+        List<Object[]> getAppointmentCountsByMonth();
 }

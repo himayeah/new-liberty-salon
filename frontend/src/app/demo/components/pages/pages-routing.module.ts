@@ -62,6 +62,7 @@ export const PagesRoutes: Routes = [
         { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'billing', component: BillingComponent },
+        { path: 'report-client-reg', component: ReportClientRegComponent },
         { path: 'report-product-sales', component: ProductSalesReportComponent },
         { path: 'report-appointment-status', component: ReportAppointmentStatusComponent },
         { path: 'report-procurement', component: ReportProcurementComponent },

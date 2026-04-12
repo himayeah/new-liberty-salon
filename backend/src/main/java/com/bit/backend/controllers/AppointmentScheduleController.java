@@ -42,7 +42,15 @@ public class AppointmentScheduleController {
     public ResponseEntity<List<AppointmentScheduleDto>> getAppointments() {
         try {
             List<AppointmentScheduleDto> appointmentScheduleDtoList = appointmentScheduleServiceI.getAppointments();
+
+            // print walk-in clients
+            appointmentScheduleDtoList.stream()
+                    .filter(dto -> "WALK_IN".equalsIgnoreCase(dto.getBookingSource()))
+                    .forEach(dto -> System.out.println("WALK_IN Client: " + dto.getClientName()));
+
+            // print all appointments
             appointmentScheduleDtoList.forEach(System.out::println);
+
             // convert into string so i can get a readable output in the terminal
             return ResponseEntity.ok(appointmentScheduleDtoList);
 
@@ -90,6 +98,17 @@ public class AppointmentScheduleController {
     public ResponseEntity<String> getMostUsedService() {
         try {
             String result = appointmentScheduleServiceI.getMostUsedService();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Dashboard chart (Get appointment counts by month for the last 6 months)
+    @GetMapping("/appointment-schedule-form/count-by-month")
+    public ResponseEntity<List<Object[]>> getAppointmentCountsByMonth() {
+        try {
+            List<Object[]> result = appointmentScheduleServiceI.getAppointmentCountsByMonth();
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);

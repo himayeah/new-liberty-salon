@@ -22,4 +22,5 @@ public interface AppointmentScheduleServiceI {
     // dashboard card
     String getMostUsedService();
 
+    List<Object[]> getAppointmentCountsByMonth();
 }
