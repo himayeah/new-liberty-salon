@@ -93,6 +93,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
 
+    //Appointment overview dashboard Chart
     initChart() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
@@ -102,38 +103,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const surfaceBorder =
             documentStyle.getPropertyValue('--surface-border');
 
-        this.chartData = {
-            labels: [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-            ],
-            datasets: [
-                {
-                    label: 'First Dataset',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: false,
-                    backgroundColor:
-                        documentStyle.getPropertyValue('--bluegray-700'),
-                    borderColor:
-                        documentStyle.getPropertyValue('--bluegray-700'),
-                    tension: 0.4,
-                },
-                {
-                    label: 'Second Dataset',
-                    data: [28, 48, 40, 19, 86, 27, 90],
-                    fill: false,
-                    backgroundColor:
-                        documentStyle.getPropertyValue('--green-600'),
-                    borderColor: documentStyle.getPropertyValue('--green-600'),
-                    tension: 0.4,
-                },
-            ],
-        };
+        //Getting data from appointment-schedule
+        //Gets a dataset like [["January",10],["February", 12],["March", 15],..]
+        this.appointmentService.getAppointmentCountsByMonth().subscribe({
+            //Splits data into 2 parts. 
+            //labels = ["January", "February", "March",..]
+            //counts = [10, 12, 15,...]
+            next: (data) => {
+                const labels = data.map((item) => item[0]);
+                const counts = data.map((item) => item[1]);
+
+                this.chartData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Appointments',
+                            data: counts,
+                            fill: false,
+                            backgroundColor:
+                                documentStyle.getPropertyValue('--bluegray-700'),
+                            borderColor:
+                                documentStyle.getPropertyValue('--bluegray-700'),
+                            tension: 0.4,
+                        },
+                    ],
+                };
+            },
+            error: (error) => {
+                console.error('Failed to load chart data', error);
+                this.chartData = { labels: [], datasets: [] };
+            },
+        });
 
         this.chartOptions = {
             plugins: {
@@ -166,6 +166,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         };
     }
 
+    //ngOnDestroy is an Angular lifecycle hook that is triggered when a component is destroyed. 
+    //It is mainly used to clean up resources like unsubscribing from Observables to prevent memory leaks
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();

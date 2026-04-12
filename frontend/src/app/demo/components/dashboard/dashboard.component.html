@@ -69,5 +69,23 @@
         </div>
         <span class="dashboard-card__subtitle">Pending completion</span>
     </div>
+</div>
 
+<!--Appointment Overview chart-->
+<div class="content-grid" style="margin-top: 2rem;">
+    <div class="chart-section">
+        <mat-card class="report-card">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon style="vertical-align: middle; margin-right: 8px;">insights</mat-icon>
+                    Appointment Overview
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="chart-wrapper">
+                    <p-chart type="line" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </div>

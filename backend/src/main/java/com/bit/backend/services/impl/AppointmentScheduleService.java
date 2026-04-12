@@ -180,7 +180,12 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         } catch (Exception e) {
             throw new AppException("Failed to load mostly used Service: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
 
+    // Dashboard chart (Get appointment counts by month for the last 6 months)
+    @Override
+    public List<Object[]> getAppointmentCountsByMonth() {
+        return appointmentScheduleRepository.getAppointmentCountsByMonth();
     }
 
 }
