@@ -23,4 +23,7 @@ public interface AppointmentScheduleServiceI {
     String getMostUsedService();
 
     List<Object[]> getAppointmentCountsByMonth();
+
+    List<Object[]> getTop3Services();
+
 }

@@ -141,13 +141,15 @@
 /* Appointment Chart Container */
 .content-grid {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 1.5rem;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
 }
 
 .chart-section {
-    width: 100%;
+    flex: 1;
+    min-width: 450px;
 }
 
 .report-card {
