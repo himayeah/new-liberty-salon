@@ -32,7 +32,7 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="table-container">
-                        <table mat-table [dataSource]="clientsData" class="full-width-table">
+                        <table mat-table [dataSource]="registrationData" class="full-width-table">
                             <ng-container matColumnDef="registrationYear">
                                 <th mat-header-cell *matHeaderCellDef> Year </th>
                                 <td mat-cell *matCellDef="let element"> {{element.registrationYear}} </td>
@@ -57,5 +57,44 @@
             </mat-card>
         </div>
     </div>
-</div>
 
+    <!-- Table Section -->
+    <div class="table-section">
+        <mat-card class="report-card">
+            <mat-card-header>
+                <mat-card-title>Registration Breakdown By Gender</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="table-container">
+                    <table mat-table [dataSource]="clientsData" class="full-width-table">
+                        <ng-container matColumnDef="registrationMonth">
+                            <th mat-header-cell *matHeaderCellDef> Month </th>
+                            <td mat-cell *matCellDef="let element"> {{element.registrationMonth}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="gender">
+                            <th mat-header-cell *matHeaderCellDef> Gender </th>
+                            <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="totalRegistrations">
+                            <th mat-header-cell *matHeaderCellDef> Total Registrations </th>
+                            <td mat-cell *matCellDef="let element"> {{element.totalRegistrations}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="['registrationMonth', 'gender', 'totalRegistrations']">
+                        </tr>
+                        <tr mat-row
+                            *matRowDef="let row; columns: ['registrationMonth', 'gender', 'totalRegistrations'];"></tr>
+
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="3" style="text-align: center; padding: 20px;">
+                                No registration data available.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -20,4 +20,14 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
     @Query(value = "SELECT COUNT(*) FROM client_registration WHERE registration_date BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
     long countClientRegistrationsLast30Days();
 
+    // Report client-registration (Female and Male registrations table)
+    @Query(value = "SELECT DATE_FORMAT(c.registration_date, '%M') AS registration_month, " +
+            "c.gender, " +
+            "COUNT(c.id) AS total_registrations " +
+            "FROM client_registration c " +
+            "WHERE c.registration_date >= CURRENT_DATE() - INTERVAL 6 MONTH " +
+            "GROUP BY registration_month, c.gender " +
+            "ORDER BY registration_month, c.gender", nativeQuery = true)
+    List<Object[]> getRegistrationsByGender();
+
 }

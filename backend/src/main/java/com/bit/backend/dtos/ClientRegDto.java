@@ -27,5 +27,6 @@ public class ClientRegDto {
 
     // Fields for Reports
     private Integer registrationYear;
+    private String registrationMonth;
     private Long totalRegistrations;
 }
