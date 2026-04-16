@@ -125,5 +125,15 @@ public class AppointmentScheduleController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    // Dashboard (Top 5 employees)
+    @GetMapping("/appointment-schedule-form/top-5-employees")
+    public ResponseEntity<List<Object[]>> getTop5Employees() {
+        try {
+            List<Object[]> result = appointmentScheduleServiceI.getTop5Employees();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

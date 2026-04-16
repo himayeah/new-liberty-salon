@@ -194,4 +194,10 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         return appointmentScheduleRepository.getTop3Services();
     }
 
+    // Dashboard (Get Top 5 employees)
+    @Override
+    public List<Object[]> getTop5Employees() {
+        return appointmentScheduleRepository.getTop5Employees();
+    }
+
 }

@@ -182,3 +182,43 @@
         grid-template-columns: 1fr;
     }
 }
+/* Table Styles */
+.table-wrapper {
+    padding: 1rem;
+    
+    ::v-deep .p-datatable {
+        .p-datatable-thead > tr > th {
+            background: #f9fafb;
+            color: #4b5563;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 1rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .p-datatable-tbody > tr {
+            background: #ffffff;
+            transition: background 0.2s ease;
+
+            &:hover {
+                background-color: #f9fafb;
+            }
+
+            > td {
+                padding: 1rem;
+                font-size: 0.875rem;
+                color: #374151;
+                border-bottom: 1px solid #f3f4f6;
+            }
+        }
+    }
+}
+
+.appointment-badge {
+    background-color: #E0E7FF;
+    color: #4338CA;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}

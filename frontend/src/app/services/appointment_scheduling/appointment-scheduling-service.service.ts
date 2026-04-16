@@ -108,5 +108,15 @@ export class AppointmentSchedulingServiceService {
     }
     return this.http.get<any[]>(requestUrl, { headers });
   }
+  //Dashboard table (getTop5Employees)
+  getTop5Employees(): Observable<any[]> {
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/top-5-employees`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get<any[]>(requestUrl, { headers });
+  }
 
 }

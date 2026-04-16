@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     newClientCountLast30Days: number = 0;
 
     mostUsedService: string;
+    top5Employees: any[] = [];
 
     constructor(
         private productService: ProductService,
@@ -58,6 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadNewClientCount();
         this.loadMostUsedService();
         this.loadTop3ServicesPieChart();
+        this.loadTop5Employees();
     }
 
     //Dashboard card (Get Appointments in Last 30 Days)
@@ -216,6 +218,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 }
             }
         };
+    }
+
+    //Dashboard table (Top 5 Employees)
+    loadTop5Employees() {
+        this.appointmentService.getTop5Employees().subscribe({
+            next: (data) => {
+                this.top5Employees = data.map(item => ({
+                    name: item[0],
+                    count: item[1]
+                }));
+            },
+            error: (error) => {
+                console.error('Failed to load top 5 employees', error);
+            },
+        });
     }
 
     //ngOnDestroy is an Angular lifecycle hook that is triggered when a component is destroyed. 

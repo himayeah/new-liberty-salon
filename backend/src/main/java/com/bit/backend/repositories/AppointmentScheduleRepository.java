@@ -63,4 +63,16 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "LIMIT 3 ", nativeQuery = true)
         List<Object[]> getTop3Services();
 
+        // Dashboard Top 5 employee table
+        @Query(value = "SELECT " +
+                        "e.employee_name, " +
+                        "COUNT(a.id) AS total_count " +
+                        "FROM appointment_schedule a " +
+                        "JOIN employee_reg e ON e.id =  a.employee_id " +
+                        "WHERE STR_TO_DATE(a.appointment_date, '%Y-%m-%d') >= CURRENT_DATE() - INTERVAL 30 DAY " +
+                        "GROUP BY e.employee_name " +
+                        "ORDER BY total_count DESC " +
+                        "LIMIT 5 ", nativeQuery = true)
+        List<Object[]> getTop5Employees();
+
 }

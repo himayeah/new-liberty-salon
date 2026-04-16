@@ -70,7 +70,10 @@ export class PurchaseOrderDetailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      if (res) this.loadPurchaseOrderDetails();
+      if (res) {
+        this.loadPurchaseOrderDetails();
+        this.loadPurchaseOrder(); // Reload status/total
+      }
     });
   }
 
@@ -80,6 +83,7 @@ export class PurchaseOrderDetailComponent implements OnInit {
         next: () => {
           this.messageService.showSuccess('Item deleted');
           this.loadPurchaseOrderDetails();
+          this.loadPurchaseOrder(); // Reload status/total
         },
         error: () => this.messageService.showError('Delete failed')
       });
@@ -107,7 +111,10 @@ export class PurchaseOrderDetailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(res => {
-      if (res) this.loadGrnDetails();
+      if (res) {
+        this.loadGrnDetails();
+        this.loadPurchaseOrder(); // Reload status
+      }
     });
   }
 
@@ -117,6 +124,7 @@ export class PurchaseOrderDetailComponent implements OnInit {
         next: () => {
           this.messageService.showSuccess('GRN record deleted');
           this.loadGrnDetails();
+          this.loadPurchaseOrder(); // Reload status
         },
         error: () => this.messageService.showError('Delete failed')
       });

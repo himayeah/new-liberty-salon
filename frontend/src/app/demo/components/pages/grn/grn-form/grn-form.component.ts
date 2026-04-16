@@ -96,8 +96,8 @@ export class GrnFormComponent implements OnInit {
             next: (response: any[]) => {
                 const allProducts = response || [];
                 if (this.data.poDetails) {
-                    const poProductNames = this.data.poDetails.map((d: any) => d.productName);
-                    this.products = allProducts.filter(p => poProductNames.includes(p.productName));
+                    const poProductIds = this.data.poDetails.map((d: any) => d.productId);
+                    this.products = allProducts.filter(p => poProductIds.includes(p.id));
                 } else {
                     this.products = allProducts;
                 }
@@ -111,7 +111,7 @@ export class GrnFormComponent implements OnInit {
         if (this.grnForm.invalid) return;
 
         this.isButtonDisabled = true;
-        const formValue = this.grnForm.value;
+        const formValue = this.grnForm.getRawValue();
 
         if (this.data.mode === 'add') {
             this.grnService.addGrn(formValue).subscribe({

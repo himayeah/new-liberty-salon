@@ -19,19 +19,19 @@ import java.util.List;
 @Transactional
 public class GrnServiceImpl implements GrnService {
 
-    private final GrnRepository repository;
+    private final GrnRepository grnRepository;
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final ProductRepository productRepository;
     private final GrnMapper mapper;
 
     @Override
     public List<GrnDto> getAllGrn() {
-        return mapper.toDtoList(repository.findAll());
+        return mapper.toDtoList(grnRepository.findAll());
     }
 
     @Override
     public List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId) {
-        return mapper.toDtoList(repository.findByPurchaseOrder_Id(purchaseOrderId));
+        return mapper.toDtoList(grnRepository.findByPurchaseOrder_Id(purchaseOrderId));
     }
 
     @Override
@@ -50,26 +50,17 @@ public class GrnServiceImpl implements GrnService {
             entity.setProduct(product);
         }
 
-        String status = "PENDING";
-        if (entity.getReceivedQuantity() != null && entity.getOrderedQuantity() != null) {
-            if (entity.getReceivedQuantity() >= entity.getOrderedQuantity()) {
-                status = "RECEIVED";
-            } else if (entity.getReceivedQuantity() > 0) {
-                status = "PARTIAL";
-            } else if ("CANCELLED".equals(dto.getStatus())) {
-                status = "CANCELLED";
-            }
-        }
-        entity.setStatus(status);
+        // Calculate GRN item status
+        entity.setStatus(calculateGrnStatus(entity));
 
-        GrnEntity savedGrn = repository.save(entity);
+        GrnEntity savedGrn = grnRepository.save(entity);
         updatePurchaseOrderStatus(savedGrn.getPurchaseOrder().getId());
         return mapper.toDto(savedGrn);
     }
 
     @Override
     public GrnDto updateGrn(Long id, GrnDto dto) {
-        GrnEntity entity = repository.findById(id).orElseThrow(() -> new RuntimeException("GRN not found"));
+        GrnEntity entity = grnRepository.findById(id).orElseThrow(() -> new RuntimeException("GRN not found"));
 
         if (dto.getPurchaseOrderId() != null) {
             PurchaseOrderEntity po = purchaseOrderRepository.findById(dto.getPurchaseOrderId())
@@ -90,19 +81,9 @@ public class GrnServiceImpl implements GrnService {
         entity.setRemarks(dto.getRemarks());
 
         // Calculate GRN item status
-        String status = "PENDING";
-        if (entity.getReceivedQuantity() != null && entity.getOrderedQuantity() != null) {
-            if (entity.getReceivedQuantity() >= entity.getOrderedQuantity()) {
-                status = "RECEIVED";
-            } else if (entity.getReceivedQuantity() > 0) {
-                status = "PARTIAL";
-            } else if ("CANCELLED".equals(dto.getStatus())) {
-                status = "CANCELLED";
-            }
-        }
-        entity.setStatus(status);
+        entity.setStatus(calculateGrnStatus(entity));
 
-        GrnEntity savedGrn = repository.save(entity);
+        GrnEntity savedGrn = grnRepository.save(entity);
 
         // Sync PO status
         updatePurchaseOrderStatus(savedGrn.getPurchaseOrder().getId());
@@ -110,28 +91,54 @@ public class GrnServiceImpl implements GrnService {
         return mapper.toDto(savedGrn);
     }
 
+    @Override
+    public void deleteGrn(Long id) {
+        GrnEntity grn = grnRepository.findById(id).orElse(null);
+        if (grn != null) {
+            Long poId = grn.getPurchaseOrder().getId();
+            grnRepository.delete(grn);
+            grnRepository.flush(); // Flush to ensure it's gone before calculating status
+            updatePurchaseOrderStatus(poId);
+        }
+    }
+
+    private String calculateGrnStatus(GrnEntity entity) {
+        double ordered = entity.getOrderedQuantity() != null ? entity.getOrderedQuantity() : 0.0;
+        double received = entity.getReceivedQuantity() != null ? entity.getReceivedQuantity() : 0.0;
+
+        if (received >= ordered && ordered > 0) {
+            return "RECEIVED";
+        } else if (received > 0) {
+            return "PARTIAL";
+        } else if ("CANCELLED".equals(entity.getStatus())) {
+            return "CANCELLED";
+        }
+        return "PENDING";
+    }
+
     private void updatePurchaseOrderStatus(Long poId) {
         PurchaseOrderEntity po = purchaseOrderRepository.findById(poId).orElse(null);
         if (po == null)
             return;
 
-        List<GrnEntity> allGrns = repository.findByPurchaseOrder_Id(poId);
-        if (allGrns.isEmpty())
+        List<GrnEntity> allGrns = grnRepository.findByPurchaseOrder_Id(poId);
+        if (allGrns.isEmpty()) {
+            po.setStatus("PENDING");
+            purchaseOrderRepository.save(po);
             return;
+        }
 
         boolean allReceived = true;
-        boolean anyReceived = false;
-        boolean anyPartial = false;
+        boolean anyReceivedOrPartial = false;
         boolean allCancelled = true;
 
         for (GrnEntity g : allGrns) {
-            if (!"RECEIVED".equals(g.getStatus()))
+            String s = g.getStatus();
+            if (!"RECEIVED".equals(s))
                 allReceived = false;
-            if ("RECEIVED".equals(g.getStatus()) || "PARTIAL".equals(g.getStatus()))
-                anyReceived = true;
-            if ("PARTIAL".equals(g.getStatus()))
-                anyPartial = true;
-            if (!"CANCELLED".equals(g.getStatus()))
+            if ("RECEIVED".equals(s) || "PARTIAL".equals(s))
+                anyReceivedOrPartial = true;
+            if (!"CANCELLED".equals(s))
                 allCancelled = false;
         }
 
@@ -140,16 +147,11 @@ public class GrnServiceImpl implements GrnService {
             newPoStatus = "CANCELLED";
         } else if (allReceived) {
             newPoStatus = "RECEIVED";
-        } else if (anyReceived || anyPartial) {
+        } else if (anyReceivedOrPartial) {
             newPoStatus = "PARTIAL";
         }
 
         po.setStatus(newPoStatus);
         purchaseOrderRepository.save(po);
-    }
-
-    @Override
-    public void deleteGrn(Long id) {
-        repository.deleteById(id);
     }
 }
