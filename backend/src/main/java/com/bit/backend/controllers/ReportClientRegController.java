@@ -29,4 +29,16 @@ public class ReportClientRegController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // Report- Get Registration Data by Gender
+    @GetMapping("/registration-data")
+    public ResponseEntity<List<ClientRegDto>> getRegistrationData() {
+        try {
+            List<ClientRegDto> clientRegDtoList = reportClientRegService.getRegistrationsByGender();
+            return ResponseEntity.ok(clientRegDtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

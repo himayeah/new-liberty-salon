@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReportAppointmentStatusService } from 'src/app/services/report-appointment-status/report-appointment-status.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { ReportAppointmentStatusService } from 'src/app/services/report-appointm
   templateUrl: './report-appointment-status.component.html',
   styleUrl: './report-appointment-status.component.scss'
 })
-export class ReportAppointmentStatusComponent {
+export class ReportAppointmentStatusComponent implements OnInit {
 
   appointmentCancellationData: any[] = [];
   loading: boolean = true;

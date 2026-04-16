@@ -14,7 +14,8 @@ public class ReportClientRegServiceSubImpl implements ReportClientRegService {
     private final ClientRegRepository clientRegRepository;
     private final com.bit.backend.mappers.ClientRegMapper clientRegMapper;
 
-    public ReportClientRegServiceSubImpl(ClientRegRepository clientRegRepository, com.bit.backend.mappers.ClientRegMapper clientRegMapper) {
+    public ReportClientRegServiceSubImpl(ClientRegRepository clientRegRepository,
+            com.bit.backend.mappers.ClientRegMapper clientRegMapper) {
         this.clientRegRepository = clientRegRepository;
         this.clientRegMapper = clientRegMapper;
     }
@@ -36,7 +37,8 @@ public class ReportClientRegServiceSubImpl implements ReportClientRegService {
         } catch (Exception e) {
             System.err.println("Error fetching registration data: " + e.getMessage());
             e.printStackTrace();
-            throw new com.bit.backend.exceptions.AppException("Error fetching registration data", org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new com.bit.backend.exceptions.AppException("Error fetching registration data",
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -46,7 +48,33 @@ public class ReportClientRegServiceSubImpl implements ReportClientRegService {
             List<com.bit.backend.entities.ClientRegEntity> clientRegEntityList = clientRegRepository.findAll();
             return clientRegMapper.toClientRegDtoList(clientRegEntityList);
         } catch (Exception e) {
-            throw new com.bit.backend.exceptions.AppException("Request failed with error: " + e.getMessage(), org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new com.bit.backend.exceptions.AppException("Request failed with error: " + e.getMessage(),
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // Get Registrations by Gender
+    @Override
+    public List<ClientRegDto> getRegistrationsByGender() {
+        try {
+            List<Object[]> results = clientRegRepository.getRegistrationsByGender();
+            System.out.println("Fetched " + results.size() + " registration records");
+            return results.stream()
+                    .map(obj -> {
+                        Object[] array = (Object[]) obj;
+                        ClientRegDto dto = new ClientRegDto();
+                        dto.setRegistrationMonth(array[0] != null ? array[0].toString() : null);
+                        dto.setGender((String) array[1]);
+                        dto.setTotalRegistrations(((Number) array[2]).longValue());
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("Error fetching registration data: " + e.getMessage());
+            e.printStackTrace();
+            throw new com.bit.backend.exceptions.AppException("Error fetching registration data",
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

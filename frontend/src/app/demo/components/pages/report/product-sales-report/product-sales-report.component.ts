@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReportProductSalesService } from 'src/app/services/report-product-sales/report-product-sales.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { ReportProductSalesService } from 'src/app/services/report-product-sales
   templateUrl: './product-sales-report.component.html',
   styleUrl: './product-sales-report.component.scss'
 })
-export class ProductSalesReportComponent {
+export class ProductSalesReportComponent implements OnInit {
 
   productSalesData: any[] = [];
   loading: boolean = true;
