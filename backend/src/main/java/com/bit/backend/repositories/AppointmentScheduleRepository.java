@@ -50,4 +50,29 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "GROUP BY month_name, MONTH(STR_TO_DATE(appointment_date, '%Y-%m-%d')) " +
                         "ORDER BY MONTH(STR_TO_DATE(appointment_date, '%Y-%m-%d'))", nativeQuery = true)
         List<Object[]> getAppointmentCountsByMonth();
+
+        // Dashboard pie chart- Top 3 services
+        @Query(value = "SELECT " +
+                        "s.service_name, " +
+                        "COUNT(a.id) AS total_count " +
+                        "FROM appointment_schedule a " +
+                        "JOIN service s ON s.id = a.service_id " +
+                        "WHERE STR_TO_DATE(a.appointment_date, '%Y-%m-%d') >= CURRENT_DATE() - INTERVAL 30 DAY " +
+                        "GROUP BY s.service_name " +
+                        "ORDER BY total_count DESC " +
+                        "LIMIT 3 ", nativeQuery = true)
+        List<Object[]> getTop3Services();
+
+        // Dashboard Top 5 employee table
+        @Query(value = "SELECT " +
+                        "e.employee_name, " +
+                        "COUNT(a.id) AS total_count " +
+                        "FROM appointment_schedule a " +
+                        "JOIN employee_reg e ON e.id =  a.employee_id " +
+                        "WHERE STR_TO_DATE(a.appointment_date, '%Y-%m-%d') >= CURRENT_DATE() - INTERVAL 30 DAY " +
+                        "GROUP BY e.employee_name " +
+                        "ORDER BY total_count DESC " +
+                        "LIMIT 5 ", nativeQuery = true)
+        List<Object[]> getTop5Employees();
+
 }

@@ -71,21 +71,78 @@
     </div>
 </div>
 
-<!--Appointment Overview chart-->
-<div class="content-grid" style="margin-top: 2rem;">
+<!--Appointment Overview and Top 3 Services charts-->
+<div class="content-grid">
     <div class="chart-section">
         <mat-card class="report-card">
-            <mat-card-header>
-                <mat-card-title>
+            <mat-card-header
+                style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
+                <mat-card-title style="margin: 0;">
                     <mat-icon style="vertical-align: middle; margin-right: 8px;">insights</mat-icon>
                     Appointment Overview
                 </mat-card-title>
+                <span class="dashboard-card__subtitle" style="margin: 0;">Last 30 days</span>
             </mat-card-header>
             <mat-card-content>
                 <div class="chart-wrapper">
-                    <p-chart type="line" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+                    <p-chart type="line" [data]="lineChartData" [options]="lineChartOptions" height="300px"></p-chart>
                 </div>
             </mat-card-content>
         </mat-card>
     </div>
+
+    <div class="chart-section">
+        <mat-card class="report-card">
+            <mat-card-header
+                style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
+                <mat-card-title style="margin: 0;">
+                    <mat-icon style="vertical-align: middle; margin-right: 8px;">pie_chart</mat-icon>
+                    Top 3 Services
+                </mat-card-title>
+                <span class="dashboard-card__subtitle" style="margin: 0;">Last 30 days</span>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="chart-wrapper">
+                    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" height="300px"></p-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!--Table Top 5 Employees-->
+    <div class="chart-section">
+        <mat-card class="report-card">
+            <mat-card-header
+                style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
+                <mat-card-title style="margin: 0;">
+                    <mat-icon style="vertical-align: middle; margin-right: 8px;">groups</mat-icon>
+                    Top 5 Stylists
+                </mat-card-title>
+                <span class="dashboard-card__subtitle" style="margin: 0;">Last 30 days</span>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="table-wrapper">
+                    <p-table [value]="top5Employees" [rows]="5" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 10%;">#</th>
+                                <th>Stylist Name</th>
+                                <th style="text-align: right;">Appointments</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-emp let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ emp.name }}</td>
+                                <td style="text-align: right;">
+                                    <span class="appointment-badge">{{ emp.count }}</span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
 </div>

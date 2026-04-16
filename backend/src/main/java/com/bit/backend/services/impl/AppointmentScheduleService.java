@@ -182,10 +182,22 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
     }
 
-    // Dashboard chart (Get appointment counts by month for the last 6 months)
+    // Dashboard line chart (Get appointment counts by month for the last 6 months)
     @Override
     public List<Object[]> getAppointmentCountsByMonth() {
         return appointmentScheduleRepository.getAppointmentCountsByMonth();
+    }
+
+    // Dashboard pie chart (Get Top 3 services)
+    @Override
+    public List<Object[]> getTop3Services() {
+        return appointmentScheduleRepository.getTop3Services();
+    }
+
+    // Dashboard (Get Top 5 employees)
+    @Override
+    public List<Object[]> getTop5Employees() {
+        return appointmentScheduleRepository.getTop5Employees();
     }
 
 }

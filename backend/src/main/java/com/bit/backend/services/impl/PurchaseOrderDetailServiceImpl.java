@@ -52,6 +52,7 @@ public class PurchaseOrderDetailServiceImpl implements PurchaseOrderDetailServic
         entity.setProduct(product);
         
         PurchaseOrderDetailEntity savedEntity = repository.save(entity);
+        repository.flush(); // Ensure it's in DB for recalculation
 
         // Auto-create GRN entry
         GrnEntity grn = new GrnEntity();
@@ -63,10 +64,8 @@ public class PurchaseOrderDetailServiceImpl implements PurchaseOrderDetailServic
         grn.setStatus("PENDING");
         grnRepository.save(grn);
 
-        // Update PO Overall Status to PENDING if not already
-        if (!"PENDING".equals(purchaseOrder.getStatus()) && !"PARTIAL".equals(purchaseOrder.getStatus()) && !"RECEIVED".equals(purchaseOrder.getStatus())) {
-            purchaseOrder.setStatus("PENDING");
-        }
+        // Update PO Overall Status using shared logic if possible, or replicate
+        updatePurchaseOrderStatus(purchaseOrder.getId());
 
         // Update Total Amount
         recalculatePurchaseOrderTotal(purchaseOrder);
@@ -80,7 +79,10 @@ public class PurchaseOrderDetailServiceImpl implements PurchaseOrderDetailServic
         PurchaseOrderDetailEntity entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Purchase Order Detail not found"));
         
-        if (dto.getProductId() != null && !dto.getProductId().equals(entity.getProduct().getId())) {
+        Long oldProductId = entity.getProduct().getId();
+        Double oldQuantity = entity.getQuantityOrdered();
+
+        if (dto.getProductId() != null && !dto.getProductId().equals(oldProductId)) {
             ProductEntity product = productRepository.findById(dto.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             entity.setProduct(product);
@@ -90,21 +92,38 @@ public class PurchaseOrderDetailServiceImpl implements PurchaseOrderDetailServic
         entity.setUnitPrice(dto.getUnitPrice());
         
         PurchaseOrderDetailEntity savedEntity = repository.save(entity);
+        repository.flush();
 
         // Update total amount in PO
         PurchaseOrderEntity purchaseOrder = savedEntity.getPurchaseOrder();
         recalculatePurchaseOrderTotal(purchaseOrder);
         purchaseOrderRepository.save(purchaseOrder);
 
-        // Optionally update existing GRN entry if needed
+        // Update existing GRN entry
         List<GrnEntity> grns = grnRepository.findByPurchaseOrder_Id(purchaseOrder.getId());
-        grns.stream()
-            .filter(g -> g.getProduct().getId().equals(savedEntity.getProduct().getId()))
-            .findFirst()
-            .ifPresent(g -> {
-                g.setOrderedQuantity(savedEntity.getQuantityOrdered());
-                grnRepository.save(g);
-            });
+        
+        // If product changed, we need to find the GRN that had the old product
+        if (!entity.getProduct().getId().equals(oldProductId)) {
+            grns.stream()
+                .filter(g -> g.getProduct().getId().equals(oldProductId))
+                .findFirst()
+                .ifPresent(g -> {
+                    g.setProduct(savedEntity.getProduct());
+                    g.setOrderedQuantity(savedEntity.getQuantityOrdered());
+                    grnRepository.save(g);
+                });
+        } else {
+            // Product didn't change, just update quantity
+            grns.stream()
+                .filter(g -> g.getProduct().getId().equals(savedEntity.getProduct().getId()))
+                .findFirst()
+                .ifPresent(g -> {
+                    g.setOrderedQuantity(savedEntity.getQuantityOrdered());
+                    grnRepository.save(g);
+                });
+        }
+
+        updatePurchaseOrderStatus(purchaseOrder.getId());
 
         return mapper.toDto(savedEntity);
     }
@@ -115,26 +134,63 @@ public class PurchaseOrderDetailServiceImpl implements PurchaseOrderDetailServic
                 .orElseThrow(() -> new RuntimeException("Purchase Order Detail not found"));
         
         PurchaseOrderEntity po = entity.getPurchaseOrder();
+        Long productId = entity.getProduct().getId();
+        
+        repository.delete(entity);
+        repository.flush(); // Ensure it's gone for recalculation
         
         // Remove linked GRN entry
         List<GrnEntity> grns = grnRepository.findByPurchaseOrder_Id(po.getId());
         grns.stream()
-            .filter(g -> g.getProduct().getId().equals(entity.getProduct().getId()))
+            .filter(g -> g.getProduct().getId().equals(productId))
             .findFirst()
             .ifPresent(grnRepository::delete);
             
-        repository.delete(entity);
-        
         // Recalculate total
         recalculatePurchaseOrderTotal(po);
+        updatePurchaseOrderStatus(po.getId());
         purchaseOrderRepository.save(po);
     }
 
     private void recalculatePurchaseOrderTotal(PurchaseOrderEntity po) {
         List<PurchaseOrderDetailEntity> details = repository.findByPurchaseOrder_Id(po.getId());
         double total = details.stream()
-                .mapToDouble(d -> d.getQuantityOrdered() * d.getUnitPrice())
+                .mapToDouble(d -> {
+                    double qty = d.getQuantityOrdered() != null ? d.getQuantityOrdered() : 0.0;
+                    double price = d.getUnitPrice() != null ? d.getUnitPrice() : 0.0;
+                    return qty * price;
+                })
                 .sum();
         po.setTotalAmount(total);
     }
+
+    private void updatePurchaseOrderStatus(Long poId) {
+        PurchaseOrderEntity po = purchaseOrderRepository.findById(poId).orElse(null);
+        if (po == null) return;
+
+        List<GrnEntity> allGrns = grnRepository.findByPurchaseOrder_Id(poId);
+        if (allGrns.isEmpty()) {
+            po.setStatus("PENDING"); // Or whatever default
+            return;
+        }
+
+        boolean allReceived = true;
+        boolean anyReceivedOrPartial = false;
+        boolean allCancelled = true;
+
+        for (GrnEntity g : allGrns) {
+            String s = g.getStatus();
+            if (!"RECEIVED".equals(s)) allReceived = false;
+            if ("RECEIVED".equals(s) || "PARTIAL".equals(s)) anyReceivedOrPartial = true;
+            if (!"CANCELLED".equals(s)) allCancelled = false;
+        }
+
+        String newStatus = "PENDING";
+        if (allCancelled) newStatus = "CANCELLED";
+        else if (allReceived) newStatus = "RECEIVED";
+        else if (anyReceivedOrPartial) newStatus = "PARTIAL";
+
+        po.setStatus(newStatus);
+    }
 }
+

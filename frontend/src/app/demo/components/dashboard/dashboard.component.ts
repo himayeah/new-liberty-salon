@@ -16,9 +16,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     products!: Product[];
 
-    chartData: any;
-
-    chartOptions: any;
+    lineChartData: any;
+    lineChartOptions: any;
+    pieChartData: any;
+    pieChartOptions: any;
 
     subscription!: Subscription;
 
@@ -27,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     newClientCountLast30Days: number = 0;
 
     mostUsedService: string;
+    top5Employees: any[] = [];
 
     constructor(
         private productService: ProductService,
@@ -38,6 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .pipe(debounceTime(25))
             .subscribe((config) => {
                 this.initChart();
+                this.loadTop3ServicesPieChart();
             });
     }
 
@@ -55,6 +58,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadAppointmentCount();
         this.loadNewClientCount();
         this.loadMostUsedService();
+        this.loadTop3ServicesPieChart();
+        this.loadTop5Employees();
     }
 
     //Dashboard card (Get Appointments in Last 30 Days)
@@ -113,17 +118,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 const labels = data.map((item) => item[0]);
                 const counts = data.map((item) => item[1]);
 
-                this.chartData = {
+                this.lineChartData = {
                     labels: labels,
                     datasets: [
                         {
                             label: 'Appointments',
                             data: counts,
                             fill: false,
-                            backgroundColor:
-                                documentStyle.getPropertyValue('--bluegray-700'),
-                            borderColor:
-                                documentStyle.getPropertyValue('--bluegray-700'),
+                            backgroundColor: '#ABD5FF',
+                            borderColor: '#ABD5FF',
                             tension: 0.4,
                         },
                     ],
@@ -131,11 +134,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error('Failed to load chart data', error);
-                this.chartData = { labels: [], datasets: [] };
+                this.lineChartData = { labels: [], datasets: [] };
             },
         });
 
-        this.chartOptions = {
+        this.lineChartOptions = {
             plugins: {
                 legend: {
                     labels: {
@@ -164,6 +167,72 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 },
             },
         };
+    }
+
+    //Top 3 services - Pie chart
+    loadTop3ServicesPieChart() {
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+
+        //Getting data from appointment-schedule
+        this.appointmentService.getTop3Services().subscribe({
+            //Splits data into 2 parts. 
+            //labels = ["Female- Haircut", "Male-Haircut", "Nails",..]
+            //counts = [10, 12, 15,...]
+            next: (data) => {
+                const labels = data.map((item) => item[0]);
+                const counts = data.map((item) => item[1]);
+
+                this.pieChartData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: counts,
+                            backgroundColor: [
+                                '#B6C787', // 1st Place
+                                '#ABD5FF', // 2nd Place
+                                '#FFCDCF'  // 3rd Place
+                            ],
+                            hoverBackgroundColor: [
+                                '#A5B676',
+                                '#9CC4EE',
+                                '#EEBCC0'
+                            ]
+                        },
+                    ],
+                };
+            },
+            error: (error) => {
+                console.error('Failed to load chart data', error);
+                this.pieChartData = { labels: [], datasets: [] };
+            },
+        });
+
+        this.pieChartOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        color: textColor
+                    }
+                }
+            }
+        };
+    }
+
+    //Dashboard table (Top 5 Employees)
+    loadTop5Employees() {
+        this.appointmentService.getTop5Employees().subscribe({
+            next: (data) => {
+                this.top5Employees = data.map(item => ({
+                    name: item[0],
+                    count: item[1]
+                }));
+            },
+            error: (error) => {
+                console.error('Failed to load top 5 employees', error);
+            },
+        });
     }
 
     //ngOnDestroy is an Angular lifecycle hook that is triggered when a component is destroyed. 

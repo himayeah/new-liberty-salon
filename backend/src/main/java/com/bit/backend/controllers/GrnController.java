@@ -1,5 +1,6 @@
 package com.bit.backend.controllers;
 
+import org.springframework.http.HttpStatus;
 import com.bit.backend.dtos.GrnDto;
 import com.bit.backend.services.GrnService;
 import lombok.RequiredArgsConstructor;
@@ -12,35 +13,63 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class GrnController {
 
-    private final GrnService service;
+    private final GrnService grnService;
 
-    public GrnController(GrnService service) {
-        this.service = service;
+    public GrnController(GrnService grnService) {
+        this.grnService = grnService;
     }
 
     @GetMapping
-    public ResponseEntity<List<GrnDto>> getAll() {
-        return ResponseEntity.ok(service.getAllGrn());
+    public ResponseEntity<List<GrnDto>> getGrnRecords() {
+        try {
+            List<GrnDto> grnDtoResponse = grnService.getAllGrn();
+            return ResponseEntity.ok(grnDtoResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/by-purchase-order/{id}")
-    public ResponseEntity<List<GrnDto>> getByPurchaseOrderId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getGrnByPurchaseOrderId(id));
+    public ResponseEntity<List<GrnDto>> getPurchaseOrderId(@PathVariable Long id) {
+        try {
+            List<GrnDto> grnDtoist = grnService.getGrnByPurchaseOrderId(id);
+            return ResponseEntity.ok(grnDtoist);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping
-    public ResponseEntity<GrnDto> save(@RequestBody GrnDto dto) {
-        return ResponseEntity.ok(service.saveGrn(dto));
+    public ResponseEntity<GrnDto> saveGrn(@RequestBody GrnDto dto) {
+        try {
+            GrnDto grnDtoResponse = grnService.saveGrn(dto);
+            return ResponseEntity.ok(grnDtoResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GrnDto> update(@PathVariable Long id, @RequestBody GrnDto dto) {
-        return ResponseEntity.ok(service.updateGrn(id, dto));
+    public ResponseEntity<GrnDto> updateGrn(@PathVariable Long id, @RequestBody GrnDto dto) {
+        try {
+            GrnDto grnDtoResponse = grnService.updateGrn(id, dto);
+            return ResponseEntity.ok(grnDtoResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deleteGrn(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteGrn(@PathVariable Long id) {
+        try {
+            grnService.deleteGrn(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
