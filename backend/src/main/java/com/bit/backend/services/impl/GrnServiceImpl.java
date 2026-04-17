@@ -4,15 +4,19 @@ import com.bit.backend.dtos.GrnDto;
 import com.bit.backend.entities.GrnEntity;
 import com.bit.backend.entities.ProductEntity;
 import com.bit.backend.entities.PurchaseOrderEntity;
+import com.bit.backend.exceptions.AppException;
 import com.bit.backend.mappers.GrnMapper;
 import com.bit.backend.repositories.ProductRepository;
 import com.bit.backend.repositories.PurchaseOrderRepository;
 import com.bit.backend.repositories.GrnRepository;
 import com.bit.backend.services.GrnService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +30,29 @@ public class GrnServiceImpl implements GrnService {
 
     @Override
     public List<GrnDto> getAllGrn() {
-        return mapper.toDtoList(grnRepository.findAll());
+
+        try {
+            List<GrnEntity> grnEntityList = grnRepository.findAll();
+            List<GrnDto> grnDtoList = mapper.toDtoList(grnEntityList);
+            return grnDtoList;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId) {
-        return mapper.toDtoList(grnRepository.findByPurchaseOrder_Id(purchaseOrderId));
+    public GrnDto getGrnByPurchaseOrderId(long id) {
+        try {
+            Optional<GrnEntity> optionalGrnEntity = grnRepository.findById(id);
+            if (!optionalGrnEntity.isPresent()) {
+                throw new AppException("Grn Does Not Exist", HttpStatus.NOT_FOUND);
+            }
+            return mapper.toDto(optionalGrnEntity.get());
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
@@ -153,5 +174,11 @@ public class GrnServiceImpl implements GrnService {
 
         po.setStatus(newPoStatus);
         purchaseOrderRepository.save(po);
+    }
+
+    @Override
+    public List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getGrnByPurchaseOrderId'");
     }
 }

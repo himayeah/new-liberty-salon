@@ -35,4 +35,17 @@ public class ReportProcurementController {
         }
     }
 
+    // Product Sales by Supplier
+    @GetMapping("/product-sales-by-supplier")
+    // line 19 method is the controller's method. line 22 method is the one that
+    // calls service class
+    public ResponseEntity<List<ReportProcurementDto>> getProductSalesBySupplier() {
+        try {
+            List<ReportProcurementDto> dtoList = reportProcurementService.getProductSalesBySupplier();
+            return ResponseEntity.ok(dtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
