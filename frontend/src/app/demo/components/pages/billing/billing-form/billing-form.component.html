@@ -6,6 +6,14 @@
 
 <mat-dialog-content class="mat-typography mt-3">
     <form [formGroup]="billingForm" class="billing-form-modal">
+        <div class="payment-method-container">
+            <label>Payment Method:</label>
+            <mat-radio-group formControlName="paymentMethod" color="primary">
+                <mat-radio-button value="CASH">Cash</mat-radio-button>
+                <mat-radio-button value="CARD" class="ms-3">Card</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
         <div class="form-grid">
             <!-- Client Name -->
             <mat-form-field appearance="outline">
@@ -112,6 +120,39 @@
 
             <div *ngIf="purchases.length === 0" class="no-data-msg p-3 text-center border">
                 No purchases added yet.
+            </div>
+
+            <!-- Table B: Billing Summary -->
+            <div class="billing-summary-section">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h3>Billing Summary</h3>
+                    <div class="summary-card">
+                        <table class="summary-table">
+                            <tr>
+                                <td class="label-cell">Total Amount</td>
+                                <td class="value-cell">{{ totalAmount | number:'1.2-2' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Gross (incl. Tax)</td>
+                                <td class="value-cell">{{ grossAmount | number:'1.2-2' }}</td>
+                            </tr>
+                            <ng-container *ngIf="billingForm.get('paymentMethod')?.value === 'CASH'">
+                                <tr>
+                                    <td class="label-cell">Paid Amount</td>
+                                    <td class="value-cell pt-2">
+                                        <input type="number" formControlName="handedAmount" class="handed-amount-input">
+                                    </td>
+                                </tr>
+                                <tr class="balance-row">
+                                    <td class="label-cell pt-3">Balance</td>
+                                    <td class="value-cell pt-3" [class.negative]="balanceAmount < 0">
+                                        {{ balanceAmount | number:'1.2-2' }}
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </form>

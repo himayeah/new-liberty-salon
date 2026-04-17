@@ -125,6 +125,8 @@ export class AppointmentScheduleComponent implements OnInit {
             billingDate: appointment.appointmentDate,
             serviceId: appointment.serviceId || (appointment.service ? appointment.service.id : null),
             serviceName: appointment.serviceName || (appointment.service ? (appointment.service.serviceName || appointment.service.name) : ''),
+            appointmentId: appointment.id,
+            appointment: appointment, // Include the full object for status update
             autoOpen: true
         };
 
