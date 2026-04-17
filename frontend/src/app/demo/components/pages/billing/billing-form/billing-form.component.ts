@@ -16,6 +16,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDividerModule } from '@angular/material/divider';
 import { BillingService } from 'src/app/services/billing/billing.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { TaxServiceService } from 'src/app/services/tax/tax-service.service';
+import { MatRadioModule } from '@angular/material/radio';
+import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 
 @Component({
   selector: 'app-billing-form',
@@ -33,7 +36,8 @@ import { MessageServiceService } from 'src/app/services/message-service/message-
     MatIconModule,
     MatDividerModule,
     MatTableModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatRadioModule
   ],
   templateUrl: './billing-form.component.html',
   styleUrl: './billing-form.component.scss'
@@ -61,6 +65,7 @@ export class BillingFormComponent implements OnInit {
   allServices: any[] = [];
   allProducts: any[] = [];
   filteredOptions: { [key: number]: any[] } = {};
+  activeTaxRate: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -68,6 +73,8 @@ export class BillingFormComponent implements OnInit {
     private messageService: MessageServiceService,
     private serviceService: ServiceService,
     private productService: ProductServiceService,
+    private taxService: TaxServiceService,
+    private appointmentService: AppointmentSchedulingServiceService,
     public dialogRef: MatDialogRef<BillingFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -77,6 +84,8 @@ export class BillingFormComponent implements OnInit {
       billingCategory: ['', [Validators.required]],
       clientType: [1, [Validators.required]],
       billingDate: [new Date(), [Validators.required]],
+      paymentMethod: ['CASH', [Validators.required]],
+      handedAmount: [0],
       purchases: this.fb.array([])
     });
   }
@@ -111,6 +120,54 @@ export class BillingFormComponent implements OnInit {
       }
     }
     this.populateSelectData();
+    this.fetchActiveTax();
+    this.setupCalculationSubscriptions();
+  }
+
+  fetchActiveTax(): void {
+    this.taxService.getData().subscribe((res: any) => {
+      const taxes = Array.isArray(res) ? res : (res?.data || []);
+      const activeTax = taxes.find((t: any) => t.isActive);
+      if (activeTax) {
+        this.activeTaxRate = activeTax.taxRate || 0;
+      }
+    });
+  }
+
+  setupCalculationSubscriptions(): void {
+    this.billingForm.get('purchases')?.valueChanges.subscribe(() => {
+      this.calculateBalance();
+    });
+    this.billingForm.get('paymentMethod')?.valueChanges.subscribe(() => {
+      this.calculateBalance();
+    });
+    this.billingForm.get('handedAmount')?.valueChanges.subscribe(() => {
+      this.calculateBalance();
+    });
+  }
+
+  get totalAmount(): number {
+    return this.purchases.controls.reduce((sum, control) => {
+      const qty = control.get('quantity')?.value || 0;
+      const price = control.get('price')?.value || 0;
+      return sum + (qty * price);
+    }, 0);
+  }
+
+  get grossAmount(): number {
+    return this.totalAmount * (1 + (this.activeTaxRate / 100));
+  }
+
+  calculateBalance(): void {
+    const handedAmount = this.billingForm.get('handedAmount')?.value || 0;
+    const balance = handedAmount - this.grossAmount;
+    // We don't necessarily need to store balance in form if we use a getter,
+    // but the user asked for it to be "calculated".
+  }
+
+  get balanceAmount(): number {
+    const handedAmount = this.billingForm.get('handedAmount')?.value || 0;
+    return handedAmount - this.grossAmount;
   }
 
   populateSelectData(): void {
@@ -174,14 +231,12 @@ export class BillingFormComponent implements OnInit {
   onOptionSelected(event: any, index: number) {
     const selectedItem = event.option.value;
     const group = this.purchases.at(index) as FormGroup;
-    const category = group.get('category')?.value;
 
-    let price = 0;
-    if (category === 'SERVICE') {
-      price = selectedItem.price || selectedItem.servicePrice || 0;
-    } else if (category === 'PRODUCT PURCHASE') {
-      price = selectedItem.sellingPrice || 0;
-    }
+    // Check all common price fields used in the system for services and products
+    // products use sellingPrice, services typically use price or servicePrice
+    const price = selectedItem.sellingPrice !== undefined ? selectedItem.sellingPrice : 
+                  (selectedItem.price !== undefined ? selectedItem.price : 
+                  (selectedItem.servicePrice !== undefined ? selectedItem.servicePrice : 0));
 
     group.patchValue({
       name: selectedItem, // Save the whole object; getItemLabel and submission logic handle it
@@ -227,7 +282,25 @@ export class BillingFormComponent implements OnInit {
     if (this.billingForm.invalid) return;
 
     this.isButtonDisabled = true;
-    const formValue = { ...this.billingForm.value };
+    const formValue = { 
+      ...this.billingForm.value,
+      paymentStatus: 'Completed' // Automatically set status to Completed as requested
+    };
+
+    // If there's an associated appointment, update its status to Completed as well
+    const appointmentId = this.data.preFill?.appointmentId || this.data.billing?.appointmentId;
+    const appointmentObj = this.data.preFill?.appointment || this.data.billing?.appointment;
+
+    if (appointmentId && appointmentObj) {
+      const updatedAppointment = { 
+        ...appointmentObj, 
+        appointmentStatus: 'Completed' 
+      };
+      this.appointmentService.editData(appointmentId, updatedAppointment).subscribe({
+        next: () => console.log('Appointment status updated to Completed'),
+        error: (err) => console.error('Error updating appointment status:', err)
+      });
+    }
 
     // Convert 'name' from object/string to string for backend
     if (formValue.purchases && Array.isArray(formValue.purchases)) {
