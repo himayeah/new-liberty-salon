@@ -1,8 +1,6 @@
 package com.bit.backend.services.impl;
 
 import com.bit.backend.dtos.ReportProcurementDto;
-import com.bit.backend.mappers.PurchaseOrderMapper;
-import com.bit.backend.repositories.PurchaseOrderDetailRepository;
 import com.bit.backend.repositories.PurchaseOrderRepository;
 import com.bit.backend.services.ReportProcurementService;
 
@@ -40,6 +38,28 @@ public class ReportProcurementServiceImpl implements ReportProcurementService {
             dto.setExpectedDate(row[3] != null ? row[3].toString() : null);
             dto.setLateDays(row[4] != null ? row[4].toString() : null);
             dto.setTotalWorth(row[5] != null ? row[5].toString() : null);
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+
+    }
+
+    @Override
+    public List<ReportProcurementDto> getProductSalesBySupplier() {
+
+        List<Object[]> results = purchaseOrderRepository.getProductSalesBySupplier();
+
+        List<ReportProcurementDto> dtoList = new ArrayList<>();
+
+        for (Object[] row : results) {
+
+            ReportProcurementDto dto = new ReportProcurementDto();
+
+            dto.setSupplier(row[0] != null ? row[0].toString() : null);
+            dto.setTotalAmount(row[1] != null ? row[1].toString() : null);
+            dto.setTotalWorth(row[1] != null ? row[1].toString() : null);
 
             dtoList.add(dto);
         }

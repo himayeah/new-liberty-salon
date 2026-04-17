@@ -23,4 +23,14 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrderEnti
             "AND po.status = 'PENDING' ", nativeQuery = true)
     List<Object[]> getPendingPurchaseOrders();
 
+    @Query(value = "SELECT " +
+            "s.supplier_name AS supplier, " +
+            "SUM(po.total_amount) AS total_worth " +
+            "FROM purchase_order po " +
+            "JOIN supplier s ON s.id = po.supplier_id " +
+            "WHERE po.status = 'RECEIVED' " +
+            "AND po.order_date >= CURRENT_DATE() - INTERVAL 3 MONTH " +
+            "GROUP BY s.supplier_name", nativeQuery = true)
+    List<Object[]> getProductSalesBySupplier();
+
 }

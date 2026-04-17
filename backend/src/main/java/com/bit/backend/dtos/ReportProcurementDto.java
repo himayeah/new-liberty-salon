@@ -19,4 +19,6 @@ public class ReportProcurementDto {
     private String lateDays;
     private String totalWorth;
 
+    private String totalAmount;
+
 }

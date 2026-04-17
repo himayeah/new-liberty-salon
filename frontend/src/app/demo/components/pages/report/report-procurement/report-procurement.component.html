@@ -69,4 +69,26 @@
             </mat-card>
         </div>
     </div>
-</div>
+
+    <!--Product Sales by Supplier-->
+    <div class="content-grid">
+        <div class="chart-section">
+            <mat-card class="report-card">
+                <mat-card-header
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
+                    <mat-card-title style="margin: 0;">
+                        <mat-icon style="vertical-align: middle; margin-right: 8px;">insights</mat-icon>
+                        Product Sales by Supplier
+                    </mat-card-title>
+                    <span class="dashboard-card__subtitle" style="margin: 0;">Last 3 months</span>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-wrapper">
+                        <p-chart type="bar" [data]="productSalesBySupplier" [options]="productSalesOptions"
+                            height="300px"></p-chart>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+    </div>
