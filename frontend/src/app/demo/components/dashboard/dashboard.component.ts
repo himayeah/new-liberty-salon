@@ -6,6 +6,7 @@ import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
+import { BillingService } from 'src/app/services/billing/billing.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -29,12 +30,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     mostUsedService: string;
     top5Employees: any[] = [];
+    totalRevenue: number = 0;
 
     constructor(
         private productService: ProductService,
         public layoutService: LayoutService,
         private appointmentService: AppointmentSchedulingServiceService,
-        private clientRegService: ClientRegServiceService
+        private clientRegService: ClientRegServiceService,
+        private billingService: BillingService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -60,6 +63,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadMostUsedService();
         this.loadTop3ServicesPieChart();
         this.loadTop5Employees();
+        this.loadTotalRevenue();
     }
 
     //Dashboard card (Get Appointments in Last 30 Days)
@@ -235,7 +239,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
 
-    //ngOnDestroy is an Angular lifecycle hook that is triggered when a component is destroyed. 
+    //Dashboard card (Calculate Total Revenue from Billings)
+    loadTotalRevenue() {
+        this.billingService.getData().subscribe({
+            next: (billings: any[]) => {
+                const data = Array.isArray(billings) ? billings : (billings as any)?.data || [];
+                this.totalRevenue = data.reduce((total, billing) => {
+                    // Each billing has a 'purchases' array
+                    const billingTotal = (billing.purchases || []).reduce((subTotal, p) => {
+                        return subTotal + ((p.quantity || 0) * (p.price || 0));
+                    }, 0);
+                    return total + billingTotal;
+                }, 0);
+            },
+            error: (error) => {
+                console.error('Failed to load revenue data', error);
+            }
+        });
+    }
+
+    //ngOnDestroy is an Angular lifecycle hook...
     //It is mainly used to clean up resources like unsubscribing from Observables to prevent memory leaks
     ngOnDestroy() {
         if (this.subscription) {
