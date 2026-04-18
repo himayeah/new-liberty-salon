@@ -51,37 +51,65 @@ export class AppointmentScheduleComponent implements OnInit {
     }
 
     populateData(): void {
-        //calls backend, Gets a list of appointments, Displays them in a Table, Logs specific values to the console
         this.appointmentService.getData().subscribe({
             next: (response: any[]) => {
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
 
-                // //code test 1 (Log the First client name and the service name)
-                // console.log(response[0].clientName);
-                // console.log(response[0].serviceName);
-
-                // //code test 2 (Log a list of all the clients and their services)
-                // response.forEach(appoinment => {
-                //     console.log(appoinment.clientName);
-                //     console.log(appoinment.serviceName);
-                // });
-
-                // //code test 4 (Log only the service Name of the second appointment)
-                // console.log(response[1].serviceName);
-
-                //code test 5 (Log the cient name of the appointment where service was "Haircut")
-                response.forEach(appointment => {
-                    if (appointment.serviceName === "Female Haircut") {
-                        console.log(appointment.clientName);
-                    }
-                });
+                // Auto-update No Show status
+                this.checkAndMarkNoShows(response);
             },
             error: (error) => {
                 this.messageService.showError('Error fetching data: ' + error.message);
             }
         });
+    }
+
+    private checkAndMarkNoShows(appointments: any[]): void {
+        const now = new Date();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const appointmentsToUpdate = appointments.filter(app => {
+            if (!app.appointmentDate) return false;
+            
+            const appDate = new Date(app.appointmentDate);
+            appDate.setHours(0, 0, 0, 0);
+
+            const isFinalStatus = ['COMPLETED', 'CANCELLED', 'NO_SHOW'].includes(app.appointmentStatus);
+            if (isFinalStatus) return false;
+
+            // If the appointment was on a previous day, mark it as NO_SHOW
+            if (appDate < today) return true;
+
+            // If the appointment is today, only mark as NO_SHOW if the end time has passed
+            if (appDate.getTime() === today.getTime() && app.appointmentEndTime) {
+                const [hours, minutes] = app.appointmentEndTime.split(':').map(Number);
+                const endTime = new Date();
+                endTime.setHours(hours, minutes, 0, 0);
+                return now > endTime;
+            }
+
+            return false;
+        });
+
+        if (appointmentsToUpdate.length > 0) {
+            let updateCount = 0;
+            appointmentsToUpdate.forEach(app => {
+                const updatedApp = { ...app, appointmentStatus: 'NO_SHOW' };
+                this.appointmentService.editData(app.id, updatedApp).subscribe({
+                    next: () => {
+                        updateCount++;
+                        if (updateCount === appointmentsToUpdate.length) {
+                            // Refresh data only after all updates are complete
+                            this.populateData();
+                        }
+                    },
+                    error: (err) => console.error('Error marking as NO_SHOW:', err)
+                });
+            });
+        }
     }
 
     openAddModal(): void {
