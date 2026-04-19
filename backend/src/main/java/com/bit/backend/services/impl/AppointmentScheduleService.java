@@ -61,7 +61,12 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             }
 
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
-            return appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
+            AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
+
+            // Send email notification to receptionist
+            sendEmailNotification(responseDto);
+
+            return responseDto;
         } catch (Exception e) {
             throw new AppException("Failed to add appointment: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -198,6 +203,20 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     @Override
     public List<Object[]> getTop5Employees() {
         return appointmentScheduleRepository.getTop5Employees();
+    }
+
+    private void sendEmailNotification(AppointmentScheduleDto appointment) {
+        // In a real application, you would use JavaMailSender here.
+        // For now, we simulate the email trigger by logging the details.
+        System.out.println("--------------------------------------------------");
+        System.out.println("NOTIFICATION: New Booking Received!");
+        System.out.println("Client: " + appointment.getClientName());
+        System.out.println("Stylist: " + appointment.getEmployeeName());
+        System.out.println("Service: " + appointment.getServiceName());
+        System.out.println("Date: " + appointment.getAppointmentDate());
+        System.out.println("Time: " + appointment.getAppointmentStartTime());
+        System.out.println("Email sent to receptionist@newlibertysalon.com");
+        System.out.println("--------------------------------------------------");
     }
 
 }

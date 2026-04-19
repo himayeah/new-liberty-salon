@@ -103,6 +103,13 @@ const routes: Routes = [
                             (m) => m.LandingModule
                         ),
                 },
+                {
+                    path: 'book-appointment',
+                    loadChildren: () =>
+                        import('./public-booking/public-booking.module').then(
+                            (m) => m.PublicBookingModule
+                        ),
+                },
                 { path: 'notfound', component: NotfoundComponent },
                 { path: '**', redirectTo: '/notfound' },
             ],

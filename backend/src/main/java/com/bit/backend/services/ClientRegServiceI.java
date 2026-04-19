@@ -18,5 +18,7 @@ public interface ClientRegServiceI {
 
     // Dashboard card (New Clients within last 30 days)
     long countClientRegistrationsLast30Days();
+    // For Public Booking Login
+    ClientRegDto findByFirstNameAndEmail(String firstName, String email);
 
 }
