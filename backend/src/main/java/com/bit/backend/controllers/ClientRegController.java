@@ -119,4 +119,19 @@ public class ClientRegController {
         }
     }
 
+    // Search Client for Public Booking Login
+    @GetMapping("/search")
+    public ResponseEntity<ClientRegDto> searchClient(@RequestParam String firstName, @RequestParam String email) {
+        try {
+            ClientRegDto clientRegDto = clientRegServiceI.findByFirstNameAndEmail(firstName, email);
+            if (clientRegDto != null) {
+                return ResponseEntity.ok(clientRegDto);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

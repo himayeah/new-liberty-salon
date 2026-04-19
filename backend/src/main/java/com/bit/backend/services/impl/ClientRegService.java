@@ -113,4 +113,21 @@ public class ClientRegService implements ClientRegServiceI {
         return clientRegRepository.countClientRegistrationsLast30Days();
     }
 
+    // Search Client for Public Booking Login
+    @Override
+    public ClientRegDto findByFirstNameAndEmail(String firstName, String email) {
+        try {
+            Optional<ClientRegEntity> optionalClientRegEntity = clientRegRepository.findByFirstNameAndEmail(firstName,
+                    email);
+            if (!optionalClientRegEntity.isPresent()) {
+                throw new AppException("Client Reg Does Not Exist", HttpStatus.NOT_FOUND);
+            }
+            return clientRegMapper.toClientRegDto(optionalClientRegEntity.get());
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

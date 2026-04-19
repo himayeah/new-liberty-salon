@@ -9,25 +9,31 @@ import java.util.List;
 //mention where you named the database Table(ClientRegEntity) and the table's id type (Long)
 public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long> {
 
-    @Query(value = "SELECT YEAR(registration_date) as registrationYear, COUNT(*) as totalRegistrations " +
-            "FROM client_registration " +
-            "WHERE registration_date IS NOT NULL " +
-            "GROUP BY YEAR(registration_date) " +
-            "ORDER BY YEAR(registration_date)", nativeQuery = true)
-    List<Object[]> countRegistrationsByYear();
+        @Query(value = "SELECT YEAR(registration_date) as registrationYear, COUNT(*) as totalRegistrations " +
+                        "FROM client_registration " +
+                        "WHERE registration_date IS NOT NULL " +
+                        "GROUP BY YEAR(registration_date) " +
+                        "ORDER BY YEAR(registration_date)", nativeQuery = true)
+        List<Object[]> countRegistrationsByYear();
 
-    // Dashboard card (New Clients within last 30 days)
-    @Query(value = "SELECT COUNT(*) FROM client_registration WHERE registration_date BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
-    long countClientRegistrationsLast30Days();
+        // Dashboard card (New Clients within last 30 days)
+        @Query(value = "SELECT COUNT(*) FROM client_registration WHERE registration_date BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
+        long countClientRegistrationsLast30Days();
 
-    // Report client-registration (Female and Male registrations table)
-    @Query(value = "SELECT DATE_FORMAT(c.registration_date, '%M') AS registration_month, " +
-            "c.gender, " +
-            "COUNT(c.id) AS total_registrations " +
-            "FROM client_registration c " +
-            "WHERE c.registration_date >= CURRENT_DATE() - INTERVAL 6 MONTH " +
-            "GROUP BY registration_month, c.gender " +
-            "ORDER BY registration_month, c.gender", nativeQuery = true)
-    List<Object[]> getRegistrationsByGender();
+        // Report client-registration (Female and Male registrations table)
+        @Query(value = "SELECT DATE_FORMAT(c.registration_date, '%M') AS registration_month, " +
+                        "c.gender, " +
+                        "COUNT(c.id) AS total_registrations " +
+                        "FROM client_registration c " +
+                        "WHERE c.registration_date >= CURRENT_DATE() - INTERVAL 6 MONTH " +
+                        "GROUP BY registration_month, c.gender " +
+                        "ORDER BY registration_month, c.gender", nativeQuery = true)
+        List<Object[]> getRegistrationsByGender();
+
+        // For Public Booking Login
+        // Can be written using @Query as well, but Query is mostly used for complex
+        // logics. and commonly used for Reporting etc.
+        // Java automatically understands the logic for simple queries like this.
+        java.util.Optional<ClientRegEntity> findByFirstNameAndEmail(String firstName, String email);
 
 }

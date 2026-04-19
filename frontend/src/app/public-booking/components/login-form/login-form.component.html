@@ -1,0 +1,31 @@
+<div class="flex justify-content-center align-items-center min-h-screen">
+    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-4">
+        <div class="text-center mb-5">
+            <h2 class="text-900 font-medium mb-3">{{ isRegistering ? 'Register' : 'Client Login' }}</h2>
+            <span class="text-600 font-medium line-height-3">Enter your details to {{ isRegistering ? 'register' : 'continue to booking' }}</span>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="isRegistering ? onRegister() : onSubmit()">
+            <div class="mb-3">
+                <label for="firstName" class="block text-900 font-medium mb-2">First Name</label>
+                <input id="firstName" type="text" pInputText formControlName="firstName" class="w-full">
+            </div>
+
+            <div class="mb-5">
+                <label for="email" class="block text-900 font-medium mb-2">Email</label>
+                <input id="email" type="text" pInputText formControlName="email" class="w-full">
+            </div>
+
+            <button pButton pRipple [label]="isRegistering ? 'Register & Book' : 'Login'" class="w-full mb-3"></button>
+            
+            <div *ngIf="!isRegistering" class="text-center">
+                <span class="text-600">First time here? </span>
+                <a (click)="isRegistering = true" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register</a>
+            </div>
+            <div *ngIf="isRegistering" class="text-center">
+                <span class="text-600">Already have an account? </span>
+                <a (click)="isRegistering = false" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Login</a>
+            </div>
+        </form>
+    </div>
+</div>
