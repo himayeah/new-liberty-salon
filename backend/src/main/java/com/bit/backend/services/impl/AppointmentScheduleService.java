@@ -15,8 +15,11 @@ import com.bit.backend.repositories.ServiceRepository;
 import com.bit.backend.services.AppointmentScheduleServiceI;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import com.bit.backend.config.EmailSender;
+import com.bit.backend.config.SmsSender;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,18 +34,25 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     private final ClientRegRepository clientRegRepository;
     private final EmployeeRegRepository employeeRegRepository;
     private final ServiceRepository serviceRepository;
+    private final EmailSender emailSender;
+    private final SmsSender smsSender;
 
     public AppointmentScheduleService(AppointmentScheduleRepository appointmentScheduleRepository,
             AppointmentScheduleMapper appointmentScheduleMapper,
             ClientRegRepository clientRegRepository,
             EmployeeRegRepository employeeRegRepository,
-            ServiceRepository serviceRepository) {
+            ServiceRepository serviceRepository,
+            EmailSender emailSender,
+            SmsSender smsSender) {
         this.appointmentScheduleRepository = appointmentScheduleRepository;
         this.appointmentScheduleMapper = appointmentScheduleMapper;
         this.clientRegRepository = clientRegRepository;
         this.employeeRegRepository = employeeRegRepository;
         this.serviceRepository = serviceRepository;
+        this.emailSender = emailSender;
+        this.smsSender = smsSender;
     }
+
 
     @Override
     public AppointmentScheduleDto addAppointment(AppointmentScheduleDto appointmentScheduleDto) {
@@ -206,17 +216,36 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     }
 
     private void sendEmailNotification(AppointmentScheduleDto appointment) {
-        // In a real application, you would use JavaMailSender here.
-        // For now, we simulate the email trigger by logging the details.
-        System.out.println("--------------------------------------------------");
-        System.out.println("NOTIFICATION: New Booking Received!");
-        System.out.println("Client: " + appointment.getClientName());
-        System.out.println("Stylist: " + appointment.getEmployeeName());
-        System.out.println("Service: " + appointment.getServiceName());
-        System.out.println("Date: " + appointment.getAppointmentDate());
-        System.out.println("Time: " + appointment.getAppointmentStartTime());
-        System.out.println("Email sent to receptionist@newlibertysalon.com");
-        System.out.println("--------------------------------------------------");
+        try {
+            // Send email notification to receptionist
+            String subject = "New Booking Received: " + appointment.getServiceName();
+            String body = String.format(
+                    "New booking details:%n" +
+                            "Client: %s%n" +
+                            "Stylist: %s%n" +
+                            "Service: %s%n" +
+                            "Date: %s%n" +
+                            "Time: %s",
+                    appointment.getClientName(),
+                    appointment.getEmployeeName(),
+                    appointment.getServiceName(),
+                    appointment.getAppointmentDate(),
+                    appointment.getAppointmentStartTime());
+
+            emailSender.sendSimpleEmail("receptionist@newlibertysalon.com", subject, body);
+
+            // Also send SMS to the client if phone number is available
+            if (appointment.getClientPhone() != null && !appointment.getClientPhone().isEmpty()) {
+                smsSender.sendAppointmentConfirmation(
+                        appointment.getClientPhone(),
+                        String.valueOf(appointment.getId()),
+                        appointment.getAppointmentDate(),
+                        appointment.getAppointmentStartTime());
+            }
+        } catch (Exception e) {
+            // Log the error but don't fail the whole appointment creation
+            System.err.println("Failed to send notification: " + e.getMessage());
+        }
     }
 
 }

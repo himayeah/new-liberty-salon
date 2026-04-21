@@ -16,6 +16,7 @@ public class AppointmentScheduleDto {
     private Long id;
     private Long clientId;
     private String clientName;
+    private String clientPhone;
     private Long employeeId;
     private String employeeName;
     private Long serviceId;

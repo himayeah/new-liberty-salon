@@ -38,7 +38,7 @@ export class LoginFormComponent {
 
       //Since API calls are asynchronous, subscribe() waits for the response from backend
       this.publicBookingService.searchClient(firstName, email).subscribe({
-        next: (client) => {
+        next: (client: any) => {
           this.messageService.add({ severity: 'success', summary: 'Welcome Back', detail: `Hello ${client.firstName}!` });
           this.userAuthenticated.emit(client);
         },
