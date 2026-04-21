@@ -16,6 +16,7 @@ public interface AppointmentScheduleMapper {
 
     @Mapping(source = "client.id", target = "clientId")
     @Mapping(target = "clientName", expression = "java(appointmentScheduleEntity.getClient() != null ? appointmentScheduleEntity.getClient().getFirstName() + \" \" + (appointmentScheduleEntity.getClient().getLastName() != null ? appointmentScheduleEntity.getClient().getLastName() : \"\") : null)")
+    @Mapping(source = "client.phoneNumber", target = "clientPhone")
     @Mapping(source = "employee.id", target = "employeeId")
     @Mapping(source = "employee.employeeName", target = "employeeName")
     @Mapping(source = "service.id", target = "serviceId")

@@ -1,0 +1,99 @@
+:host {
+  display: block;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.booking-container {
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field {
+  label {
+    display: block;
+    color: #ccc;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+::ng-deep {
+  .p-dropdown, .p-calendar {
+    width: 100% !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    
+    .p-inputtext {
+      background: transparent !important;
+      color: #fff !important;
+    }
+
+    &:not(.p-disabled).p-focus {
+      border-color: #6366f1 !important;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
+    }
+  }
+
+  .p-dropdown-panel {
+    background: #1e1e2e !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    
+    .p-dropdown-items {
+      .p-dropdown-item {
+        color: #fff !important;
+        
+        &:hover {
+          background: rgba(99, 102, 241, 0.2) !important;
+        }
+        
+        &.p-highlight {
+          background: #6366f1 !important;
+        }
+      }
+    }
+  }
+
+  .p-button {
+    width: 100%;
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+    border: none !important;
+    padding: 1rem !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    &:disabled {
+      background: #444 !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+}
