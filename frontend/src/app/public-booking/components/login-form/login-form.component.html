@@ -1,31 +1,41 @@
-<div class="flex justify-content-center align-items-center min-h-screen">
-    <div class="surface-card p-4 shadow-2 border-round w-full lg:w-4">
-        <div class="text-center mb-5">
-            <h2 class="text-900 font-medium mb-3">{{ isRegistering ? 'Register' : 'Client Login' }}</h2>
-            <span class="text-600 font-medium line-height-3">Enter your details to {{ isRegistering ? 'register' : 'continue to booking' }}</span>
+<div class="booking-wrapper">
+    <mat-card class="booking-card">
+        <div class="header-banner">
+            <h2>{{ isRegistering ? 'Register' : 'Client Login' }}</h2>
+            <p>Enter your details to {{ isRegistering ? 'register' : 'continue to booking' }}</p>
         </div>
 
-        <form [formGroup]="loginForm" (ngSubmit)="isRegistering ? onRegister() : onSubmit()">
-            <div class="mb-3">
-                <label for="firstName" class="block text-900 font-medium mb-2">First Name</label>
-                <input id="firstName" type="text" pInputText formControlName="firstName" class="w-full">
-            </div>
+        <mat-card-content>
+            <form [formGroup]="loginForm" class="form-container" (ngSubmit)="isRegistering ? onRegister() : onSubmit()">
+                <div class="form-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName">
+                    </mat-form-field>
+                </div>
 
-            <div class="mb-5">
-                <label for="email" class="block text-900 font-medium mb-2">Email</label>
-                <input id="email" type="text" pInputText formControlName="email" class="w-full">
-            </div>
+                <div class="form-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="email">
+                    </mat-form-field>
+                </div>
 
-            <button pButton pRipple [label]="isRegistering ? 'Register & Book' : 'Login'" class="w-full mb-3"></button>
-            
-            <div *ngIf="!isRegistering" class="text-center">
-                <span class="text-600">First time here? </span>
-                <a (click)="isRegistering = true" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Register</a>
-            </div>
-            <div *ngIf="isRegistering" class="text-center">
-                <span class="text-600">Already have an account? </span>
-                <a (click)="isRegistering = false" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Login</a>
-            </div>
-        </form>
-    </div>
+                <div class="action-buttons">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+                        {{ isRegistering ? 'Register & Book' : 'Login' }}
+                    </button>
+                </div>
+
+                <div *ngIf="!isRegistering" class="toggle-link text-center mt-3">
+                    <span class="text-600">First time here? </span>
+                    <a (click)="isRegistering = true" class="text-blue-500 cursor-pointer">Register</a>
+                </div>
+                <div *ngIf="isRegistering" class="toggle-link text-center mt-3">
+                    <span class="text-600">Already have an account? </span>
+                    <a (click)="isRegistering = false" class="text-blue-500 cursor-pointer">Login</a>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
 </div>

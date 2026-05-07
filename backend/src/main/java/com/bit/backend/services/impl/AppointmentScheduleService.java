@@ -18,8 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.bit.backend.config.EmailSender;
-import com.bit.backend.config.SmsSender;
+import com.bit.backend.services.NotificationService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,25 +33,21 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     private final ClientRegRepository clientRegRepository;
     private final EmployeeRegRepository employeeRegRepository;
     private final ServiceRepository serviceRepository;
-    private final EmailSender emailSender;
-    private final SmsSender smsSender;
+    private final NotificationService notificationService;
 
     public AppointmentScheduleService(AppointmentScheduleRepository appointmentScheduleRepository,
             AppointmentScheduleMapper appointmentScheduleMapper,
             ClientRegRepository clientRegRepository,
             EmployeeRegRepository employeeRegRepository,
             ServiceRepository serviceRepository,
-            EmailSender emailSender,
-            SmsSender smsSender) {
+            NotificationService notificationService) {
         this.appointmentScheduleRepository = appointmentScheduleRepository;
         this.appointmentScheduleMapper = appointmentScheduleMapper;
         this.clientRegRepository = clientRegRepository;
         this.employeeRegRepository = employeeRegRepository;
         this.serviceRepository = serviceRepository;
-        this.emailSender = emailSender;
-        this.smsSender = smsSender;
+        this.notificationService = notificationService;
     }
-
 
     @Override
     public AppointmentScheduleDto addAppointment(AppointmentScheduleDto appointmentScheduleDto) {
@@ -73,8 +68,13 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
             AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
 
-            // Send email notification to receptionist
-            sendEmailNotification(responseDto);
+            // Ensure client phone number is populated for notifications
+            if (savedItem.getClient() != null && (responseDto.getClientPhone() == null || responseDto.getClientPhone().isEmpty())) {
+                responseDto.setClientPhone(savedItem.getClient().getPhoneNumber());
+            }
+
+            // Send notifications via NotificationService
+            notificationService.sendAppointmentNotification(responseDto);
 
             return responseDto;
         } catch (Exception e) {
@@ -215,37 +215,5 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         return appointmentScheduleRepository.getTop5Employees();
     }
 
-    private void sendEmailNotification(AppointmentScheduleDto appointment) {
-        try {
-            // Send email notification to receptionist
-            String subject = "New Booking Received: " + appointment.getServiceName();
-            String body = String.format(
-                    "New booking details:%n" +
-                            "Client: %s%n" +
-                            "Stylist: %s%n" +
-                            "Service: %s%n" +
-                            "Date: %s%n" +
-                            "Time: %s",
-                    appointment.getClientName(),
-                    appointment.getEmployeeName(),
-                    appointment.getServiceName(),
-                    appointment.getAppointmentDate(),
-                    appointment.getAppointmentStartTime());
-
-            emailSender.sendSimpleEmail("receptionist@newlibertysalon.com", subject, body);
-
-            // Also send SMS to the client if phone number is available
-            if (appointment.getClientPhone() != null && !appointment.getClientPhone().isEmpty()) {
-                smsSender.sendAppointmentConfirmation(
-                        appointment.getClientPhone(),
-                        String.valueOf(appointment.getId()),
-                        appointment.getAppointmentDate(),
-                        appointment.getAppointmentStartTime());
-            }
-        } catch (Exception e) {
-            // Log the error but don't fail the whole appointment creation
-            System.err.println("Failed to send notification: " + e.getMessage());
-        }
-    }
 
 }

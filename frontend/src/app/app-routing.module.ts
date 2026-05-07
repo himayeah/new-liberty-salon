@@ -104,7 +104,7 @@ const routes: Routes = [
                         ),
                 },
                 {
-                    path: 'book-appointment',
+                    path: 'public-booking',
                     loadChildren: () =>
                         import('./public-booking/public-booking.module').then(
                             (m) => m.PublicBookingModule
