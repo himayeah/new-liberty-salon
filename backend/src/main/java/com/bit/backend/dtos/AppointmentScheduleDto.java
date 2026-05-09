@@ -17,6 +17,7 @@ public class AppointmentScheduleDto {
     private Long clientId;
     private String clientName;
     private String clientPhone;
+    private String clientEmail;
     private Long employeeId;
     private String employeeName;
     private Long serviceId;
@@ -31,5 +32,6 @@ public class AppointmentScheduleDto {
     private String cancelledDate;
     private String createdDate;
     private String createdBy;
+    private boolean reminderSent;
 
 }

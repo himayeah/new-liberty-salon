@@ -60,4 +60,8 @@ public class AppointmentScheduleEntity {
     @Column(name = "created_by")
     private String createdBy;
 
+    // boolean field to ensure only one reminder is sent per appointment
+    @Column(name = "reminder_sent")
+    private boolean reminderSent = false;
+
 }
