@@ -59,6 +59,18 @@ public class AppointmentScheduleController {
         }
     }
 
+    @GetMapping("/appointment-schedule-form/{id}")
+    public ResponseEntity<AppointmentScheduleDto> getAppointmentById(@PathVariable long id) {
+        try {
+            AppointmentScheduleDto appointmentScheduleDto = appointmentScheduleServiceI.getAppointmentById(id);
+            return ResponseEntity.ok(appointmentScheduleDto);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/appointment-schedule-form/{id}")
     public ResponseEntity<AppointmentScheduleDto> updateAppointment(
             @PathVariable long id,

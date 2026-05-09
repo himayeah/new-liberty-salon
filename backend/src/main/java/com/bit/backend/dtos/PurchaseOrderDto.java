@@ -1,10 +1,9 @@
 package com.bit.backend.dtos;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+ 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -15,13 +14,11 @@ public class PurchaseOrderDto {
     private Long supplierId;
     private SupplierDto supplier;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate orderDate;
+    private String orderDate;
 
     private String status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate expectedDeliveryDate;
+    private String expectedDeliveryDate;
 
     private Double totalAmount;
     private String notes;

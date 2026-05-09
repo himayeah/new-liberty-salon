@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,13 +25,13 @@ public class PurchaseOrderEntity {
     private SupplierEntity supplier;
 
     @Column(name = "order_date")
-    private LocalDate orderDate;
+    private String orderDate;
 
     @Column(name = "status")
     private String status;
 
     @Column(name = "expected_delivery_date")
-    private LocalDate expectedDeliveryDate;
+    private String expectedDeliveryDate;
 
     @Column(name = "total_amount")
     private Double totalAmount;

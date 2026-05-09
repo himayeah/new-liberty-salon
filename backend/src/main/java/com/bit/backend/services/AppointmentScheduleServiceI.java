@@ -8,13 +8,13 @@ public interface AppointmentScheduleServiceI {
 
     AppointmentScheduleDto addAppointment(AppointmentScheduleDto appointmentScheduleDto);
 
-    List<AppointmentScheduleDto> getAppointment();
+    List<AppointmentScheduleDto> getAppointments();
+
+    AppointmentScheduleDto getAppointmentById(long id);
 
     AppointmentScheduleDto updateAppointment(long id, AppointmentScheduleDto appointmentScheduleDto);
 
     AppointmentScheduleDto deleteAppointment(long id);
-
-    List<AppointmentScheduleDto> getAppointments();
 
     // dashboard card
     long countAppointmentsLast30Days();

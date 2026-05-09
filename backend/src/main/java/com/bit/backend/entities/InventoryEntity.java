@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -32,7 +31,7 @@ public class InventoryEntity {
     private int maximumStock;
 
     @Column(name = "last_restocked_date")
-    private LocalDate lastRestockedDate;
+    private String lastRestockedDate;
 
     @Column(name = "shelf_location")
     private String shelfLocation;

@@ -1,10 +1,11 @@
 package com.bit.backend.entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,10 +27,10 @@ public class GrnEntity {
     private ProductEntity product;
 
     @Column(name = "ordered_date")
-    private LocalDate orderedDate;
+    private String orderedDate;
 
     @Column(name = "received_date")
-    private LocalDate receivedDate;
+    private String receivedDate;
 
     @Column(name = "ordered_quantity")
     private Double orderedQuantity;

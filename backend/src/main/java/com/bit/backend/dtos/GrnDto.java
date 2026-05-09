@@ -1,7 +1,6 @@
 package com.bit.backend.dtos;
 
 import lombok.*;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -12,8 +11,8 @@ public class GrnDto {
     private Long purchaseOrderId;
     private Long productId;
     private String productName;
-    private LocalDate orderedDate;
-    private LocalDate receivedDate;
+    private String orderedDate;
+    private String receivedDate;
     private Double orderedQuantity;
     private Double receivedQuantity;
     private String remarks;

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +17,6 @@ public class InventoryDto {
     private int currentStock;
     private int minimumStock;
     private int maximumStock;
-    private LocalDate lastRestockedDate;
+    private String lastRestockedDate;
     private String shelfLocation;
 }

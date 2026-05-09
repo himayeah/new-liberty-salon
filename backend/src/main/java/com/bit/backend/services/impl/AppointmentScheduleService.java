@@ -104,9 +104,10 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             entity.setId(id);
             setRelations(entity, appointmentScheduleDto);
 
-            // Preserve audit fields
+            // Preserve audit fields and reminder status
             entity.setCreatedDate(existingEntity.getCreatedDate());
             entity.setCreatedBy(existingEntity.getCreatedBy());
+            entity.setReminderSent(existingEntity.getReminderSent());
 
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -150,8 +151,16 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     }
 
     @Override
-    public List<AppointmentScheduleDto> getAppointment() {
-        return getAppointments();
+    public AppointmentScheduleDto getAppointmentById(long id) {
+        try {
+            AppointmentScheduleEntity entity = appointmentScheduleRepository.findById(id)
+                    .orElseThrow(() -> new AppException("Appointment Schedule Does Not Exist", HttpStatus.NOT_FOUND));
+            return appointmentScheduleMapper.toAppointmentScheduleDto(entity);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Failed to fetch appointment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void setRelations(AppointmentScheduleEntity entity, AppointmentScheduleDto dto) {
