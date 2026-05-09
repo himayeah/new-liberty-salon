@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -57,12 +56,12 @@ public class ClientRegEntity {
 
     // client-reg report
     @Column(name = "registration_date")
-    private LocalDate registrationDate;
+    private String registrationDate;
 
     @PrePersist
     protected void onCreate() {
         if (this.registrationDate == null) {
-            this.registrationDate = LocalDate.now();
+            this.registrationDate = java.time.LocalDate.now().toString();
         }
     }
 

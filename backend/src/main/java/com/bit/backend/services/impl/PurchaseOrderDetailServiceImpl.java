@@ -191,6 +191,7 @@ public class PurchaseOrderDetailServiceImpl implements PurchaseOrderDetailServic
         else if (anyReceivedOrPartial) newStatus = "PARTIAL";
 
         po.setStatus(newStatus);
+        purchaseOrderRepository.save(po);
     }
 }
 
