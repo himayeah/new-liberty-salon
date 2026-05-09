@@ -9,6 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AppointmentScheduleRepository extends JpaRepository<AppointmentScheduleEntity, Long> {
 
+        // Finds all appointments for the next day that have not been reminded for
+        // (Client reminders 24hrs prior to appointment time)
+        @Query(value = "SELECT * FROM appointment_schedule " +
+                        "WHERE appointment_date = DATE_FORMAT(CURRENT_DATE + INTERVAL 1 DAY, '%Y-%m-%d') " +
+                        "AND reminder_sent = false " +
+                        "AND appointment_status != 'CANCELLED'", nativeQuery = true)
+        List<AppointmentScheduleEntity> findAppointmentsForReminder();
+
         // Dashboard Card (Total Appointments in last 30 Days)
         @Query(value = "SELECT COUNT(*) FROM appointment_schedule WHERE STR_TO_DATE(appointment_date, '%Y-%m-%d') BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
         long countAppointmentsLast30Days();

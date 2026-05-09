@@ -69,7 +69,8 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
 
             // Ensure client phone number is populated for notifications
-            if (savedItem.getClient() != null && (responseDto.getClientPhone() == null || responseDto.getClientPhone().isEmpty())) {
+            if (savedItem.getClient() != null
+                    && (responseDto.getClientPhone() == null || responseDto.getClientPhone().isEmpty())) {
                 responseDto.setClientPhone(savedItem.getClient().getPhoneNumber());
             }
 
@@ -214,6 +215,5 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     public List<Object[]> getTop5Employees() {
         return appointmentScheduleRepository.getTop5Employees();
     }
-
 
 }

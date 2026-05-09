@@ -30,11 +30,11 @@ public class NotificationServiceImpl implements NotificationService {
 
             // Create email subject and body
             String clientPhone = appointment.getClientPhone() != null ? appointment.getClientPhone() : "N/A";
-            String subject = String.format("New Appointment: %s - %s (%s) [%s]", 
-                appointment.getServiceName(), 
-                appointment.getClientName(), 
-                clientPhone,
-                bookingType);
+            String subject = String.format("New Appointment: %s - %s (%s) [%s]",
+                    appointment.getServiceName(),
+                    appointment.getClientName(),
+                    clientPhone,
+                    bookingType);
 
             // calls the method constructEmailBody to create the email body
             String body = constructEmailBody(appointment, bookingType);
@@ -52,6 +52,44 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (Exception e) {
             // Log error but don't disrupt the main flow
             System.err.println("Notification failed: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendAppointmentReminder(AppointmentScheduleDto appointment) {
+        try {
+
+            // Is email null? meaning doesn't exist at all. or is email empty? meaning
+            // the client might have provided an empty email
+            if (appointment.getClientEmail() == null || appointment.getClientEmail().isEmpty()) {
+                System.out.println("No email address found for cli  ent, skipping reminder.");
+                return;
+            }
+
+            String subject = "Reminder: Your Appointment at New Liberty Salon tomorrow!";
+            String body = String.format(
+                    "Hello %s,%n%n" +
+                            "This is a friendly reminder for your upcoming appointment tomorrow.%n%n" +
+                            "Appointment Details:%n" +
+                            "-------------------%n" +
+                            "Service:           %s%n" +
+                            "Date:              %s%n" +
+                            "Time:              %s%n%n" +
+                            "We look forward to seeing you!%n%n" +
+                            "Best Regards,%n" +
+                            "New Liberty Salon Team",
+                    appointment.getClientName(),
+                    appointment.getServiceName(),
+                    appointment.getAppointmentDate(),
+                    appointment.getAppointmentStartTime());
+
+            // contains subject, body etc
+            emailSender.sendSimpleEmail(appointment.getClientEmail(), subject, body);
+            // System notification in console mentioning that the reminder has been sent to
+            // the client email
+            System.out.println("Reminder email sent to: " + appointment.getClientEmail());
+        } catch (Exception e) {
+            System.err.println("Failed to send reminder: " + e.getMessage());
         }
     }
 
