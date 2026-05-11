@@ -65,6 +65,8 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
                 entity.setCancelledDate(now);
             }
 
+            formatAppointmentDate(entity);
+
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
             AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
 
@@ -124,6 +126,8 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
                 // Status is not CANCELLED, clear the date
                 entity.setCancelledDate(null);
             }
+
+            formatAppointmentDate(entity);
 
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
             return appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
@@ -223,6 +227,27 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     @Override
     public List<Object[]> getTop5Employees() {
         return appointmentScheduleRepository.getTop5Employees();
+    }
+
+    // Dashboard Appointment Timeline Notification (Next 30 minutes)
+    @Override
+    public List<AppointmentScheduleDto> getUpcomingNotifications() {
+        List<AppointmentScheduleEntity> entities = appointmentScheduleRepository.findUpcomingNotifications();
+
+        // Mark as notified before returning
+        for (AppointmentScheduleEntity entity : entities) {
+            entity.setDashboardNotified(true);
+        }
+        appointmentScheduleRepository.saveAll(entities);
+
+        return appointmentScheduleMapper.toAppointmentScheduleDtoList(entities);
+    }
+
+    private void formatAppointmentDate(AppointmentScheduleEntity entity) {
+        if (entity.getAppointmentDate() != null && entity.getAppointmentDate().contains("T")) {
+            // Truncate ISO string to YYYY-MM-DD
+            entity.setAppointmentDate(entity.getAppointmentDate().split("T")[0]);
+        }
     }
 
 }

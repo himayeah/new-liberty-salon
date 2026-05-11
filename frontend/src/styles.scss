@@ -12,5 +12,30 @@ $gutter: 1rem; //for primeflex grid system
 @import "assets/demo/styles/flags/flags.css";
 @import "assets/demo/styles/badges.scss";
 @import "assets/demo/styles/code.scss";
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Appointment Reminder Notification Styling */
+.appointment-reminder-toast {
+    background-color: #A6C5FF !important;
+    color: #1a202c !important;
+    /* Dark text for better contrast on light blue */
+    box-shadow: 0 8px 20px rgba(166, 197, 255, 0.4) !important;
+
+    .toast-title {
+        font-weight: 700 !important;
+    }
+
+    .toast-progress {
+        background-color: #1a202c !important;
+        opacity: 0.2 !important;
+    }
+}

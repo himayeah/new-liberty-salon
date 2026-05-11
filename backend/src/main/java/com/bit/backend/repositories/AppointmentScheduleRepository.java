@@ -83,4 +83,14 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "LIMIT 5 ", nativeQuery = true)
         List<Object[]> getTop5Employees();
 
+        // Dashboard Appointment Timeline Notification (Next 30 minutes)
+        @Query(value = "SELECT * FROM appointment_schedule " +
+                        "WHERE appointment_date = CURRENT_DATE " +
+                        "AND dashboard_notified = false " +
+                        "AND appointment_status != 'CANCELLED' " +
+                        "AND STR_TO_DATE(appointment_start_time, '%H:%i') <= TIME_FORMAT(CURRENT_TIME + INTERVAL 30 MINUTE, '%H:%i') "
+                        +
+                        "AND STR_TO_DATE(appointment_start_time, '%H:%i') >= TIME_FORMAT(CURRENT_TIME, '%H:%i')", nativeQuery = true)
+        List<AppointmentScheduleEntity> findUpcomingNotifications();
+
 }

@@ -64,4 +64,7 @@ public class AppointmentScheduleEntity {
     @Column(name = "reminder_sent")
     private Boolean reminderSent = false;
 
+    @Column(name = "dashboard_notified")
+    private Boolean dashboardNotified = false;
+
 }

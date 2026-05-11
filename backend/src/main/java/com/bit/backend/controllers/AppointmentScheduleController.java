@@ -148,4 +148,14 @@ public class AppointmentScheduleController {
         }
     }
 
+    @GetMapping("/appointment-schedule-form/upcoming-notifications")
+    public ResponseEntity<List<AppointmentScheduleDto>> getUpcomingNotifications() {
+        try {
+            List<AppointmentScheduleDto> result = appointmentScheduleServiceI.getUpcomingNotifications();
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

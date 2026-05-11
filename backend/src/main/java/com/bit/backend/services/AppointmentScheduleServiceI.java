@@ -25,7 +25,9 @@ public interface AppointmentScheduleServiceI {
     List<Object[]> getAppointmentCountsByMonth();
 
     List<Object[]> getTop3Services();
-    
+
     List<Object[]> getTop5Employees();
+
+    List<AppointmentScheduleDto> getUpcomingNotifications();
 
 }

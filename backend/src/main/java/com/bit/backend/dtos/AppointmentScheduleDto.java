@@ -33,5 +33,6 @@ public class AppointmentScheduleDto {
     private String createdDate;
     private String createdBy;
     private boolean reminderSent;
+    private boolean dashboardNotified;
 
 }
