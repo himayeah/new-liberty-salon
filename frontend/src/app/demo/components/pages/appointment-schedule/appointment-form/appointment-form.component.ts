@@ -123,7 +123,13 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         if (this.appointmentScheduleForm.invalid) return;
 
         this.isButtonDisabled = true;
-        const formValue = this.appointmentScheduleForm.value;
+        const formValue = { ...this.appointmentScheduleForm.value };
+
+        // Format date to YYYY-MM-DD to maintain database consistency
+        if (formValue.appointmentDate instanceof Date) {
+            const d = formValue.appointmentDate;
+            formValue.appointmentDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
 
         if (this.mode === 'add') {
             this.appointmentService.serviceCall(formValue).subscribe({

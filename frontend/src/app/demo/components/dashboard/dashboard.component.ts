@@ -7,6 +7,7 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { BillingService } from 'src/app/services/billing/billing.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -31,13 +32,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     mostUsedService: string;
     top5Employees: any[] = [];
     totalRevenue: number = 0;
+    notificationInterval: any;
 
     constructor(
         private productService: ProductService,
         public layoutService: LayoutService,
         private appointmentService: AppointmentSchedulingServiceService,
         private clientRegService: ClientRegServiceService,
-        private billingService: BillingService
+        private billingService: BillingService,
+        //Toaster service used to display premium looking notifications
+        private toastr: ToastrService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -64,6 +68,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadTop3ServicesPieChart();
         this.loadTop5Employees();
         this.loadTotalRevenue();
+        this.startNotificationPolling();
+    }
+    // Runs startNotificationPolling() method at every 60,000 ms intervals ( equals to 1 minute)
+    startNotificationPolling() {
+        this.checkUpcomingNotifications();
+        this.notificationInterval = setInterval(() => {
+            this.checkUpcomingNotifications();
+        }, 60000); // Check every minute
+    }
+
+    // Runs getUpcomingNotifications method at every 60,000 ms intervals ( equals to 1 minute) 
+    checkUpcomingNotifications() {
+        this.appointmentService.getUpcomingNotifications().subscribe({
+            next: (notifications) => {
+                notifications.forEach((notif) => {
+                    const message = `
+                        <strong>Service:</strong> ${notif.serviceName}<br/>
+                        <strong>Phone:</strong> ${notif.clientPhone || 'N/A'}<br/>
+                        <strong>Time:</strong> ${notif.appointmentStartTime}
+                    `;
+                    this.toastr.info(message, `Reminder: ${notif.clientName}`, {
+                        timeOut: 15000,
+                        progressBar: true,
+                        enableHtml: true,
+                        positionClass: 'toast-top-right',
+                        toastClass: 'ngx-toastr appointment-reminder-toast'
+                    });
+                });
+            },
+            error: (error) => {
+                console.error('Failed to load upcoming notifications', error);
+            },
+        });
     }
 
     //Dashboard card (Get Appointments in Last 30 Days)
@@ -263,6 +300,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();
+        }
+        if (this.notificationInterval) {
+            clearInterval(this.notificationInterval);
         }
     }
 }

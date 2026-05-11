@@ -119,4 +119,15 @@ export class AppointmentSchedulingServiceService {
     return this.http.get<any[]>(requestUrl, { headers });
   }
 
+  // Dashboard Appointment Timeline Notification (Next 30 minutes)
+  getUpcomingNotifications(): Observable<any[]> {
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/upcoming-notifications`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get<any[]>(requestUrl, { headers });
+  }
+
 }
