@@ -1,41 +1,42 @@
-<div class="booking-wrapper">
-    <mat-card class="booking-card">
-        <div class="header-banner">
-            <h2>{{ isRegistering ? 'Register' : 'Client Login' }}</h2>
-            <p>Enter your details to {{ isRegistering ? 'register' : 'continue to booking' }}</p>
+<div class="login-content-container">
+    <div class="content-header">
+        <div class="logo-container">
+            <img src="assets/layout/images/logo.png" alt="Salon Logo" class="form-logo">
+        </div>
+        <h1 class="main-title">Book Your Appointment</h1>
+        <p class="sub-description">Enter your details to {{ isRegistering ? 'register and start' : 'continue' }} your booking experience.</p>
+    </div>
+
+    <form [formGroup]="loginForm" class="login-form-minimal" (ngSubmit)="isRegistering ? onRegister() : onSubmit()">
+        <div class="form-section">
+            <mat-form-field appearance="outline" class="modern-field">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName" placeholder="e.g. John">
+            </mat-form-field>
         </div>
 
-        <mat-card-content>
-            <form [formGroup]="loginForm" class="form-container" (ngSubmit)="isRegistering ? onRegister() : onSubmit()">
-                <div class="form-row">
-                    <mat-form-field appearance="outline">
-                        <mat-label>First Name</mat-label>
-                        <input matInput formControlName="firstName">
-                    </mat-form-field>
-                </div>
+        <div class="form-section">
+            <mat-form-field appearance="outline" class="modern-field">
+                <mat-label>Email Address</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="e.g. john@example.com">
+            </mat-form-field>
+        </div>
 
-                <div class="form-row">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Email</mat-label>
-                        <input matInput type="email" formControlName="email">
-                    </mat-form-field>
-                </div>
+        <div class="form-actions">
+            <button mat-flat-button class="cta-button" type="submit" [disabled]="loginForm.invalid">
+                {{ isRegistering ? 'Register & Book Now' : 'Login to Book' }}
+            </button>
+        </div>
 
-                <div class="action-buttons">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-                        {{ isRegistering ? 'Register & Book' : 'Login' }}
-                    </button>
-                </div>
-
-                <div *ngIf="!isRegistering" class="toggle-link text-center mt-3">
-                    <span class="text-600">First time here? </span>
-                    <a (click)="isRegistering = true" class="text-blue-500 cursor-pointer">Register</a>
-                </div>
-                <div *ngIf="isRegistering" class="toggle-link text-center mt-3">
-                    <span class="text-600">Already have an account? </span>
-                    <a (click)="isRegistering = false" class="text-blue-500 cursor-pointer">Login</a>
-                </div>
-            </form>
-        </mat-card-content>
-    </mat-card>
+        <div class="footer-links">
+            <div *ngIf="!isRegistering" class="toggle-link">
+                <span class="text-secondary">First time here? </span>
+                <a (click)="isRegistering = true" class="link-primary">Create an account</a>
+            </div>
+            <div *ngIf="isRegistering" class="toggle-link">
+                <span class="text-secondary">Already have an account? </span>
+                <a (click)="isRegistering = false" class="link-primary">Sign in instead</a>
+            </div>
+        </div>
+    </form>
 </div>
