@@ -1,0 +1,12 @@
+<div class="split-screen-container">
+    <div class="form-side">
+        <div class="form-content w-full">
+            <app-login-form *ngIf="!authenticatedUser" (userAuthenticated)="onUserAuthenticated($event)"></app-login-form>
+            <app-booking-form *ngIf="authenticatedUser" [client]="authenticatedUser"></app-booking-form>
+        </div>
+    </div>
+    <div class="image-side">
+        <img src="assets/images/booking-bg.png" alt="Luxury Salon Interior">
+    </div>
+</div>
+<p-toast></p-toast>

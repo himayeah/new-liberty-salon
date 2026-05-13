@@ -22,12 +22,12 @@ export class BookingFormComponent implements OnInit {
   ) {
     this.bookingForm = this.fb.group({
       clientId: ['', Validators.required],
-      employeeId: ['', Validators.required],
+      employeeId: [null],
       serviceId: ['', Validators.required],
       appointmentDate: ['', Validators.required],
       appointmentStartTime: ['', Validators.required],
       appointmentStatus: ['PENDING'],
-      bookingSource: ['PUBLIC_WEB']
+      bookingSource: ['ONLINE']
     });
   }
 

@@ -23,7 +23,8 @@ public class NotificationServiceImpl implements NotificationService {
             String recipient = "receptionist@newlibertysalon.com";
             String bookingType = "Internal Booking";
 
-            if ("PUBLIC_WEB".equalsIgnoreCase(appointment.getBookingSource())) {
+            if ("ONLINE".equalsIgnoreCase(appointment.getBookingSource())
+                    || "PUBLIC_WEB".equalsIgnoreCase(appointment.getBookingSource())) {
                 recipient = "libertysalontest@gmail.com";
                 bookingType = "Public Online Booking";
             }

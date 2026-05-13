@@ -2,11 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-public-booking',
-  template: `
-    <app-login-form *ngIf="!authenticatedUser" (userAuthenticated)="onUserAuthenticated($event)"></app-login-form>
-    <app-booking-form *ngIf="authenticatedUser" [client]="authenticatedUser"></app-booking-form>
-    <p-toast></p-toast>
-  `
+  templateUrl: './public-booking.component.html',
+  styleUrls: ['./public-booking.component.scss']
 })
 export class PublicBookingComponent {
   authenticatedUser: any = null;
