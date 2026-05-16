@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.ReportAppointmentStatusService;
@@ -41,6 +42,17 @@ public class ReportAppointmentStatusController {
             List<ReportCancelledAppointmentScheduleDto> reportCancelledAppointmentScheduleDtoList = reportAppointmentStatusService
                     .getCancelledAppointmentDetails();
             return ResponseEntity.ok(reportCancelledAppointmentScheduleDtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Report- getBookingsBySource (Pie Chart)
+    @GetMapping("/bookings-by-source")
+    public ResponseEntity<List<ReportAppointmentStatusDto>> getBookingsBySource() {
+        try {
+            List<ReportAppointmentStatusDto> reportAppointmentStatusDtoList = reportAppointmentStatusService.getAppointmentsBySource();
+            return ResponseEntity.ok(reportAppointmentStatusDtoList);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

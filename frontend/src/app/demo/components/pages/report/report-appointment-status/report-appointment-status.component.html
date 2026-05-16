@@ -75,5 +75,24 @@
             </mat-card>
         </div>
 
+        // Replace [Data] and [Options] with actual properties when Re-using
+        <div class="chart-section">
+            <mat-card class="report-card">
+                <mat-card-header
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
+                    <mat-card-title style="margin: 0;">
+                        <mat-icon style="vertical-align: middle; margin-right: 8px;">pie_chart</mat-icon>
+                        Top 3 Services
+                    </mat-card-title>
+                    <span class="dashboard-card__subtitle" style="margin: 0;">Last 30 days</span>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-wrapper">
+                        <p-chart type="pie" [data]="appointmentsBySourceData" [options]="appointmentsBySourceOptions" height="300px"></p-chart>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
     </div>
 </div>

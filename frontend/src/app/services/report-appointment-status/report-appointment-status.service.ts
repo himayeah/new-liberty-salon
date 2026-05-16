@@ -32,8 +32,15 @@ export class ReportAppointmentStatusService {
     return this.http.get<any[]>(requestUrl, { headers });
   }
 
+  getAppointmentsBySource(): Observable<any[]> {
+    const requestUrl = `${environment.baseUrl}/report-appointment-status/bookings-by-source`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get<any[]>(requestUrl, { headers });
+  }
+
+
 }
-
-
-
-

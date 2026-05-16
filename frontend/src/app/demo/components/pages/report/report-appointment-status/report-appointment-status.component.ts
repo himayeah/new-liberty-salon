@@ -13,6 +13,8 @@ export class ReportAppointmentStatusComponent implements OnInit {
   chartData: any;
   chartOptions: any;
   data: number;
+  appointmentsBySourceData: any;
+  appointmentsBySourceOptions: any;
 
   constructor(private reportService: ReportAppointmentStatusService) { }
 
@@ -20,6 +22,8 @@ export class ReportAppointmentStatusComponent implements OnInit {
     this.initChartOptions();
     this.fetchData();
     this.loadAppointmentCancellationData();
+    this.loadAppointmentsBySourcePieChart();
+  
   }
 
   initChartOptions(): void {
@@ -94,24 +98,6 @@ export class ReportAppointmentStatusComponent implements OnInit {
     });
   }
 
-  // prepareChartData(): void {
-  //   const labels = this.appointmentCancellationData.map(item => item.registrationYear);
-  //   const data = this.appointmentCancellationData.map(item => item.totalRegistrations);
-
-  //   this.chartData = {
-  //     labels: labels,
-  //     datasets: [
-  //       {
-  //         label: 'Total Appointment Cancellations',
-  //         data: data,
-  //         backgroundColor: ['rgba(255, 159, 64, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-  //         borderColor: ['rgb(255, 159, 64)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)'],
-  //         borderWidth: 1
-  //       }
-  //     ]
-  //   };
-  // }
-
   prepareChartData(count: number): void {
     this.chartData = {
       labels: ['Cancelled'],
@@ -140,5 +126,53 @@ export class ReportAppointmentStatusComponent implements OnInit {
       }
     });
   }
+
+  // appointmentsBySource (Pie Chart)
+  loadAppointmentsBySourcePieChart() {
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        this.reportService.getAppointmentsBySource().subscribe({
+  
+            next: (data) => {
+                const labels = data.map(item => item.bookingSource);
+                const counts = data.map(item => item.totalCount); //Appointment count as the data
+
+                this.appointmentsBySourceData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: counts,
+                            backgroundColor: [
+                               '#B6C787', 
+                                '#ABD5FF', 
+                                '#FFCDCF'  
+                            ],
+                            hoverBackgroundColor: [
+                                '#A5B676',
+                                '#9CC4EE',
+                                '#EEBCC0'
+                            ]
+                        },
+                    ],
+                };
+            },
+            error: (error) => {
+                console.error('Failed to load chart data', error);
+                this.appointmentsBySourceData = { labels: [], datasets: [] };
+            },
+        });
+
+        this.appointmentsBySourceOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        color: textColor
+                    }
+                }
+            }
+        };
+    }
+
 
 }

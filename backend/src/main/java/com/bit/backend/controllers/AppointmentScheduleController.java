@@ -13,17 +13,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
+import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.AppointmentScheduleServiceI;
+import com.bit.backend.services.ReportAppointmentStatusService;
 
 @RestController
 public class AppointmentScheduleController {
 
     private final AppointmentScheduleServiceI appointmentScheduleServiceI;
+    private final ReportAppointmentStatusService reportAppointmentStatusService;
 
-    public AppointmentScheduleController(AppointmentScheduleServiceI appointmentScheduleServiceI) {
+    public AppointmentScheduleController(
+        AppointmentScheduleServiceI appointmentScheduleServiceI,
+        ReportAppointmentStatusService reportAppointmentStatusService) {
         this.appointmentScheduleServiceI = appointmentScheduleServiceI;
-
+        this.reportAppointmentStatusService = reportAppointmentStatusService;
     }
 
     @PostMapping("/appointment-schedule-form")
@@ -157,5 +162,7 @@ public class AppointmentScheduleController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
 }
