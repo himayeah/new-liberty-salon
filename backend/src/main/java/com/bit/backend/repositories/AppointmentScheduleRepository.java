@@ -1,11 +1,12 @@
 package com.bit.backend.repositories;
 
-import com.bit.backend.entities.AppointmentScheduleEntity;
-
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import com.bit.backend.entities.AppointmentScheduleEntity;
+import com.bit.backend.dtos.ReportAppointmentStatusDto;
 
 public interface AppointmentScheduleRepository extends JpaRepository<AppointmentScheduleEntity, Long> {
 
@@ -93,4 +94,10 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "AND STR_TO_DATE(appointment_start_time, '%H:%i') >= TIME_FORMAT(CURRENT_TIME, '%H:%i')", nativeQuery = true)
         List<AppointmentScheduleEntity> findUpcomingNotifications();
 
+        // Report- getBookingsBySource (Pie Chart)
+        @Query(value = "SELECT booking_source AS bookingSource, COUNT(id) AS totalCount " +
+                        "FROM appointment_schedule " +
+                        "WHERE appointment_date >= CURRENT_DATE - INTERVAL 30 DAY " +
+                        "GROUP BY booking_source", nativeQuery = true)
+        List<ReportAppointmentStatusDto> getAppointmentsBySource();
 }

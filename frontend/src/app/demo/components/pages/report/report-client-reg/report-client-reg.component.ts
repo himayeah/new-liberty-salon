@@ -106,4 +106,7 @@ export class ReportClientRegComponent implements OnInit {
       ]
     };
   }
+
+  
+
 }
