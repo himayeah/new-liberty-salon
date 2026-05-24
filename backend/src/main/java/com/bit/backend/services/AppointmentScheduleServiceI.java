@@ -1,8 +1,8 @@
 package com.bit.backend.services;
 
-import com.bit.backend.dtos.AppointmentScheduleDto;
-
 import java.util.List;
+
+import com.bit.backend.dtos.AppointmentScheduleDto;
 
 public interface AppointmentScheduleServiceI {
 
@@ -29,5 +29,7 @@ public interface AppointmentScheduleServiceI {
     List<Object[]> getTop5Employees();
 
     List<AppointmentScheduleDto> getUpcomingNotifications();
+
+    Long getMaxId();
 
 }

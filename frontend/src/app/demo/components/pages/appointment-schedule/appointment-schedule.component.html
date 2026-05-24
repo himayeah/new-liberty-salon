@@ -13,6 +13,21 @@
           <mat-icon class="material-icons">add</mat-icon> Add New Appointment
         </button>
 
+       <!--Get No Show Appointments
+        <button mat-raised-button color="primary" (click)="getNoShowAppointments()">
+          <mat-icon class="material-icons">add</mat-icon> Get No Show Appointments
+        </button>-->
+
+        <!--Get Max ID-->
+        <button mat-raised-button color="primary" (click)="getMaxId()">
+          <mat-icon class="material-icons">add</mat-icon> Get Max ID
+        </button>
+
+        <!--Get ID After 10-->
+        <button mat-raised-button color="primary" (click)="getIDAfter10()">
+          <mat-icon class="material-icons">add</mat-icon> Get ID After 10
+        </button>
+
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="Search Appointments" #input />

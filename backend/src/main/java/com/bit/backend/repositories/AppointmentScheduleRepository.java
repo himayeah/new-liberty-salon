@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.bit.backend.entities.AppointmentScheduleEntity;
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
+import com.bit.backend.entities.AppointmentScheduleEntity;
 
 public interface AppointmentScheduleRepository extends JpaRepository<AppointmentScheduleEntity, Long> {
 
@@ -100,4 +100,9 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "WHERE appointment_date >= CURRENT_DATE - INTERVAL 30 DAY " +
                         "GROUP BY booking_source", nativeQuery = true)
         List<ReportAppointmentStatusDto> getAppointmentsBySource();
+
+        //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+        @Query(value = "SELECT MAX(id) FROM appointment_schedule as max_id", nativeQuery = true)
+        Long getMaxId();
+        
 }

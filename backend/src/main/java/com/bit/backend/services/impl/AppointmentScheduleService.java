@@ -1,5 +1,15 @@
 package com.bit.backend.services.impl;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.dtos.UserDto;
 import com.bit.backend.entities.AppointmentScheduleEntity;
@@ -13,17 +23,7 @@ import com.bit.backend.repositories.ClientRegRepository;
 import com.bit.backend.repositories.EmployeeRegRepository;
 import com.bit.backend.repositories.ServiceRepository;
 import com.bit.backend.services.AppointmentScheduleServiceI;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import com.bit.backend.services.NotificationService;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AppointmentScheduleService implements AppointmentScheduleServiceI {
@@ -92,6 +92,17 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             return appointmentScheduleMapper.toAppointmentScheduleDtoList(entities);
         } catch (Exception e) {
             throw new AppException("Failed to fetch appointments: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+    @Override
+    public Long getMaxId() {
+        try {
+            Long maxId = appointmentScheduleRepository.getMaxId();
+            return (maxId*10);
+        } catch (Exception e) {
+            throw new AppException("Failed to fetch max ID: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -39,6 +39,18 @@ export class AppointmentSchedulingServiceService {
     return this.http.get(requestUrl, { headers });
   }
 
+  //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+  getMaxId() {
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/max-id`;
+
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get(requestUrl, { headers });
+  }
+
   deleteData(id: number) {
 
     const requestUrl = `${environment.baseUrl}/appointment-schedule-form/${id}`;
