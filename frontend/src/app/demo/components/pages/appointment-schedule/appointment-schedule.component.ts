@@ -38,6 +38,10 @@ export class AppointmentScheduleComponent implements OnInit {
     lastAddedRow: any = null;
     lastEditedRow: any = null;
 
+    noShowAppointments: any[] = [];
+    appointmentIDs: any[] = [];
+
+
     constructor(
         private appointmentService: AppointmentSchedulingServiceService,
         private messageService: MessageServiceService,
@@ -47,7 +51,6 @@ export class AppointmentScheduleComponent implements OnInit {
 
     ngOnInit(): void {
         this.populateData();
-        //code test
     }
 
     populateData(): void {
@@ -65,6 +68,53 @@ export class AppointmentScheduleComponent implements OnInit {
             }
         });
     }
+
+    //Show ID, Names of All Persons who's Appointment Status = "No-Show" - Q1
+    getNoShowAppointments(): void {
+        this.appointmentService.getData().subscribe( {
+            next: (response: any[]) => {
+
+                this.noShowAppointments = response
+                    .filter(appointments => appointments.appointmentStatus === 'NO_SHOW')
+                    .map(appointments => ({
+                        id : appointments.id,
+                        clientName : appointments.clientName
+                    }))
+                console.log(this.noShowAppointments);
+            }
+        })
+    }
+
+    //Show Appointment IDs after 10
+    getIDAfter10(): void {
+        this.appointmentService.getData().subscribe( {
+            next: (response: any[]) => {
+
+                this.appointmentIDs = response
+                .filter(appointments => appointments.id > 10)
+                //ASC
+                 .sort((a, b) => a.id - b.id)
+                //DESC ((a,b) => b.id - a.id)
+                .map(appointments => ({
+                    id : appointments.id,
+                }
+            ))
+                console.log(this.appointmentIDs);
+            }
+        })
+    }
+
+    //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+    getMaxId(): void {
+        this.appointmentService.getMaxId().subscribe( {
+            next: (response: number) => {
+                console.log(response);
+            }, 
+            error: (error) => {
+                this.messageService.showError('Error fetching max ID: ' + error.message);
+            }
+        })
+    } 
 
     private checkAndMarkNoShows(appointments: any[]): void {
         const now = new Date();
@@ -194,4 +244,5 @@ export class AppointmentScheduleComponent implements OnInit {
             this.lastEditedRow = null;
         }, 3000);
     }
+
 }

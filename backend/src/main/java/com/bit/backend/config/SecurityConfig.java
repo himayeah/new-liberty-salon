@@ -2,13 +2,11 @@ package com.bit.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration // saying spring that this is a configuration class
 @EnableWebSecurity // saying spring to use this configuration instead of default security configs
@@ -38,6 +36,7 @@ public class SecurityConfig {
                         "/api/grn/**",
                         "/appointment-schedule-form",
                         "/appointment-schedule-form/**",
+                         "/appointment-schedule-form/max-id",
                         "/client-notes/**",
                         "/report-client-controller/**",
                         "/api/v1/employee-schedule/**"

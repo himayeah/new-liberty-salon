@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
-import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.AppointmentScheduleServiceI;
 import com.bit.backend.services.ReportAppointmentStatusService;
@@ -59,6 +58,17 @@ public class AppointmentScheduleController {
             // convert into string so i can get a readable output in the terminal
             return ResponseEntity.ok(appointmentScheduleDtoList);
 
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+    @GetMapping("/appointment-schedule-form/max-id")
+    public ResponseEntity<Long> getMaxId() {
+        try {
+            Long maxId = appointmentScheduleServiceI.getMaxId();
+            return ResponseEntity.ok(maxId);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
