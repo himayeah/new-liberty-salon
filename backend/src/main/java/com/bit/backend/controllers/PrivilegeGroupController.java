@@ -1,16 +1,18 @@
 package com.bit.backend.controllers;
 
-import com.bit.backend.dtos.PrivilegeGroupDto;
-import com.bit.backend.dtos.SignUpDto;
-import com.bit.backend.dtos.SystemPrivilegeListDto;
-import com.bit.backend.dtos.UserDto;
-import com.bit.backend.entities.PrivilegeGroup;
-import com.bit.backend.services.PrivilegeGroupServiceI;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bit.backend.dtos.PrivilegeGroupDto;
+import com.bit.backend.services.PrivilegeGroupServiceI;
 
 @RestController
 public class PrivilegeGroupController {

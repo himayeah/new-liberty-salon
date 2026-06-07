@@ -104,5 +104,5 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
         @Query(value = "SELECT MAX(id) FROM appointment_schedule as max_id", nativeQuery = true)
         Long getMaxId();
-        
+
 }

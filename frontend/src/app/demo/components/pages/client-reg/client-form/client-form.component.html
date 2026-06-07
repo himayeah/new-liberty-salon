@@ -68,7 +68,11 @@
 
 <mat-dialog-actions align="end" class="dialog-actions">
   <button mat-button (click)="onCancel()">Cancel</button>
+  // 'Update' and 'Save' are only button labels.
+  // If the user openes the moda by clicking "Add new", the button label is "Save", else through the table 'Edit Data', 'Update'
+  // Either way the button will trigger the onSave() function in the .ts
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="clientForm.invalid">
     {{ isEditMode ? 'Update' : 'Save' }}
-  </button>
+</button>
+
 </mat-dialog-actions>

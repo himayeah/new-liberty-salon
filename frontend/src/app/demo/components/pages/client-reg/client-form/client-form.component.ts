@@ -12,6 +12,8 @@ import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employ
 })
 export class ClientFormComponent implements OnInit {
   clientForm!: FormGroup;
+  //isEditMode is initialized as false, the form starts in add mode by default
+  // It switches to edit mode only when data.mode is set to 'edit' when opening the dialog
   isEditMode: boolean = false;
   employees: any[] = [];
 
@@ -24,18 +26,29 @@ export class ClientFormComponent implements OnInit {
     private employeeService: EmployeeRegServicesService
   ) { }
 
+  //
   ngOnInit(): void {
     this.isEditMode = this.data.mode === 'edit';
     this.initForm();
     this.loadEmployees();
 
+    // if the mode is edit and client data exists, patch the form with existing client data 
+    // Data table's 'edit' button will pass the client data to the dialog, and data will be autofilled in the form
+    // client-reg.component.ts file's openAddCientModal function passes the client data and the mode -> data: { mode: 'edit', client: data }
+    //  data: { mode: 'edit', client: data }
+    // patchValue is a method of Angular reactive FormGroup,
+    //  whereas setValue requires all fields to be provided because it needs to follow the object structure of the form, patchValue allows you to update only specific fields
     if (this.isEditMode && this.data.client) {
       this.clientForm.patchValue(this.data.client);
     }
   }
 
+  // employee data is needed to populate the dropdown for preferred stylist in the client form
   loadEmployees(): void {
     this.employeeService.getData().subscribe({
+      // subscribe has 3 RxJS callback function parameters: next, error, and complete
+      // next runs when the data is successfuly received from the observable
+      // data = whaterver the API returns, in this case, it's the list of employees
       next: (data: any) => {
         this.employees = data;
       },
@@ -58,23 +71,43 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
+  // onSave(custom method)
   onSave(): void {
+    // valid = Angular form property that checkes whether all the form validations are passes or not, 
+    // if the form is valid, then the form value will be sent to the backend API through the service call  
     if (this.clientForm.valid) {
       const formValue = this.clientForm.value;
 
+      // if (form data + client.id) exists, meaning the form is editing data of an existing client, hence call the editData() method 
       if (this.isEditMode && this.data.client?.id) {
+        //editData() method takes client id and form data as parameters
         this.clientService.editData(this.data.client.id, formValue).subscribe({
-          next: (res) => {
+
+          // you edit the data, send to backend, observabe waits for a response, and when it's received next runs and shows success message and closes the dialog, 
+          // and also sends the response data to the dialogRef.close() method, which will be used in the client-reg.component.ts file to show the highlight effect on the edited row
+          // response stores the received data from the backend through the observable. it could be something like ;
+          // {
+          //   "id": 5,
+          //   "firstName": "John",
+          //   "lastName": "Doe"
+          // }
+          next: (response) => {
             this.messageService.showSuccess('Client updated successfully');
-            this.dialogRef.close(res);
+            // close is a MatDialogRef function. It closes the dialog and it can also pass the data back to the component that opened the dialog, 
+            // in this case, it's the client-reg.component.ts file
+            // which will receive the response data and use it to show the highlight effect on the edited row
+            this.dialogRef.close(response);
           },
+          // didn't resceive the response from backend, use subscribe's error parameter to show error message
           error: (err) => this.messageService.showError('Update failed: ' + err.message)
         });
+
+      // if the form is not in edit mode, meaning it's adding a new client, hence call the serviceCall() method to add a new client
       } else {
         this.clientService.serviceCall(formValue).subscribe({
-          next: (res) => {
+          next: (response) => {
             this.messageService.showSuccess('Client added successfully');
-            this.dialogRef.close(res);
+            this.dialogRef.close(response);
           },
           error: (err) => this.messageService.showError('Save failed: ' + err.message)
         });
@@ -87,4 +120,5 @@ export class ClientFormComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
+
 }

@@ -60,6 +60,7 @@ import { ReportClientRegComponent } from './report/report-client-reg/report-clie
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
+import { CustomerRegComponent } from './customer-reg/customer-reg.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { ReportProcurementComponent } from './report/report-procurement/report-p
     ReportClientRegComponent,
     ProductSalesReportComponent,
     ReportAppointmentStatusComponent,
-    ReportProcurementComponent
+    ReportProcurementComponent,
+    CustomerRegComponent
   ],
 
   imports: [

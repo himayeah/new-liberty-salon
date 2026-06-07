@@ -25,6 +25,7 @@ import { ProductSalesReportComponent } from './report/product-sales-report/produ
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
 import { BillingComponent } from './billing/billing.component';
+import { CustomerRegComponent } from './customer-reg/customer-reg.component';
 
 
 
@@ -66,6 +67,7 @@ export const PagesRoutes: Routes = [
         { path: 'report-product-sales', component: ProductSalesReportComponent },
         { path: 'report-appointment-status', component: ReportAppointmentStatusComponent },
         { path: 'report-procurement', component: ReportProcurementComponent },
+        { path: 'customer-reg', component: CustomerRegComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],

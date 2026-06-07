@@ -21,13 +21,11 @@ import com.bit.backend.services.ReportAppointmentStatusService;
 public class AppointmentScheduleController {
 
     private final AppointmentScheduleServiceI appointmentScheduleServiceI;
-    private final ReportAppointmentStatusService reportAppointmentStatusService;
 
     public AppointmentScheduleController(
         AppointmentScheduleServiceI appointmentScheduleServiceI,
         ReportAppointmentStatusService reportAppointmentStatusService) {
         this.appointmentScheduleServiceI = appointmentScheduleServiceI;
-        this.reportAppointmentStatusService = reportAppointmentStatusService;
     }
 
     @PostMapping("/appointment-schedule-form")
