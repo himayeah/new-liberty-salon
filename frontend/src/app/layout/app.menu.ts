@@ -29,6 +29,13 @@ const navigationModel = [
                 icon: 'pi pi-user-plus', // client add
                 routerLink: ['/pages/client-reg'],
             },
+             {
+                label: 'Customer Registration',
+                isVisible: false,
+                auth: authenticationEnum.Home_Dashboard,
+                icon: 'pi pi-user-plus', // customer add
+                routerLink: ['/pages/customer-reg'],
+            },
             {
                 label: 'Employee Registration',
                 isVisible: false,
