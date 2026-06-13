@@ -57,7 +57,8 @@ export class ClientRegComponent implements OnInit {
 
     populateData(): void {
         this.clientRegService.getData().subscribe({
-            //next is a callback function of observable, subscribe also emits data, and those data is stored in 'response' variable of an array type any
+            //next is a callback function of observable, It runs when the data is successfully returned
+            // you can save the returned data in a variable : 'response'
             next: (response: any[]) => { 
                 // the response or a empty array (if response is null or undefined) is assigned to the dataSource of the table
                 this.dataSource = new MatTableDataSource(response || []);
@@ -65,6 +66,7 @@ export class ClientRegComponent implements OnInit {
                 this.dataSource.sort = this.sort;
             },
             // error is a callback function of observable
+            // Just like response stores the data emitted by next, the (error) stores the error object emitted by the Observable when something goes wrong.
             error: (error) => {
                 this.messageService.showError('Error fetching data: ' + error.message);
             }
@@ -152,18 +154,21 @@ export class ClientRegComponent implements OnInit {
     // }
 
 
+    // The modal that openes for 'Add New' Button
     openAddClientModal(): void {
-        // The open method will return an instance of MatDialogRef:
+        // The open method of MatDialog service will return an instance of MatDialogRef:
         // ClientFormComponent and an object containing styles are passes as parameters
+        // 06/08 : diaog is my local varaible pointing to the MatDialogRef Instance
+        // An instance is just a real usable copy of something that is created from a blueprint (class)
         const dialogRef = this.dialog.open(ClientFormComponent, {
             width: '600px',
             data: { mode: 'add' }
         });
 
-        // afterClosed is a handle of MatDialog
+        // afterClosed is a handle of MatDialog and it emits the data of the dialog when it's closed. subscribe is used to listen to that emitted data and do something with it
         // It can be used to close the dialog and to receive notifications when the dialog has been closed
         // The subscribe method is used to listen for the close event of the dialog, and when the dialog is closed, it will execute the callback function with the result passed from the dialog
-        // result is a variable and it returns the data from the DIalog when it's closed
+        // result is a variable and it returns the data from the Dialog when it's closed
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.populateData();
@@ -173,6 +178,7 @@ export class ClientRegComponent implements OnInit {
         });
     }
 
+    // The modal that openes for 'Edit' Button
     editData(data: any): void {
         const dialogRef = this.dialog.open(ClientFormComponent, {
             width: '600px',
@@ -218,8 +224,10 @@ export class ClientRegComponent implements OnInit {
     }
 
     // helpers
+    // temporarily highlights the last edited or added row for 3 seconds
    private highlightRow(type: 'add' | 'edit', response: any): void { 
         //tunneling response to the top to show the highlight effect
+        // if a new client is added, store it in 'lastAddedRow', if a client is edited store it in 'lastEditedRow'
         if (type === 'add') this.lastAddedRow = response;
         else this.lastEditedRow = response;
         setTimeout(() => {

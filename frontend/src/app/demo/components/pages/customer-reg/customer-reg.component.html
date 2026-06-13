@@ -1,1 +1,100 @@
-<p>customer-reg works!</p>
+<div class="container">
+    <mat-card class="customer-card">
+
+     <!--header section-->   
+    <div class="header-section"> 
+        <h2>Customer Registration Details</h2>
+        <button mat-icon-button (click)="refreshData()" matToolTip="Refresh">
+            <mat-icon class="material-icons">refresh</mat-icon>
+        </button>
+    </div>
+
+    <div class="content-section">
+        <div class="action-bar">
+            <!--Add new button-->
+            <button mat-raised-button color="primary" (click)="openAddNewModal()">
+                Add new customer
+            </button>
+            <!--Filter-->
+            <!--a mat-form-field appearance property can have either "outline" or "fill", by default it's fill-->
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Filter</mat-label>
+                <!-- (keyup) is a DOM event that fires when the key is released after being pressed -->
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search customer by Name" #input>
+                <mat-icon matSuffix class="material-icons">search</mat-icon>
+            </mat-form-field>
+        </div>  
+        <div class="table-container">
+            <!--ts file's 'response' stores the retrieved data from the db. dataSource is used to wrap those data into the material table-->
+             <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="firstName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> First Name </th>
+                    <!--dataSource contains all the data, angular loops through each row from the dataSource, element variable is used to access each single row-->
+                    <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
+                </ng-container>
+                 <ng-container matColumnDef="lastName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </th>
+                    <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Email Address </th>
+                    <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+                </ng-container>
+                <ng-container matColumnDef="dateOfBirth">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Of Birth </th>
+                    <td mat-cell *matCellDef="let element">{{ element.dateOfBirth }}</td>
+                </ng-container>
+                <ng-container matColumnDef="phoneNumber">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number </th>
+                    <td mat-cell *matCellDef="let element">{{ element.phoneNumber }}</td>
+                </ng-container>
+                <ng-container matColumnDef="preferredStylist">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Preferred Stylist </th>
+                    <td mat-cell *matCellDef="let element">{{ element.preferredStylist }}</td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-button color="accent" (click)="viewData(element)" matTooltip="View Client Data">
+                            <mat-icon class="material-icons">visibility</mat-icon> View
+                        </button>
+                        <button mat-button color="primary" (click)="editData(element)" matTooltip="Edit Client Data">
+                            <mat-icon class="material-icons">edit</mat-icon> Edit
+                        </button>
+                        <button mat-button color="warn" (click)="deleteData(element)" matTooltip="Delete Client Data">
+                            <mat-icon class="material-icons">delete</mat-icon> Delete
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!--Above we have mentioned all the possible columns, but we need to specifically tell Angular which exact columns out of those should be displayed
+                in the .ts file 'displayedColumns' controls the columns to be displayed-->
+                <!--mat-header-row tells Angular to create header cells only for these columns-->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+                <!--mat-row tells,For each row in dataSource, display only these columns-->
+                <!--[ngClass] is used to add CSS classes based on conditions, if selectedRow exists, apply the css class selected-Row-->
+                <!--For every object in the dataSource, create a table row (row), and display only the columns listed in displayedColumns-->
+                <!--*matRowDef="
+                        let row;
+                        columns: displayedColumns;"
+                        ('column' is a predefined variable that represents the current column being processed in the table)-->
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{
+                    'selected-row': selectedRow?.id === row.id,
+                    'added-row': lastAddedRow?.id === row.id,
+                    'edited-row': lastEditedRow?.id === row.id
+                    }">
+                </tr>
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="12" style="padding: 16px; text-align: center;">No data matching the filter
+                    "{{input.value}}"</td>
+                </tr>
+             </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of clients">
+      </mat-paginator>
+    </div>
+    </mat-card>
+
+</div>

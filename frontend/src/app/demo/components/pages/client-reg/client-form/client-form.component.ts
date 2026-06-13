@@ -58,6 +58,7 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
+  //everytime you click 'edit' button, initForm() creates a new form and add these fields and patch the values from the client object
   initForm(): void {
     this.clientForm = this.fb.group({
       firstName: ['', Validators.required],

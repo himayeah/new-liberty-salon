@@ -15,6 +15,7 @@
 
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Filter</mat-label>
+          <!--keyup is an event that fires when the user releases a key on the keyboard after pressing it-->
           <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" #input />
           <mat-icon matSuffix class="material-icons">search</mat-icon>
         </mat-form-field>

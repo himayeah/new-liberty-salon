@@ -103,11 +103,20 @@ const routes: Routes = [
                             (m) => m.LandingModule
                         ),
                 },
+
+                 //link to access the public-link: http://localhost:4200/stylist-workspace
                 {
                     path: 'public-booking',
                     loadChildren: () =>
                         import('./public-booking/public-booking.module').then(
                             (m) => m.PublicBookingModule
+                        ),
+                },
+                {
+                    path: 'stylist-workspace',
+                    loadChildren: () =>
+                        import('./stylist-workspace/stylist-workspace.module').then(
+                            (m) => m.StylistWorkspaceModule
                         ),
                 },
                 { path: 'notfound', component: NotfoundComponent },
