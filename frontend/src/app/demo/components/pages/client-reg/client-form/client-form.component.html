@@ -1,3 +1,4 @@
+<!--isEditMode is declared in the ts file-->
 <h2 mat-dialog-title>{{ isEditMode ? 'Edit Client Profile' : 'Add New Client' }}</h2>
 
 <mat-dialog-content>
@@ -49,6 +50,8 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Preferred Stylist</mat-label>
         <mat-select formControlName="preferredStylist">
+
+          <!--Angular loops over the employee array returned from the ts file, creates a new mat-option for each itme, and also mentioned, if this specific emp is selected, emp.employeeName (that particular employee Name) will be displayed-->
           <mat-option *ngFor="let emp of employees" [value]="emp.employeeName">
             {{ emp.employeeName }}
           </mat-option>
@@ -69,7 +72,7 @@
 <mat-dialog-actions align="end" class="dialog-actions">
   <button mat-button (click)="onCancel()">Cancel</button>
   // 'Update' and 'Save' are only button labels.
-  // If the user openes the moda by clicking "Add new", the button label is "Save", else through the table 'Edit Data', 'Update'
+  // If the user openes the modal by clicking "Add new", the button label is "Save", else through the table 'Edit Data', 'Update'
   // Either way the button will trigger the onSave() function in the .ts
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="clientForm.invalid">
     {{ isEditMode ? 'Update' : 'Save' }}
