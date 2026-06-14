@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
+import { EmployeeAuthService } from 'src/app/employee-workspace/services/employee-auth.service';
+import { Role } from 'src/app/models/role.enum';
 
 @Component({
     selector: 'app-employee-reg',
@@ -37,15 +39,18 @@ export class EmployeeRegComponent implements OnInit {
     selectedRow: any = null;
     lastAddedRow: any = null;
     lastEditedRow: any = null;
+    isReceptionist = false;
 
     constructor(
         private employeeRegService: EmployeeRegServicesService,
         private messageService: MessageServiceService,
         private dialog: MatDialog,
-        private router: Router
+        private router: Router,
+        private employeeAuthService: EmployeeAuthService
     ) { }
 
     ngOnInit(): void {
+        this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
         this.populateData();
     }
 
@@ -67,6 +72,7 @@ export class EmployeeRegComponent implements OnInit {
     }
 
     openAddEmployeeModal(): void {
+        if (this.isReceptionist) return;
         const dialogRef = this.dialog.open(EmployeeFormComponent, {
             width: '600px',
             data: { mode: 'add' }
@@ -81,6 +87,7 @@ export class EmployeeRegComponent implements OnInit {
     }
 
     editData(data: any): void {
+        if (this.isReceptionist) return;
         this.selectedRow = data;
         const dialogRef = this.dialog.open(EmployeeFormComponent, {
             width: '600px',
@@ -100,6 +107,7 @@ export class EmployeeRegComponent implements OnInit {
     }
 
     deleteData(data: any): void {
+        if (this.isReceptionist) return;
         if (confirm(`Are you sure you want to delete ${data.employeeName}?`)) {
             this.employeeRegService.deleteData(data.id).subscribe({
                 next: () => {

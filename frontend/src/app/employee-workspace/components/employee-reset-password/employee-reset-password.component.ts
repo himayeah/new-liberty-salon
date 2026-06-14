@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StylistWorkspaceService } from '../../services/stylist-workspace.service';
+import { EmployeeWorkspaceService } from '../../services/employee-workspace.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 
 @Component({
-  selector: 'app-stylist-reset-password',
-  templateUrl: './stylist-reset-password.component.html',
-  styleUrls: ['./stylist-reset-password.component.scss'],
+  selector: 'app-employee-reset-password',
+  templateUrl: './employee-reset-password.component.html',
+  styleUrls: ['./employee-reset-password.component.scss'],
 })
-export class StylistResetPasswordComponent implements OnInit {
+export class EmployeeResetPasswordComponent implements OnInit {
   resetForm: FormGroup;
   token: string = '';
   isSubmitting = false;
@@ -20,7 +20,7 @@ export class StylistResetPasswordComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private stylistWorkspaceService: StylistWorkspaceService,
+    private employeeWorkspaceService: EmployeeWorkspaceService,
     private messageService: MessageServiceService
   ) {
     this.resetForm = this.fb.group({
@@ -73,11 +73,11 @@ export class StylistResetPasswordComponent implements OnInit {
     if (this.resetForm.valid && this.token) {
       this.isSubmitting = true;
       const { email, password } = this.resetForm.value;
-      this.stylistWorkspaceService.resetPassword(this.token, email, password).subscribe({
+      this.employeeWorkspaceService.resetPassword(this.token, email, password).subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
           this.messageService.showSuccess(response.message || 'Password reset successfully! You can now log in.');
-          this.router.navigate(['/stylist-workspace']);
+          this.router.navigate(['/employee-workspace']);
         },
         error: (error) => {
           this.isSubmitting = false;

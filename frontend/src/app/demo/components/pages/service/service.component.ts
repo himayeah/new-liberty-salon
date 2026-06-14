@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ServiceFormComponent } from './service-form/service-form.component';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { ServiceService } from 'src/app/services/service/service.service';
+import { EmployeeAuthService } from 'src/app/employee-workspace/services/employee-auth.service';
+import { Role } from 'src/app/models/role.enum';
 
 @Component({
   selector: 'app-service',
@@ -24,14 +26,17 @@ export class ServiceComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
+  isReceptionist = false;
 
   constructor(
     private serviceService: ServiceService,
     private messageService: MessageServiceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private employeeAuthService: EmployeeAuthService
   ) { }
 
   ngOnInit(): void {
+    this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
     this.populateData();
   }
 
@@ -51,6 +56,7 @@ export class ServiceComponent implements OnInit {
 
   //Add New Service pop-up
   openAddServiceModal(): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ServiceFormComponent, {
       width: '600px',
       data: { mode: 'add' }
@@ -65,6 +71,7 @@ export class ServiceComponent implements OnInit {
   }
 
   editService(data: any): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ServiceFormComponent, {
       width: '600px',
       data: { mode: 'edit', service: data }
@@ -82,6 +89,7 @@ export class ServiceComponent implements OnInit {
   }
 
   deleteService(data: any): void {
+    if (this.isReceptionist) return;
     this.serviceService.deleteService(data.id).subscribe({
       next: () => {
         this.messageService.showSuccess('Deleted Successfully!');
@@ -109,6 +117,7 @@ export class ServiceComponent implements OnInit {
 
   // Toggle active state from the table
   toggleActive(element: any, newState: boolean): void {
+    if (this.isReceptionist) return;
     const prev = element.is_active;
     element.is_active = newState;
     this.serviceService.editService(element.id, { is_active: newState }).subscribe({

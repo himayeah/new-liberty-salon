@@ -6,14 +6,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class StylistWorkspaceService {
+export class EmployeeWorkspaceService {
 
-  private apiUrl = `${environment.baseUrl}/api/v1/stylist-workspace`;
+  private apiUrl = `${environment.baseUrl}/api/v1/employee-workspace`;
 
   constructor(private http: HttpClient) { }
 
   /**
-   * Authenticate a stylist with email and password.
+   * Authenticate an employee with email and password.
    */
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email, password });

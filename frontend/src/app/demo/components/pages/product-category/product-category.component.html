@@ -9,7 +9,7 @@
 
         <div class="content-section">
             <div class="actions-bar">
-                <button mat-raised-button color="primary" (click)="openAddCategoryModal()">
+                <button *ngIf="!isReceptionist" mat-raised-button color="primary" (click)="openAddCategoryModal()">
                     <mat-icon class="material-icons">add</mat-icon> Add New Category
                 </button>
 
@@ -32,10 +32,10 @@
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> Actions </th>
                         <td mat-cell *matCellDef="let element">
-                            <button mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+                            <button *ngIf="!isReceptionist" mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
                                 <mat-icon>edit</mat-icon>
                             </button>
-                            <button mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+                            <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </td>

@@ -8,6 +8,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { filter } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ServiceCategoryFormComponent } from './service-category-form/service-category-form.component';
+import { EmployeeAuthService } from 'src/app/employee-workspace/services/employee-auth.service';
+import { Role } from 'src/app/models/role.enum';
 
 @Component({
   selector: 'app-service-category',
@@ -30,15 +32,18 @@ export class ServiceCategoryComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
+  isReceptionist = false;
 
   constructor(
     private serviceCategoryService: ServiceCategoryService,
     private messageService: MessageServiceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private employeeAuthService: EmployeeAuthService
   ) { }
 
   //ngOnInit's populateData() method runs when the page first loads
   ngOnInit(): void {
+    this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
     this.populateData();
   }
 
@@ -66,6 +71,7 @@ export class ServiceCategoryComponent implements OnInit {
 
   //Add New Category pop-up
   openAddCategoryModal(): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ServiceCategoryFormComponent, {
       width: '600px',
       data: { mode: 'add' }
@@ -81,6 +87,7 @@ export class ServiceCategoryComponent implements OnInit {
 
   //html Table edit method
   editData(data: any): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ServiceCategoryFormComponent, {
       width: '600px',
       data: { mode: 'edit', category: data }
@@ -99,6 +106,7 @@ export class ServiceCategoryComponent implements OnInit {
 
   //deleteData() method
   deleteData(data: any): void {
+    if (this.isReceptionist) return;
     this.serviceCategoryService.deleteData(data.id).subscribe({
       next: () => {
         this.messageService.showSuccess('Deleted Successfully!');

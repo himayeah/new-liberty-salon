@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StylistWorkspaceComponent } from './stylist-workspace.component';
-import { StylistLoginComponent } from '../components/stylist-login/stylist-login.component';
+import { EmployeeWorkspaceComponent } from './employee-workspace.component';
+import { EmployeeLoginComponent } from '../components/employee-login/employee-login.component';
 import { StylistDashboardComponent } from '../components/stylist-dashboard/stylist-dashboard.component';
-import { StylistInviteComponent } from '../components/stylist-invite/stylist-invite.component';
-import { StylistResetPasswordComponent } from '../components/stylist-reset-password/stylist-reset-password.component';
-import { StylistAuthGuard } from 'src/app/guards/stylist-auth.guard';
+import { EmployeeInviteComponent } from '../components/employee-invite/employee-invite.component';
+import { EmployeeResetPasswordComponent } from '../components/employee-reset-password/employee-reset-password.component';
+import { EmployeeAuthGuard } from 'src/app/guards/employee-auth.guard';
 
 const routes: Routes = [
   { 
     path: '', 
-    component: StylistWorkspaceComponent,
+    component: EmployeeWorkspaceComponent,
     children: [
-      { path: '', component: StylistLoginComponent },
-      { path: 'invite', component: StylistInviteComponent },
-      { path: 'reset-password', component: StylistResetPasswordComponent },
+      { path: '', component: EmployeeLoginComponent },
+      { path: 'invite', component: EmployeeInviteComponent },
+      { path: 'reset-password', component: EmployeeResetPasswordComponent },
       { 
         path: 'dashboard', 
         component: StylistDashboardComponent,
-        canActivate: [StylistAuthGuard]
+        canActivate: [EmployeeAuthGuard]
       }
     ]
   }
@@ -28,4 +28,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class StylistWorkspaceRoutingModule { }
+export class EmployeeWorkspaceRoutingModule { }

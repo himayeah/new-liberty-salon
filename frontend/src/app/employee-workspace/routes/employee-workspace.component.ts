@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-stylist-workspace',
-  templateUrl: './stylist-workspace.component.html',
-  styleUrls: ['./stylist-workspace.component.scss']
+  selector: 'app-employee-workspace',
+  templateUrl: './employee-workspace.component.html',
+  styleUrls: ['./employee-workspace.component.scss']
 })
-export class StylistWorkspaceComponent implements OnInit {
+export class EmployeeWorkspaceComponent implements OnInit {
 
   constructor() { }
 

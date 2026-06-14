@@ -4,7 +4,7 @@
     <div class="image-overlay">
       <div class="overlay-content">
         <h1>New Liberty Salon</h1>
-        <p>Empowering our stylists to deliver exceptional experiences. Welcome to your creative workspace.</p>
+        <p>Empowering our staff to deliver exceptional experiences. Welcome to your employee workspace.</p>
       </div>
     </div>
   </div>
@@ -16,22 +16,22 @@
       <ng-container *ngIf="!isForgotPasswordMode">
         <!--header-->
         <div class="content-header">
-          <h1 class="header">Stylist Portal</h1>
-          <p class="paragraph">Sign in with your credentials to access your dashboard, schedule, and client notes.</p>
+          <h1 class="header">Staff Workspace Login</h1>
+          <p class="paragraph">Sign in with your credentials to access your employee workspace.</p>
         </div>
 
         <!--form-->
-        <form [formGroup]="stylistLoginForm" class="stylist-login-form" (ngSubmit)="onSubmit()">
+        <form [formGroup]="loginForm" class="stylist-login-form" (ngSubmit)="onSubmit()">
           <div class="form-section">
             
             <mat-form-field appearance="outline" class="full-width-field">
               <mat-label>Email Address</mat-label>
               <input matInput formControlName="email" placeholder="e.g. jane@newliberty.com" type="email">
               <mat-icon matPrefix>email</mat-icon>
-              <mat-error *ngIf="stylistLoginForm.get('email')?.hasError('required')">
+              <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
                 Email is required
               </mat-error>
-              <mat-error *ngIf="stylistLoginForm.get('email')?.hasError('email')">
+              <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
                 Please enter a valid email address
               </mat-error>
             </mat-form-field>
@@ -43,7 +43,7 @@
               <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Toggle password visibility'">
                 <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
-              <mat-error *ngIf="stylistLoginForm.get('password')?.hasError('required')">
+              <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
                 Password is required
               </mat-error>
             </mat-form-field>
@@ -55,7 +55,7 @@
           </div>
           
           <div class="form-actions mt-4">
-            <button mat-flat-button color="primary" class="submit-btn" type="submit" [disabled]="isButtonDisabled || stylistLoginForm.invalid">
+            <button mat-flat-button color="primary" class="submit-btn" type="submit" [disabled]="isButtonDisabled || loginForm.invalid">
               <span *ngIf="!isButtonDisabled">Login to Workspace</span>
               <span *ngIf="isButtonDisabled">Authenticating...</span>
             </button>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { StylistAuthService } from '../../services/stylist-auth.service';
+import { EmployeeAuthService } from '../../services/employee-auth.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 
@@ -19,14 +19,14 @@ export class StylistDashboardComponent implements OnInit {
   filterStatus: string = '';
 
   constructor(
-    private stylistAuthService: StylistAuthService,
+    private employeeAuthService: EmployeeAuthService,
     private appointmentService: AppointmentSchedulingServiceService,
     private messageService: MessageServiceService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.stylist = this.stylistAuthService.getStylistData();
+    this.stylist = this.employeeAuthService.getEmployeeData();
     if (this.stylist) {
       this.loadAppointments();
     }
@@ -97,8 +97,8 @@ export class StylistDashboardComponent implements OnInit {
   }
 
   logout(): void {
-    this.stylistAuthService.logout();
-    this.router.navigate(['/stylist-workspace']);
+    this.employeeAuthService.logout();
+    this.router.navigate(['/employee-workspace']);
   }
 
 }

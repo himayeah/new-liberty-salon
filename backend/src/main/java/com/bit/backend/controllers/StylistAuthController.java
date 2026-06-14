@@ -21,7 +21,7 @@ import com.bit.backend.mappers.EmployeeRegMapper;
 import com.bit.backend.repositories.EmployeeRegRepository;
 
 @RestController
-@RequestMapping("/api/v1/stylist-workspace")
+@RequestMapping("/api/v1/employee-workspace")
 public class StylistAuthController {
 
     private final EmployeeRegRepository employeeRegRepository;
@@ -178,7 +178,7 @@ public class StylistAuthController {
         employeeRegRepository.save(employee);
 
         // Send the reset email
-        String resetLink = "http://localhost:4200/stylist-workspace/reset-password?token=" + resetToken;
+        String resetLink = "http://localhost:4200/employee-workspace/reset-password?token=" + resetToken;
         String subject = "Liberty Salon - Reset Your Password";
         String body = "Hello " + employee.getEmployeeName() + ",\n\n" +
                       "We received a request to reset your password. Please click the link below to set a new password:\n\n" +

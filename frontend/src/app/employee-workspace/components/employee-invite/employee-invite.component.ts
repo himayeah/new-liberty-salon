@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StylistWorkspaceService } from '../../services/stylist-workspace.service';
+import { EmployeeWorkspaceService } from '../../services/employee-workspace.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 
 @Component({
-  selector: 'app-stylist-invite',
-  templateUrl: './stylist-invite.component.html',
-  styleUrls: ['./stylist-invite.component.scss'],
+  selector: 'app-employee-invite',
+  templateUrl: './employee-invite.component.html',
+  styleUrls: ['./employee-invite.component.scss'],
 })
-export class StylistInviteComponent implements OnInit {
+export class EmployeeInviteComponent implements OnInit {
   inviteForm: FormGroup;
   token: string = '';
   isSubmitting = false;
@@ -20,7 +20,7 @@ export class StylistInviteComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private stylistWorkspaceService: StylistWorkspaceService,
+    private employeeWorkspaceService: EmployeeWorkspaceService,
     private messageService: MessageServiceService
   ) {
     this.inviteForm = this.fb.group({
@@ -73,11 +73,11 @@ export class StylistInviteComponent implements OnInit {
     if (this.inviteForm.valid && this.token) {
       this.isSubmitting = true;
       const { email, password } = this.inviteForm.value;
-      this.stylistWorkspaceService.setPassword(this.token, email, password).subscribe({
+      this.employeeWorkspaceService.setPassword(this.token, email, password).subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
           this.messageService.showSuccess(response.message || 'Password set successfully! You can now log in.');
-          this.router.navigate(['/stylist-workspace']);
+          this.router.navigate(['/employee-workspace']);
         },
         error: (error) => {
           this.isSubmitting = false;

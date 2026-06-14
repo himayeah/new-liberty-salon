@@ -45,7 +45,29 @@ public class SecurityConfig {
                         "/client-notes/**",
                         "/report-client-controller/**",
                         "/api/v1/employee-schedule/**",
-                        "/api/v1/stylist-workspace/**"
+                        "/api/v1/employee-workspace/**",
+                        "/employee-attendance",
+                        "/employee-attendance/**",
+                        "/billing",
+                        "/billing/**",
+                        "/service",
+                        "/service/**",
+                        "/product",
+                        "/product/**",
+                        "/api/tax",
+                        "/api/tax/**",
+                        "/inventory",
+                        "/inventory/**",
+                        "/product-category",
+                        "/product-category/**",
+                        "/service-category",
+                        "/service-category/**",
+                        "/report-appointment-status",
+                        "/report-appointment-status/**",
+                        "/report/procurement",
+                        "/report/procurement/**",
+                        "/report-product-sales-controller",
+                        "/report-product-sales-controller/**"
 
                 ).permitAll()
                         .anyRequest().authenticated());

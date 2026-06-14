@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { StylistWorkspaceService } from '../../services/stylist-workspace.service';
-import { StylistAuthService } from '../../services/stylist-auth.service';
+import { EmployeeWorkspaceService } from '../../services/employee-workspace.service';
+import { EmployeeAuthService } from '../../services/employee-auth.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 
 @Component({
-  selector: 'app-stylist-login',
-  templateUrl: './stylist-login.component.html',
-  styleUrls: ['./stylist-login.component.scss'],
+  selector: 'app-employee-login',
+  templateUrl: './employee-login.component.html',
+  styleUrls: ['./employee-login.component.scss'],
 })
-export class StylistLoginComponent {
-  stylistLoginForm: FormGroup;
+export class EmployeeLoginComponent {
+  loginForm: FormGroup;
   forgotPasswordForm: FormGroup;
   isButtonDisabled = false;
   isForgotPasswordMode = false;
@@ -20,12 +20,12 @@ export class StylistLoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private stylistWorkspaceService: StylistWorkspaceService,
-    private stylistAuthService: StylistAuthService,
+    private employeeWorkspaceService: EmployeeWorkspaceService,
+    private employeeAuthService: EmployeeAuthService,
     private messageService: MessageServiceService,
     private router: Router
   ) {
-    this.stylistLoginForm = this.fb.group({
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
@@ -36,19 +36,30 @@ export class StylistLoginComponent {
   }
 
   onSubmit(): void {
-    if (this.stylistLoginForm.valid) {
+    if (this.loginForm.valid) {
       this.isButtonDisabled = true;
-      const { email, password } = this.stylistLoginForm.value;
-      this.stylistWorkspaceService.login(email, password).subscribe({
-        next: (stylist: any) => {
+      const { email, password } = this.loginForm.value;
+      this.employeeWorkspaceService.login(email, password).subscribe({
+        next: (employee: any) => {
           this.isButtonDisabled = false;
           this.messageService.showSuccess('Hello, welcome back!');
 
           // Store session
-          this.stylistAuthService.login(stylist);
+          this.employeeAuthService.login(employee);
 
-          // Navigate to dashboard
-          this.router.navigate(['/stylist-workspace/dashboard']);
+          // Navigate based on designation/role
+          if (employee && employee.designation) {
+            const designation = employee.designation.trim().toUpperCase();
+            if (designation === 'RECEPTIONIST') {
+              this.router.navigate(['/pages/appointment-schedule']);
+            } else if (designation === 'MANAGER') {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['/employee-workspace/dashboard']);
+            }
+          } else {
+            this.router.navigate(['/employee-workspace/dashboard']);
+          }
         },
         error: (error) => {
           this.isButtonDisabled = false;
@@ -70,7 +81,7 @@ export class StylistLoginComponent {
     if (this.forgotPasswordForm.valid) {
       this.isSendingReset = true;
       const { email } = this.forgotPasswordForm.value;
-      this.stylistWorkspaceService.forgotPassword(email).subscribe({
+      this.employeeWorkspaceService.forgotPassword(email).subscribe({
         next: (response: any) => {
           this.isSendingReset = false;
           this.messageService.showSuccess(response.message || 'A password reset link has been sent to your email.');

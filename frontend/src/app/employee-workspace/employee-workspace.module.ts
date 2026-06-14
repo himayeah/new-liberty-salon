@@ -1,13 +1,12 @@
-// All the components of the module are imported here, on it's separate ts file
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { StylistWorkspaceRoutingModule } from './routes/stylist-workspace-routing.module';
-import { StylistWorkspaceComponent } from './routes/stylist-workspace.component';
-import { StylistLoginComponent } from './components/stylist-login/stylist-login.component';
+import { EmployeeWorkspaceRoutingModule } from './routes/employee-workspace-routing.module';
+import { EmployeeWorkspaceComponent } from './routes/employee-workspace.component';
+import { EmployeeLoginComponent } from './components/employee-login/employee-login.component';
 import { StylistDashboardComponent } from './components/stylist-dashboard/stylist-dashboard.component';
-import { StylistInviteComponent } from './components/stylist-invite/stylist-invite.component';
-import { StylistResetPasswordComponent } from './components/stylist-reset-password/stylist-reset-password.component';
+import { EmployeeInviteComponent } from './components/employee-invite/employee-invite.component';
+import { EmployeeResetPasswordComponent } from './components/employee-reset-password/employee-reset-password.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 // Material Imports
@@ -24,17 +23,17 @@ import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
-    StylistWorkspaceComponent,
-    StylistLoginComponent,
+    EmployeeWorkspaceComponent,
+    EmployeeLoginComponent,
     StylistDashboardComponent,
-    StylistInviteComponent,
-    StylistResetPasswordComponent
+    EmployeeInviteComponent,
+    EmployeeResetPasswordComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    StylistWorkspaceRoutingModule,
+    EmployeeWorkspaceRoutingModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -48,4 +47,4 @@ import { MatDividerModule } from '@angular/material/divider';
     SharedModule
   ]
 })
-export class StylistWorkspaceModule { }
+export class EmployeeWorkspaceModule { }

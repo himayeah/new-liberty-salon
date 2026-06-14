@@ -68,7 +68,7 @@ public class EmployeeRegService implements EmployeeRegServiceI {
 
             // Send email invite if email is present
             if (savedItem.getEmail() != null && !savedItem.getEmail().trim().isEmpty()) {
-                String inviteLink = "http://localhost:4200/stylist-workspace/invite?token=" + token;
+                String inviteLink = "http://localhost:4200/employee-workspace/invite?token=" + token;
                 String subject = "Welcome to Liberty Salon - Set Your Password";
                 String body = "Hello " + savedItem.getEmployeeName() + ",\n\n" +
                         "You have been registered as an employee at Liberty Salon. Please click the link below to set your password and access your workspace:\n\n"

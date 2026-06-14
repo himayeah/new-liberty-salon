@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProductCategoryServiceService } from 'src/app/services/product-category/product-category-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { ProductCategoryFormComponent } from './product-category-form/product-category-form.component';
+import { EmployeeAuthService } from 'src/app/employee-workspace/services/employee-auth.service';
+import { Role } from 'src/app/models/role.enum';
 
 @Component({
   selector: 'app-product-category',
@@ -22,14 +24,17 @@ export class ProductCategoryComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
+  isReceptionist = false;
 
   constructor(
     private productCategoryService: ProductCategoryServiceService,
     private messageService: MessageServiceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private employeeAuthService: EmployeeAuthService
   ) { }
 
   ngOnInit(): void {
+    this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
     this.populateData();
   }
 
@@ -47,6 +52,7 @@ export class ProductCategoryComponent implements OnInit {
   }
 
   openAddCategoryModal(): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ProductCategoryFormComponent, {
       width: '500px',
       data: { mode: 'add' }
@@ -61,6 +67,7 @@ export class ProductCategoryComponent implements OnInit {
   }
 
   editData(data: any): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ProductCategoryFormComponent, {
       width: '500px',
       data: { mode: 'edit', category: data }
@@ -78,6 +85,7 @@ export class ProductCategoryComponent implements OnInit {
   }
 
   deleteData(data: any): void {
+    if (this.isReceptionist) return;
     this.productCategoryService.deleteData(data.id).subscribe({
       next: () => {
         this.messageService.showSuccess('Category deleted successfully.');
