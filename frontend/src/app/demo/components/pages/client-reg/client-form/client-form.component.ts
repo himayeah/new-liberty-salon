@@ -16,6 +16,7 @@ export class ClientFormComponent implements OnInit {
   // It switches to edit mode only when data.mode is set to 'edit' when opening the dialog
   isEditMode: boolean = false;
   employees: any[] = [];
+  minDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -24,7 +25,9 @@ export class ClientFormComponent implements OnInit {
     private clientService: ClientRegServiceService,
     private messageService: MessageServiceService,
     private employeeService: EmployeeRegServicesService
-  ) { }
+  ) {
+    this.minDate.setHours(0, 0, 0, 0);
+  }
 
   //
   ngOnInit(): void {
@@ -39,7 +42,11 @@ export class ClientFormComponent implements OnInit {
     // patchValue is a method of Angular reactive FormGroup,
     //  whereas setValue requires all fields to be provided because it needs to follow the object structure of the form, patchValue allows you to update only specific fields
     if (this.isEditMode && this.data.client) {
-      this.clientForm.patchValue(this.data.client);
+      const client = { ...this.data.client };
+      if (client.dateOfBirth) {
+        client.dateOfBirth = this.toDate(client.dateOfBirth);
+      }
+      this.clientForm.patchValue(client);
     }
   }
 
@@ -72,12 +79,37 @@ export class ClientFormComponent implements OnInit {
     });
   }
 
-  // onSave(custom method)
+  private toDate(value: any): Date | null {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Date) {
+      return value;
+    }
+
+    const dateValue = new Date(value);
+    return isNaN(dateValue.getTime()) ? null : dateValue;
+  }
+
+  private formatDateValue(value: any): string | null {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Date) {
+      return value.toISOString().split('T')[0];
+    }
+
+    return String(value);
+  }
+
   onSave(): void {
-    // valid = Angular form property that checkes whether all the form validations are passes or not, 
-    // if the form is valid, then the form value will be sent to the backend API through the service call  
     if (this.clientForm.valid) {
-      const formValue = this.clientForm.value;
+      const formValue = {
+        ...this.clientForm.value,
+        dateOfBirth: this.formatDateValue(this.clientForm.get('dateOfBirth')?.value)
+      };
 
       // if (form data + client.id) exists, meaning the form is editing data of an existing client, hence call the editData() method 
       if (this.isEditMode && this.data.client?.id) {

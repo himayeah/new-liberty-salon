@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmployeeAttendanceServiceService } from 'src/app/services/employee-attendance/employee-attendance-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
@@ -21,8 +21,8 @@ export class EmployeeAttendanceFormComponent implements OnInit {
     ) {
         this.attendanceForm = this.fb.group({
             employeeName: [{ value: '', disabled: true }],
-            checkInTime: ['', Validators.required],
-            checkOutTime: [''],
+            checkInTime: ['', [Validators.required, this.timeFormatValidator.bind(this)]],
+            checkOutTime: ['', this.timeFormatValidator.bind(this)],
             status: ['', Validators.required]
         });
     }
@@ -53,8 +53,10 @@ export class EmployeeAttendanceFormComponent implements OnInit {
 
             const combineDateAndTime = (timeStr: string) => {
                 if (!timeStr) return null;
+                const normalized = this.parseTimeInput(timeStr);
+                if (!normalized) return null;
                 const baseDate = this.data.selectedDate ? new Date(this.data.selectedDate) : new Date();
-                const [hours, minutes] = timeStr.split(':');
+                const [hours, minutes] = normalized.split(':');
                 baseDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
                 return baseDate.toISOString();
             };
@@ -85,6 +87,44 @@ export class EmployeeAttendanceFormComponent implements OnInit {
                 });
             }
         }
+    }
+
+    parseTimeInput(value: string | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const trimmed = String(value).trim().toUpperCase();
+        const explicitMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+        if (explicitMatch) {
+            let hours = Number(explicitMatch[1]);
+            const minutes = explicitMatch[2];
+            const suffix = explicitMatch[3];
+            if (suffix === 'PM' && hours < 12) {
+                hours += 12;
+            }
+            if (suffix === 'AM' && hours === 12) {
+                hours = 0;
+            }
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+
+        const simpleMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+        if (simpleMatch) {
+            const hours = Number(simpleMatch[1]);
+            const minutes = simpleMatch[2];
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+
+        return null;
+    }
+
+    private timeFormatValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) {
+            return null;
+        }
+        return this.parseTimeInput(value) ? null : { invalidTime: true };
     }
 
     onCancel(): void {

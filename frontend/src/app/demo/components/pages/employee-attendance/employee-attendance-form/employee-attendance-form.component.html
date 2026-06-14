@@ -11,14 +11,18 @@
         <div class="form-row">
             <mat-form-field appearance="outline">
                 <mat-label>Check-in Time</mat-label>
-                <input matInput type="time" formControlName="checkInTime">
+                <input matInput formControlName="checkInTime" placeholder="e.g. 09:00 AM">
+                <mat-hint>Use AM/PM format</mat-hint>
+                <mat-error *ngIf="attendanceForm.get('checkInTime')?.hasError('invalidTime')">Enter time as e.g. 09:00 AM</mat-error>
             </mat-form-field>
         </div>
 
         <div class="form-row">
             <mat-form-field appearance="outline">
                 <mat-label>Check-out Time</mat-label>
-                <input matInput type="time" formControlName="checkOutTime">
+                <input matInput formControlName="checkOutTime" placeholder="e.g. 05:00 PM">
+                <mat-hint>Use AM/PM format</mat-hint>
+                <mat-error *ngIf="attendanceForm.get('checkOutTime')?.hasError('invalidTime')">Enter time as e.g. 05:00 PM</mat-error>
             </mat-form-field>
         </div>
 

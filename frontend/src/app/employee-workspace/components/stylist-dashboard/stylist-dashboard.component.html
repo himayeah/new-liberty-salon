@@ -1,0 +1,108 @@
+<div class="dashboard-page">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div>
+      <h1 class="greeting">Welcome back, {{ stylist?.employeeName }}!</h1>
+      <p class="subtitle">Here is your appointment schedule</p>
+    </div>
+    <button mat-flat-button color="warn" class="logout-btn" (click)="logout()">
+      <mat-icon>logout</mat-icon> Logout
+    </button>
+  </div>
+
+  <!-- Filter Section -->
+  <mat-card class="filter-card">
+    <mat-card-content class="filter-container">
+      
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Filter by Date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" (dateChange)="applyFilters()">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Filter by Status</mat-label>
+        <mat-select [(ngModel)]="filterStatus" (selectionChange)="applyFilters()">
+          <mat-option value="">All Statuses</mat-option>
+          <mat-option value="BOOKED">Booked</mat-option>
+          <mat-option value="READY FOR BILLING">Ready for Billing</mat-option>
+          <mat-option value="CANCELLED">Cancelled</mat-option>
+          <mat-option value="NO_SHOW">No-Show</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-button class="clear-btn" (click)="clearFilters()" *ngIf="filterDate || filterStatus">
+        Clear Filters
+      </button>
+
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Appointments List -->
+  <div class="appointments-list">
+    
+    <div class="empty-state" *ngIf="filteredAppointments.length === 0">
+      <mat-icon class="empty-icon">event_busy</mat-icon>
+      <h3>No appointments found</h3>
+      <p>Try adjusting your filters or checking back later.</p>
+    </div>
+
+    <!-- Appointment Card -->
+    <mat-card class="appointment-card" *ngFor="let app of filteredAppointments">
+      <div class="card-layout">
+        
+        <!-- Status Indicator Strip -->
+        <div class="status-strip" [ngClass]="{
+          'strip-booked': app.appointmentStatus === 'BOOKED',
+          'strip-ready': app.appointmentStatus === 'READY FOR BILLING',
+          'strip-cancelled': app.appointmentStatus === 'CANCELLED',
+          'strip-noshow': app.appointmentStatus === 'NO_SHOW'
+        }"></div>
+
+        <!-- Content -->
+        <div class="card-content">
+          
+          <div class="card-header-row">
+            <h2 class="service-name">{{ app.serviceName }}</h2>
+            <span class="status-badge" [ngClass]="{
+              'badge-booked': app.appointmentStatus === 'BOOKED',
+              'badge-ready': app.appointmentStatus === 'READY FOR BILLING',
+              'badge-cancelled': app.appointmentStatus === 'CANCELLED',
+              'badge-noshow': app.appointmentStatus === 'NO_SHOW'
+            }">{{ app.appointmentStatus }}</span>
+          </div>
+
+          <div class="card-details-grid">
+            <div class="detail-item">
+              <mat-icon>person</mat-icon>
+              <span>{{ app.clientName }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ app.appointmentDate }}</span>
+            </div>
+            <div class="detail-item">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ app.appointmentStartTime | time12 }} - {{ app.appointmentEndTime | time12 }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Area -->
+        <div class="card-actions" *ngIf="app.appointmentStatus === 'BOOKED'">
+          <mat-divider [vertical]="true" class="desktop-divider"></mat-divider>
+          <mat-divider class="mobile-divider"></mat-divider>
+          <div class="action-btn-container">
+            <button mat-flat-button color="primary" class="complete-btn" (click)="markAsComplete(app)">
+              <mat-icon>check_circle</mat-icon> Mark as Complete
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </mat-card>
+
+  </div>
+</div>

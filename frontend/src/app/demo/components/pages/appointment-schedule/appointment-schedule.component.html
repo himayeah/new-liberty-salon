@@ -64,13 +64,13 @@
 
           <ng-container matColumnDef="appointmentStartTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Start </th>
-            <td mat-cell *matCellDef="let element">{{ element.appointmentStartTime || (element.appointmentDate ?
+            <td mat-cell *matCellDef="let element">{{ element.appointmentStartTime ? (element.appointmentStartTime | time12) : (element.appointmentDate ?
               (element.appointmentDate | date:'shortTime') : '') }}</td>
           </ng-container>
 
           <ng-container matColumnDef="appointmentEndTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> End </th>
-            <td mat-cell *matCellDef="let element">{{ element.appointmentEndTime || '' }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.appointmentEndTime ? (element.appointmentEndTime | time12) : '' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="appointmentStatus">

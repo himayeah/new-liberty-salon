@@ -13,6 +13,9 @@ export class LoginFormComponent {
   isRegistering: boolean = false;
   @Output() userAuthenticated = new EventEmitter<any>();
 
+  // ngOnInit is not needed here because this component doesn't need to load any data when it initializes —
+  // it's a form-driven component that only reacts to user actions.
+
   constructor(
     private fb: FormBuilder,
     private publicBookingService: PublicBookingService,

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { EmployeeAuthService } from 'src/app/employee-workspace/services/employee-auth.service';
+import { Role } from 'src/app/models/role.enum';
 
 @Component({
     selector: 'app-employee-profile',
@@ -13,14 +15,17 @@ export class EmployeeProfileComponent implements OnInit {
     employee: any = null;
     loading: boolean = true;
     profileImage: string | null = null;
+    isReceptionist = false;
 
     constructor(
         private route: ActivatedRoute,
         private employeeRegService: EmployeeRegServicesService,
-        private messageService: MessageServiceService
+        private messageService: MessageServiceService,
+        private employeeAuthService: EmployeeAuthService
     ) { }
 
     ngOnInit(): void {
+        this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
         this.route.paramMap.subscribe(params => {
             this.employeeId = params.get('id');
             if (this.employeeId) {
@@ -47,6 +52,7 @@ export class EmployeeProfileComponent implements OnInit {
     }
 
     onFileSelected(event: any): void {
+        if (this.isReceptionist) return;
         const file: File = event.target.files[0];
         if (file) {
             const reader = new FileReader();

@@ -21,15 +21,15 @@
             <div class="row">
                 <!-- Profile Upload / Avatar Section (Top-Left) -->
                 <div class="col-md-3 text-center mb-4 mb-md-0">
-                    <div class="avatar-container mx-auto" (click)="triggerFileUpload()">
+                    <div class="avatar-container mx-auto" [style.cursor]="isReceptionist ? 'default' : 'pointer'" (click)="!isReceptionist && triggerFileUpload()">
                         <img [src]="profileImage || 'assets/demo/images/avatar/profile.jpg'" alt="Employee Avatar"
                             class="profile-avatar">
-                        <div class="avatar-overlay">
+                        <div *ngIf="!isReceptionist" class="avatar-overlay">
                             <mat-icon>camera_alt</mat-icon>
                             <span>Change Photo</span>
                         </div>
                     </div>
-                    <input type="file" id="profilePhotoInput" (change)="onFileSelected($event)" accept="image/*"
+                    <input *ngIf="!isReceptionist" type="file" id="profilePhotoInput" (change)="onFileSelected($event)" accept="image/*"
                         class="d-none">
                     <div class="mt-3">
                         <h3 class="employee-name-title mb-1">{{ employee.employeeName }}</h3>

@@ -4,6 +4,7 @@ import { LayoutService } from './service/app.layout.service';
 import { Router } from '@angular/router';
 import { CacheService } from '../services/CacheService';
 import { HttpService } from '../services/http.service';
+import { EmployeeAuthService } from '../employee-workspace/services/employee-auth.service';
 
 @Component({
     selector: 'app-topbar',
@@ -22,12 +23,18 @@ export class AppTopBarComponent {
         public layoutService: LayoutService,
         private httpService: HttpService,
         private router: Router,
-        private cacheService: CacheService
+        private cacheService: CacheService,
+        private employeeAuthService: EmployeeAuthService
     ) {}
 
     public logOutUser(): void {
-        this.cacheService.clear(this.httpService.getUserId()!);
-        this.httpService.removeToken();
-        this.router.navigate(['/auth/login']);
+        if (this.employeeAuthService.isAuthenticated()) {
+            this.employeeAuthService.logout();
+            this.router.navigate(['/employee-workspace']);
+        } else {
+            this.cacheService.clear(this.httpService.getUserId()!);
+            this.httpService.removeToken();
+            this.router.navigate(['/auth/login']);
+        }
     }
 }

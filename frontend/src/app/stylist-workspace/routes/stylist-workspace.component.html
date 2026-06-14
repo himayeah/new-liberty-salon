@@ -1,4 +1,0 @@
-<div class="stylist-workspace-container">
-  <app-stylist-login *ngIf="!authenticatedStylist" (stylistAuthenticated)="onStylistAuthenticated($event)"></app-stylist-login>
-  <app-stylist-dashboard *ngIf="authenticatedStylist" [stylist]="authenticatedStylist"></app-stylist-dashboard>
-</div>

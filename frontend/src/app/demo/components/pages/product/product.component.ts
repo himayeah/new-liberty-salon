@@ -6,6 +6,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductServiceService } from 'src/app/services/product/product-service.service';
 import { ProductFormComponent } from './product-form/product-form.component';
+import { EmployeeAuthService } from 'src/app/employee-workspace/services/employee-auth.service';
+import { Role } from 'src/app/models/role.enum';
 
 @Component({
   selector: 'app-product',
@@ -21,14 +23,17 @@ export class ProductComponent implements OnInit {
   selectedRow: any = null;
   lastAddedRow: any = null;
   lastEditedRow: any = null;
+  isReceptionist = false;
 
   constructor(
     private productService: ProductServiceService,
     private messageService: MessageServiceService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private employeeAuthService: EmployeeAuthService
   ) { }
 
   ngOnInit(): void {
+    this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
     this.populateData();
   }
 
@@ -47,6 +52,7 @@ export class ProductComponent implements OnInit {
   }
 
   openAddProductModal(): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '700px',
       data: { mode: 'add' }
@@ -61,6 +67,7 @@ export class ProductComponent implements OnInit {
   }
 
   editProduct(data: any): void {
+    if (this.isReceptionist) return;
     const dialogRef = this.dialog.open(ProductFormComponent, {
       width: '700px',
       data: { mode: 'edit', product: data }
@@ -78,6 +85,7 @@ export class ProductComponent implements OnInit {
   }
 
   deleteProduct(data: any): void {
+    if (this.isReceptionist) return;
     this.productService.deleteData(data.id).subscribe({
       next: () => {
         this.messageService.showSuccess('Deleted Successfully!');

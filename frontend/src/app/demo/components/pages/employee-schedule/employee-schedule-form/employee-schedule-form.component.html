@@ -27,15 +27,19 @@
             <!-- Shift Start Time -->
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Shift Start Time</mat-label>
-                <input matInput type="time" formControlName="startTime" />
+                <input matInput formControlName="startTime" placeholder="e.g. 10:00 AM" />
+                <mat-hint>Use AM/PM format</mat-hint>
                 <mat-error *ngIf="isInvalid('startTime', 'required')">Start Time is required</mat-error>
+                <mat-error *ngIf="scheduleForm.get('startTime')?.hasError('invalidTime')">Enter time as e.g. 10:00 AM</mat-error>
             </mat-form-field>
 
             <!-- Shift End Time -->
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Shift End Time</mat-label>
-                <input matInput type="time" formControlName="endTime" />
+                <input matInput formControlName="endTime" placeholder="e.g. 06:00 PM" />
+                <mat-hint>Use AM/PM format</mat-hint>
                 <mat-error *ngIf="isInvalid('endTime', 'required')">End Time is required</mat-error>
+                <mat-error *ngIf="scheduleForm.get('endTime')?.hasError('invalidTime')">Enter time as e.g. 06:00 PM</mat-error>
             </mat-form-field>
 
             <!-- Effective Date -->

@@ -104,7 +104,7 @@ const routes: Routes = [
                         ),
                 },
 
-                 //link to access the public-link: http://localhost:4200/stylist-workspace
+                 //link to access the public-link: http://localhost:4200/employee-workspace
                 {
                     path: 'public-booking',
                     loadChildren: () =>
@@ -113,10 +113,10 @@ const routes: Routes = [
                         ),
                 },
                 {
-                    path: 'stylist-workspace',
+                    path: 'employee-workspace',
                     loadChildren: () =>
-                        import('./stylist-workspace/stylist-workspace.module').then(
-                            (m) => m.StylistWorkspaceModule
+                        import('./employee-workspace/employee-workspace.module').then(
+                            (m) => m.EmployeeWorkspaceModule
                         ),
                 },
                 { path: 'notfound', component: NotfoundComponent },

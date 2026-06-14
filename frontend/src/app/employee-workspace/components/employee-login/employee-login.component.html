@@ -1,0 +1,107 @@
+<div class="login-page-wrapper">
+  
+  <div class="login-image-section">
+    <div class="image-overlay">
+      <div class="overlay-content">
+        <h1>New Liberty Salon</h1>
+        <p>Empowering our staff to deliver exceptional experiences. Welcome to your employee workspace.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-form-section">
+    <div class="login-content-container">
+      
+      <!-- Login Mode -->
+      <ng-container *ngIf="!isForgotPasswordMode">
+        <!--header-->
+        <div class="content-header">
+          <h1 class="header">Staff Workspace Login</h1>
+          <p class="paragraph">Sign in with your credentials to access your employee workspace.</p>
+        </div>
+
+        <!--form-->
+        <form [formGroup]="loginForm" class="stylist-login-form" (ngSubmit)="onSubmit()">
+          <div class="form-section">
+            
+            <mat-form-field appearance="outline" class="full-width-field">
+              <mat-label>Email Address</mat-label>
+              <input matInput formControlName="email" placeholder="e.g. jane@newliberty.com" type="email">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                Please enter a valid email address
+              </mat-error>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="full-width-field mt-3">
+              <mat-label>Password</mat-label>
+              <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password">
+              <mat-icon matPrefix>lock</mat-icon>
+              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Toggle password visibility'">
+                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                Password is required
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+
+          <div class="forgot-password-link">
+            <a (click)="toggleForgotPassword()" class="link-text">Forgot Password?</a>
+          </div>
+          
+          <div class="form-actions mt-4">
+            <button mat-flat-button color="primary" class="submit-btn" type="submit" [disabled]="isButtonDisabled || loginForm.invalid">
+              <span *ngIf="!isButtonDisabled">Login to Workspace</span>
+              <span *ngIf="isButtonDisabled">Authenticating...</span>
+            </button>
+          </div>
+        </form>
+      </ng-container>
+
+      <!-- Forgot Password Mode -->
+      <ng-container *ngIf="isForgotPasswordMode">
+        <div class="content-header">
+          <h1 class="header">Reset Password</h1>
+          <p class="paragraph">Enter the email address associated with your account and we'll send you a link to reset your password.</p>
+        </div>
+
+        <form [formGroup]="forgotPasswordForm" class="stylist-login-form" (ngSubmit)="onForgotPasswordSubmit()">
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="full-width-field">
+              <mat-label>Email Address</mat-label>
+              <input matInput formControlName="email" placeholder="e.g. jane@newliberty.com" type="email">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error *ngIf="forgotPasswordForm.get('email')?.hasError('required')">
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="forgotPasswordForm.get('email')?.hasError('email')">
+                Please enter a valid email address
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions mt-4">
+            <button mat-flat-button color="primary" class="submit-btn" type="submit" [disabled]="isSendingReset || forgotPasswordForm.invalid">
+              <span *ngIf="!isSendingReset">Send Reset Link</span>
+              <span *ngIf="isSendingReset">Sending...</span>
+            </button>
+          </div>
+
+          <div class="back-to-login mt-3">
+            <a (click)="toggleForgotPassword()" class="link-text">
+              <mat-icon class="back-icon">arrow_back</mat-icon>
+              Back to Login
+            </a>
+          </div>
+        </form>
+      </ng-container>
+
+    </div>
+  </div>
+
+</div>

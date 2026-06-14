@@ -1,8 +1,10 @@
 package com.bit.backend.services.impl;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ import com.bit.backend.services.NotificationService;
 
 @Service
 public class AppointmentScheduleService implements AppointmentScheduleServiceI {
+
+    private static final LocalTime SALON_OPENING_TIME = LocalTime.of(10, 0);
+    private static final LocalTime SALON_CLOSING_TIME = LocalTime.of(18, 0);
 
     private final AppointmentScheduleRepository appointmentScheduleRepository;
     private final AppointmentScheduleMapper appointmentScheduleMapper;
@@ -65,6 +70,7 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
                 entity.setCancelledDate(now);
             }
 
+            normalizeAndValidateAppointmentTimes(entity);
             formatAppointmentDate(entity);
 
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
@@ -138,6 +144,7 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
                 entity.setCancelledDate(null);
             }
 
+            normalizeAndValidateAppointmentTimes(entity);
             formatAppointmentDate(entity);
 
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
@@ -254,9 +261,57 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         return appointmentScheduleMapper.toAppointmentScheduleDtoList(entities);
     }
 
+    private void normalizeAndValidateAppointmentTimes(AppointmentScheduleEntity entity) {
+        String startTime = normalizeTime(entity.getAppointmentStartTime());
+        String endTime = normalizeTime(entity.getAppointmentEndTime());
+
+        entity.setAppointmentStartTime(startTime);
+        entity.setAppointmentEndTime(endTime);
+
+        LocalTime start = parseTime(startTime);
+        LocalTime end = parseTime(endTime);
+
+        if (start == null || end == null) {
+            throw new AppException("Appointment times must be in HH:mm or h:mm AM/PM format", HttpStatus.BAD_REQUEST);
+        }
+
+        if (start.isBefore(SALON_OPENING_TIME) || end.isAfter(SALON_CLOSING_TIME) || !end.isAfter(start)) {
+            throw new AppException("Appointments must be booked between 10:00 AM and 06:00 PM, with end time after start time", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private String normalizeTime(String value) {
+        if (value == null || value.isBlank()) {
+            return value;
+        }
+
+        LocalTime parsed = parseTime(value);
+        return parsed != null ? parsed.format(DateTimeFormatter.ofPattern("HH:mm")) : value;
+    }
+
+    private LocalTime parseTime(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        String trimmed = value.trim();
+        for (DateTimeFormatter formatter : List.of(
+                DateTimeFormatter.ofPattern("HH:mm"),
+                DateTimeFormatter.ofPattern("H:mm"),
+                DateTimeFormatter.ofPattern("hh:mm a", Locale.US),
+                DateTimeFormatter.ofPattern("h:mm a", Locale.US))) {
+            try {
+                return LocalTime.parse(trimmed, formatter);
+            } catch (Exception ignored) {
+                // Try the next formatter
+            }
+        }
+
+        return null;
+    }
+
     private void formatAppointmentDate(AppointmentScheduleEntity entity) {
         if (entity.getAppointmentDate() != null && entity.getAppointmentDate().contains("T")) {
-            // Truncate ISO string to YYYY-MM-DD
             entity.setAppointmentDate(entity.getAppointmentDate().split("T")[0]);
         }
     }
