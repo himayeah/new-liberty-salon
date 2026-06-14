@@ -1,0 +1,95 @@
+<div class="invite-page-wrapper">
+  
+  <div class="invite-image-section">
+    <div class="image-overlay">
+      <div class="overlay-content">
+        <h1>Welcome to Liberty Salon</h1>
+        <p>You're almost there! Set your password to access your professional workspace.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="invite-form-section">
+    <div class="invite-content-container">
+      
+      <div class="content-header">
+        <div class="icon-badge">
+          <mat-icon>how_to_reg</mat-icon>
+        </div>
+        <h1 class="header">Set Your Password</h1>
+        <p class="paragraph">Welcome! Please enter your email address and create a secure password to complete your account setup.</p>
+      </div>
+
+      <form [formGroup]="inviteForm" class="invite-form" (ngSubmit)="onSubmit()">
+        <div class="form-section">
+          
+          <mat-form-field appearance="outline" class="full-width-field">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email" placeholder="Enter the email registered by your administrator" type="email">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="inviteForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="inviteForm.get('email')?.hasError('email')">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width-field">
+            <mat-label>Create Password</mat-label>
+            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Min. 6 characters with a number">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="inviteForm.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="inviteForm.get('password')?.hasError('minlength')">
+              Password must be at least 6 characters
+            </mat-error>
+            <mat-error *ngIf="inviteForm.get('password')?.hasError('noNumber')">
+              Password must contain at least one number
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width-field">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" placeholder="Re-enter your password">
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
+              <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="inviteForm.get('confirmPassword')?.hasError('required')">
+              Please confirm your password
+            </mat-error>
+          </mat-form-field>
+
+          <div class="password-mismatch-error" *ngIf="inviteForm.hasError('passwordMismatch') && inviteForm.get('confirmPassword')?.touched">
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            <span>Passwords do not match</span>
+          </div>
+
+        </div>
+        
+        <div class="form-actions mt-4">
+          <button mat-flat-button color="primary" class="submit-btn" type="submit" 
+                  [disabled]="isSubmitting || inviteForm.invalid || !token">
+            <span *ngIf="!isSubmitting">Activate Account</span>
+            <span *ngIf="isSubmitting">Setting up...</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="password-requirements mt-3">
+        <p class="requirements-title">Password Requirements:</p>
+        <ul>
+          <li [class.met]="inviteForm.get('password')?.value?.length >= 6">At least 6 characters</li>
+          <li [class.met]="passwordHasNumber">Contains at least one number</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</div>

@@ -27,7 +27,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests((request) -> request.requestMatchers(
                         "/login",
                         "/register",
+                        "/employee_reg",
                         "/employee_reg/**",
+                        "/employee_get",
+                        "/employee_get/**",
+                        "/employee_edit/**",
+                        "/employee_delete/**",
                         "/employee_leave/**",
                         "/api/v1/client-reg/**",
                         "/api/supplier/**",
@@ -39,7 +44,8 @@ public class SecurityConfig {
                          "/appointment-schedule-form/max-id",
                         "/client-notes/**",
                         "/report-client-controller/**",
-                        "/api/v1/employee-schedule/**"
+                        "/api/v1/employee-schedule/**",
+                        "/api/v1/stylist-workspace/**"
 
                 ).permitAll()
                         .anyRequest().authenticated());

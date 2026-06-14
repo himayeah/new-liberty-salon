@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
@@ -21,6 +21,9 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     services: any[] = [];
     submitted = false;
     isButtonDisabled = false;
+    minDate: Date = new Date();
+    readonly salonOpeningTime = '10:00';
+    readonly salonClosingTime = '18:00';
 
     appointmentStatuses = [
         { value: 'BOOKED', viewValue: 'Booked' },
@@ -51,21 +54,21 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         public dialogRef: MatDialogRef<AppointmentFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
+        this.minDate.setHours(0, 0, 0, 0);
         this.mode = data.mode || 'add';
         this.appointmentScheduleForm = this.fb.group({
             clientId: [null, [Validators.required]],
             employeeId: [null, [Validators.required]],
-            //remove serviceID required validator for now until Salon service module is added
             serviceId: [null],
             appointmentDate: [null, [Validators.required]],
-            appointmentStartTime: [null, [Validators.required]],
-            appointmentEndTime: [null, [Validators.required]],
+            appointmentStartTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
+            appointmentEndTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
             appointmentStatus: ['BOOKED', [Validators.required]],
             bookingSource: [null, [Validators.required]],
             notes: [null],
             cancellationReason: [null],
             cancelledDate: [null],
-        });
+        }, { validators: this.validateSalonHours.bind(this) });
     }
 
     ngOnInit(): void {
@@ -82,13 +85,19 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         const endCtrl = this.appointmentScheduleForm.get('appointmentEndTime');
 
         if (startCtrl) {
-            this.subs.push(startCtrl.valueChanges.subscribe(() => this.computeEndTimeIfNeeded()));
+            this.subs.push(startCtrl.valueChanges.subscribe((value) => {
+                this.applyTimeFormatting(startCtrl);
+                this.computeEndTimeIfNeeded();
+            }));
         }
         if (serviceCtrl) {
             this.subs.push(serviceCtrl.valueChanges.subscribe(() => this.computeEndTimeIfNeeded()));
         }
         if (endCtrl) {
-            this.subs.push(endCtrl.valueChanges.subscribe(() => this.endTimeAutoCalculated = false));
+            this.subs.push(endCtrl.valueChanges.subscribe((value) => {
+                this.applyTimeFormatting(endCtrl);
+                this.endTimeAutoCalculated = false;
+            }));
         }
     }
 
@@ -99,6 +108,8 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         patchVal.serviceId = data.serviceId ?? data.service?.id ?? null;
         patchVal.appointmentDate = data.appointmentDate ? new Date(data.appointmentDate) : null;
         patchVal.appointmentStatus = data.appointmentStatus ?? data.status ?? 'BOOKED';
+        patchVal.appointmentStartTime = this.formatTimeForInput(data.appointmentStartTime);
+        patchVal.appointmentEndTime = this.formatTimeForInput(data.appointmentEndTime);
         this.appointmentScheduleForm.patchValue(patchVal);
 
         if (!patchVal.appointmentEndTime) {
@@ -124,8 +135,29 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
 
         this.isButtonDisabled = true;
         const formValue = { ...this.appointmentScheduleForm.value };
+        const startTime = this.parseTimeInput(formValue.appointmentStartTime);
+        const endTime = this.parseTimeInput(formValue.appointmentEndTime);
 
-        // Format date to YYYY-MM-DD to maintain database consistency
+        if (!startTime || !endTime) {
+            this.messageService.showError('Please enter valid times in HH:MM AM/PM format.');
+            this.isButtonDisabled = false;
+            return;
+        }
+
+        const startMinutes = this.toMinutes(startTime);
+        const endMinutes = this.toMinutes(endTime);
+        const openingMinutes = this.toMinutes(this.salonOpeningTime);
+        const closingMinutes = this.toMinutes(this.salonClosingTime);
+
+        if (startMinutes < openingMinutes || endMinutes > closingMinutes || endMinutes <= startMinutes) {
+            this.messageService.showError('Appointments must be booked between 10:00 AM and 06:00 PM, with end time after start time.');
+            this.isButtonDisabled = false;
+            return;
+        }
+
+        formValue.appointmentStartTime = startTime;
+        formValue.appointmentEndTime = endTime;
+
         if (formValue.appointmentDate instanceof Date) {
             const d = formValue.appointmentDate;
             formValue.appointmentDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -170,14 +202,130 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     }
 
     private computeEndTime(startTime: string, serviceId: any): string | null {
-        if (!startTime) return null;
+        const normalizedStart = this.parseTimeInput(startTime);
+        if (!normalizedStart) return null;
+
         const duration = this.getServiceDuration(serviceId);
         const dateBase = this.appointmentScheduleForm.get('appointmentDate')?.value ? new Date(this.appointmentScheduleForm.get('appointmentDate')!.value) : new Date();
-        const parts = startTime.split(':').map(p => Number(p));
+        const parts = normalizedStart.split(':').map(p => Number(p));
         if (parts.length < 2) return null;
         dateBase.setHours(parts[0], parts[1], 0, 0);
         const endDate = new Date(dateBase.getTime() + duration * 60000);
         return `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
+    }
+
+    private formatTimeForInput(value: string | null | undefined): string {
+        if (!value) {
+            return '';
+        }
+
+        const normalized = this.parseTimeInput(value);
+        if (!normalized) {
+            return value;
+        }
+
+        const [hoursStr, minutes] = normalized.split(':');
+        const hours = Number(hoursStr);
+        const suffix = hours >= 12 ? 'PM' : 'AM';
+        let hours12 = hours % 12;
+        if (hours12 === 0) {
+            hours12 = 12;
+        }
+
+        return `${String(hours12).padStart(2, '0')}:${minutes} ${suffix}`;
+    }
+
+    private parseTimeInput(value: string | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const trimmed = String(value).trim().toUpperCase();
+        const explicitMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+        if (explicitMatch) {
+            let hours = Number(explicitMatch[1]);
+            const minutes = explicitMatch[2];
+            const suffix = explicitMatch[3];
+            if (suffix === 'PM' && hours < 12) {
+                hours += 12;
+            }
+            if (suffix === 'AM' && hours === 12) {
+                hours = 0;
+            }
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+
+        const simpleMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+        if (simpleMatch) {
+            const hours = Number(simpleMatch[1]);
+            const minutes = simpleMatch[2];
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+
+        return null;
+    }
+
+    private applyTimeFormatting(control: AbstractControl | null): void {
+        if (!control) {
+            return;
+        }
+
+        const value = control.value;
+        if (typeof value !== 'string' || !value.trim()) {
+            return;
+        }
+
+        const normalized = this.parseTimeInput(value);
+        if (!normalized) {
+            return;
+        }
+
+        const formatted = this.formatTimeForInput(normalized);
+        if (formatted !== value) {
+            control.setValue(formatted, { emitEvent: false });
+        }
+    }
+
+    private timeFormatValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) {
+            return null;
+        }
+
+        return this.parseTimeInput(value) ? null : { invalidTime: true };
+    }
+
+    private validateSalonHours(group: AbstractControl): ValidationErrors | null {
+        const startValue = group.get('appointmentStartTime')?.value;
+        const endValue = group.get('appointmentEndTime')?.value;
+        if (!startValue || !endValue) {
+            return null;
+        }
+
+        const startMinutes = this.toMinutes(this.parseTimeInput(startValue));
+        const endMinutes = this.toMinutes(this.parseTimeInput(endValue));
+        if (startMinutes == null || endMinutes == null) {
+            return null;
+        }
+
+        const openingMinutes = this.toMinutes(this.salonOpeningTime);
+        const closingMinutes = this.toMinutes(this.salonClosingTime);
+        if (startMinutes < openingMinutes || endMinutes > closingMinutes || endMinutes <= startMinutes) {
+            return { salonHours: true };
+        }
+
+        return null;
+    }
+
+    private toMinutes(value: string | null | undefined): number | null {
+        if (!value) {
+            return null;
+        }
+        const [hours, minutes] = value.split(':').map(part => Number(part));
+        if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+            return null;
+        }
+        return hours * 60 + minutes;
     }
 
     private getServiceDuration(serviceId: any): number {

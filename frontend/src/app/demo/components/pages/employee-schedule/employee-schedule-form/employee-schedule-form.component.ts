@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmployeeScheduleService } from 'src/app/services/employee-schedule/employee-schedule-service.service';
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
@@ -29,8 +29,8 @@ export class EmployeeScheduleFormComponent implements OnInit {
             employeeId: ['', Validators.required],
             workDay: ['', [Validators.required, Validators.min(0), Validators.max(6)]],
             isActive: [true],
-            startTime: [''],
-            endTime: [''],
+            startTime: ['', this.timeFormatValidator.bind(this)],
+            endTime: ['', this.timeFormatValidator.bind(this)],
             effectiveDate: [null],
             endDate: [null]
         });
@@ -43,9 +43,8 @@ export class EmployeeScheduleFormComponent implements OnInit {
                     employeeId: s.employeeId,
                     workDay: s.workDay,
                     isActive: s.isActive,
-                    startTime: s.startTime || '',
-                    endTime: s.endTime || '',
-                    // Parse string dates back to Date objects for the datepicker
+                    startTime: this.formatTimeForInput(s.startTime),
+                    endTime: this.formatTimeForInput(s.endTime),
                     effectiveDate: s.effectiveDate ? new Date(s.effectiveDate) : null,
                     endDate: s.endDate ? new Date(s.endDate) : null
                 });
@@ -98,10 +97,10 @@ export class EmployeeScheduleFormComponent implements OnInit {
 
         this.isButtonDisabled = true;
         const raw = this.scheduleForm.value;
-
-        // Build payload with properly formatted dates
         const formValue = {
             ...raw,
+            startTime: this.parseTimeInput(raw.startTime),
+            endTime: this.parseTimeInput(raw.endTime),
             effectiveDate: this.formatDate(raw.effectiveDate),
             endDate: this.formatDate(raw.endDate)
         };
@@ -142,14 +141,73 @@ export class EmployeeScheduleFormComponent implements OnInit {
                 employeeId: s.employeeId,
                 workDay: s.workDay,
                 isActive: s.isActive,
-                startTime: s.startTime || '',
-                endTime: s.endTime || '',
+                startTime: this.formatTimeForInput(s.startTime),
+                endTime: this.formatTimeForInput(s.endTime),
                 effectiveDate: s.effectiveDate ? new Date(s.effectiveDate) : null,
                 endDate: s.endDate ? new Date(s.endDate) : null
             });
         }
         this.submitted = false;
         this.isButtonDisabled = false;
+    }
+
+    private formatTimeForInput(value: string | null | undefined): string {
+        if (!value) {
+            return '';
+        }
+
+        const normalized = this.parseTimeInput(value);
+        if (!normalized) {
+            return String(value);
+        }
+
+        const [hoursStr, minutes] = normalized.split(':');
+        const hours = Number(hoursStr);
+        const suffix = hours >= 12 ? 'PM' : 'AM';
+        let hours12 = hours % 12;
+        if (hours12 === 0) {
+            hours12 = 12;
+        }
+
+        return `${String(hours12).padStart(2, '0')}:${minutes} ${suffix}`;
+    }
+
+    private parseTimeInput(value: string | null | undefined): string | null {
+        if (!value) {
+            return null;
+        }
+
+        const trimmed = String(value).trim().toUpperCase();
+        const explicitMatch = trimmed.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+        if (explicitMatch) {
+            let hours = Number(explicitMatch[1]);
+            const minutes = explicitMatch[2];
+            const suffix = explicitMatch[3];
+            if (suffix === 'PM' && hours < 12) {
+                hours += 12;
+            }
+            if (suffix === 'AM' && hours === 12) {
+                hours = 0;
+            }
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+
+        const simpleMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+        if (simpleMatch) {
+            const hours = Number(simpleMatch[1]);
+            const minutes = simpleMatch[2];
+            return `${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+
+        return null;
+    }
+
+    private timeFormatValidator(control: AbstractControl): ValidationErrors | null {
+        const value = control.value;
+        if (!value) {
+            return null;
+        }
+        return this.parseTimeInput(value) ? null : { invalidTime: true };
     }
 
     private handleError(error: any): void {

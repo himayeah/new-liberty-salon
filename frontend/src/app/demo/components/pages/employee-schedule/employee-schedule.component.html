@@ -49,13 +49,13 @@
                     <!-- Start Time -->
                     <ng-container matColumnDef="startTime">
                         <th mat-header-cell *matHeaderCellDef>Start Time</th>
-                        <td mat-cell *matCellDef="let row">{{ row.startTime }}</td>
+                        <td mat-cell *matCellDef="let row">{{ row.startTime | time12 }}</td>
                     </ng-container>
 
                     <!-- End Time -->
                     <ng-container matColumnDef="endTime">
                         <th mat-header-cell *matHeaderCellDef>End Time</th>
-                        <td mat-cell *matCellDef="let row">{{ row.endTime }}</td>
+                        <td mat-cell *matCellDef="let row">{{ row.endTime | time12 }}</td>
                     </ng-container>
 
                     <!-- Effective Date -->

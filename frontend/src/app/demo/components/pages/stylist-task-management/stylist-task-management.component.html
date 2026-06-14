@@ -117,12 +117,12 @@
 
           <ng-container matColumnDef="startTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Time </th>
-            <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.startTime | time12}} </td>
           </ng-container>
 
           <ng-container matColumnDef="endTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> End Time </th>
-            <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.endTime | time12}} </td>
           </ng-container>
 
           <ng-container matColumnDef="serviceStatus">

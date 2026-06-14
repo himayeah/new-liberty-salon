@@ -21,6 +21,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     services: any[] = [];
     submitted = false;
     isButtonDisabled = false;
+    minDate: Date = new Date();
 
     appointmentStatuses = [
         { value: 'BOOKED', viewValue: 'Booked' },
@@ -51,6 +52,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         public dialogRef: MatDialogRef<AppointmentFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
+        this.minDate.setHours(0, 0, 0, 0);
         this.mode = data.mode || 'add';
         this.appointmentScheduleForm = this.fb.group({
             clientId: [null, [Validators.required]],

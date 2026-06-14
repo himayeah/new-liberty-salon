@@ -62,6 +62,7 @@ import { ReportAppointmentStatusComponent } from './report/report-appointment-st
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
 import { CustomerRegComponent } from './customer-reg/customer-reg.component';
 import { CustomerRegFormComponent } from './customer-reg/customer-reg-form/customer-reg-form.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -127,7 +128,8 @@ import { CustomerRegFormComponent } from './customer-reg/customer-reg-form/custo
     MatTabsModule,
     TableModule,
     ChartModule,
-    BillingFormComponent
+    BillingFormComponent,
+    SharedModule
   ]
 })
 export class PagesModule { } // Trigger re-compilation

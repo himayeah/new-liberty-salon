@@ -40,7 +40,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Date of Birth</mat-label>
-        <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth">
+        <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth" [min]="minDate">
         <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
         <mat-datepicker #dobPicker></mat-datepicker>
       </mat-form-field>
@@ -71,11 +71,7 @@
 
 <mat-dialog-actions align="end" class="dialog-actions">
   <button mat-button (click)="onCancel()">Cancel</button>
-  // 'Update' and 'Save' are only button labels.
-  // If the user openes the modal by clicking "Add new", the button label is "Save", else through the table 'Edit Data', 'Update'
-  // Either way the button will trigger the onSave() function in the .ts
   <button mat-raised-button color="primary" (click)="onSave()" [disabled]="clientForm.invalid">
     {{ isEditMode ? 'Update' : 'Save' }}
-</button>
-
+  </button>
 </mat-dialog-actions>

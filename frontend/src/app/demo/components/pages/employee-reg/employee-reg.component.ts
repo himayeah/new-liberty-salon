@@ -22,6 +22,7 @@ export class EmployeeRegComponent implements OnInit {
     dataSource = new MatTableDataSource<any>([]);
     displayedColumns: string[] = [
         'employeeName',
+        'email',
         'dateJoined',
         'designation',
         'specializations',

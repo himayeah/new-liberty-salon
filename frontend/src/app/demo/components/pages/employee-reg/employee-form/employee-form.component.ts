@@ -12,6 +12,7 @@ import { MessageServiceService } from 'src/app/services/message-service/message-
 export class EmployeeFormComponent implements OnInit {
   employeeForm!: FormGroup;
   isEditMode: boolean = false;
+  minDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -19,7 +20,9 @@ export class EmployeeFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private employeeService: EmployeeRegServicesService,
     private messageService: MessageServiceService
-  ) { }
+  ) {
+    this.minDate.setHours(0, 0, 0, 0);
+  }
 
   ngOnInit(): void {
     this.isEditMode = this.data.mode === 'edit';
@@ -37,6 +40,7 @@ export class EmployeeFormComponent implements OnInit {
   initForm(): void {
     this.employeeForm = this.fb.group({
       employeeName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       dateJoined: ['', Validators.required],
       designation: ['', Validators.required],
       specializations: [''],

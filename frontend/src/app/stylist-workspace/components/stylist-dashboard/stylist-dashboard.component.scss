@@ -1,3 +1,356 @@
-.stylist-dashboard-container {
-  padding: 20px;
+.dashboard-page {
+  padding: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Outfit', 'Roboto', sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
 }
+
+/* Header styling */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  
+  .greeting {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .logout-btn {
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+    }
+  }
+}
+
+/* Filter Card Styling */
+.filter-card {
+  margin-bottom: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+
+  .filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem;
+
+    .filter-field {
+      flex: 1;
+      min-width: 200px;
+
+      ::ng-deep .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+    }
+
+    .clear-btn {
+      color: #64748b;
+      font-weight: 600;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        border-color: #94a3b8;
+      }
+    }
+  }
+}
+
+/* Appointments List & Card styling */
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.appointment-card {
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-layout {
+    display: flex;
+    min-height: 120px;
+    width: 100%;
+  }
+
+  /* Left color indicator strip */
+  .status-strip {
+    width: 8px;
+    flex-shrink: 0;
+
+    &.strip-booked {
+      background: linear-gradient(180deg, #6366f1, #4f46e5);
+    }
+    &.strip-ready {
+      background: linear-gradient(180deg, #10b981, #059669);
+    }
+    &.strip-cancelled {
+      background: linear-gradient(180deg, #ef4444, #dc2626);
+    }
+    &.strip-noshow {
+      background: linear-gradient(180deg, #f59e0b, #d97706);
+    }
+  }
+
+  /* Card content details */
+  .card-content {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .service-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+      }
+    }
+
+    .card-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #475569;
+        font-size: 0.95rem;
+
+        mat-icon {
+          color: #94a3b8;
+          font-size: 1.25rem;
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    }
+  }
+
+  /* Action Buttons styling */
+  .card-actions {
+    display: flex;
+    align-items: stretch;
+
+    .desktop-divider {
+      height: 100%;
+      align-self: center;
+      background-color: #f1f5f9;
+    }
+
+    .mobile-divider {
+      display: none;
+    }
+
+    .action-btn-container {
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .complete-btn {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #ffffff;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 0.6rem 1.25rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.3);
+
+        mat-icon {
+          margin-right: 0.25rem;
+        }
+
+        &:hover {
+          transform: scale(1.03);
+          box-shadow: 0 6px 18px -2px rgba(16, 185, 129, 0.4);
+        }
+      }
+    }
+  }
+}
+
+/* Status Badges */
+.status-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &.badge-booked {
+    background-color: #e0e7ff;
+    color: #4f46e5;
+  }
+  &.badge-ready {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+  &.badge-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  &.badge-noshow {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+}
+
+/* Empty State styling */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .empty-icon {
+    font-size: 3.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    color: #cbd5e1;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+/* Responsive Rules */
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 1.5rem;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .logout-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .filter-card .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    
+    .filter-field {
+      width: 100%;
+    }
+
+    .clear-btn {
+      width: 100%;
+    }
+  }
+
+  .appointment-card {
+    .card-layout {
+      flex-direction: column;
+    }
+
+    .status-strip {
+      width: 100%;
+      height: 6px;
+    }
+
+    .card-content {
+      padding: 1.25rem;
+    }
+
+    .card-actions {
+      flex-direction: column;
+
+      .desktop-divider {
+        display: none;
+      }
+
+      .mobile-divider {
+        display: block;
+        background-color: #f1f5f9;
+        border: none;
+        height: 1px;
+      }
+
+      .action-btn-container {
+        padding: 1rem 1.25rem;
+        
+        .complete-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+

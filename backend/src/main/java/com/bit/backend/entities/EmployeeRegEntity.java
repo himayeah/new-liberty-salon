@@ -40,8 +40,20 @@ public class EmployeeRegEntity {
     @Column(name = "max_appointments_per_day")
     private String maxAppointmentsPerDay;
 
+    @Column(name = "email")
+    private String email;
+
     @Lob
     @Column(name = "profile_image", columnDefinition = "LONGTEXT")
     private String profileImage;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "invite_token")
+    private String inviteToken;
+
+    @Column(name = "reset_token")
+    private String resetToken;
 
 }

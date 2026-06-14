@@ -4,20 +4,25 @@
   <form [formGroup]="employeeForm" class="form-container">
     
     <div class="form-row">
-      <mat-form-field appearance="outline" class="flex-60">
+      <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Employee Name</mat-label>
         <input matInput formControlName="employeeName" placeholder="Full Name">
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="flex-40">
-        <mat-label>Date Joined</mat-label>
-        <input matInput [matDatepicker]="joinPicker" formControlName="dateJoined">
-        <mat-datepicker-toggle matSuffix [for]="joinPicker"></mat-datepicker-toggle>
-        <mat-datepicker #joinPicker></mat-datepicker>
+      <mat-form-field appearance="outline" class="flex-50">
+        <mat-label>Email Address</mat-label>
+        <input matInput formControlName="email" placeholder="Email Address" type="email">
       </mat-form-field>
     </div>
 
     <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-50">
+        <mat-label>Date Joined</mat-label>
+        <input matInput [matDatepicker]="joinPicker" formControlName="dateJoined" [min]="minDate">
+        <mat-datepicker-toggle matSuffix [for]="joinPicker"></mat-datepicker-toggle>
+        <mat-datepicker #joinPicker></mat-datepicker>
+      </mat-form-field>
+      
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Designation</mat-label>
         <mat-select formControlName="designation">
@@ -28,8 +33,10 @@
           <mat-option value="Receptionist">Receptionist</mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline" class="flex-50">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-100">
         <mat-label>Specializations</mat-label>
         <input matInput formControlName="specializations" placeholder="e.g. Haircut, Coloring">
       </mat-form-field>
