@@ -32,9 +32,14 @@ public class ClientRegController {
         this.reportClientRegService = reportClientRegService;
     }
 
-    // ResponseEntity<ClientRegDto> : The response body will contain a ClientRegDto
+    // ResponseEntity<ClientRegDto> : The final response body that's sent to the
+    // frontend will contain a ClientRegDto
     // ResponseEntity is a wrapper Spring uses to send a response back to the
     // frontend
+    // addForm(@RequestBody ClientRegDto clientRegDto): Take the JSON sent from the
+    // frontend request body and Spring converts it into a Java object( the DTO,
+    // then sends this DTO data to the addClientReg() method in the service
+    // interface
     @PostMapping
     public ResponseEntity<ClientRegDto> addForm(@RequestBody ClientRegDto clientRegDto) throws AppException {
 
@@ -44,9 +49,18 @@ public class ClientRegController {
 
             // send the DTO to the addClientReg() method in the service interface class, and
             // do the function accordingly,
-            // then save the response as the clientRegDtoResponse (Which is a ClientRegDto
+            // then save the response returned from the ServiceI as the clientRegDtoResponse
+            // (Which is a ClientRegDto
             // type)
+            // @RequestBody → reads the JSON body and converts it into a Java object (your
+            // ClientRegDto)
+            // @ResponseBody → convert the Java object → JSON
+            // HttpMessageConverter (usually Jackson) converts JSON -> DTO and vice versa
             ClientRegDto clientRegDtoResponse = clientRegServiceI.addClientReg(clientRegDto);
+            // the final responseEntity is returned it contains:
+            // → URI.create("/api/v1/client-reg/" + clientRegDtoResponse.getId()) → URL of
+            // the newly created resource(201 status code)
+            // → .body(clientRegDtoResponse) → response body(the ClientRegDto object)
             return ResponseEntity.created(URI.create("/api/v1/client-reg/" + clientRegDtoResponse.getId()))
                     .body(clientRegDtoResponse);
         } catch (Exception e) {

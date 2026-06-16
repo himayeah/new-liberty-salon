@@ -46,8 +46,8 @@
             <!-- Appointment Date -->
             <mat-form-field appearance="outline">
                 <mat-label>Appointment Date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="appointmentDate"
-                    placeholder="Choose a date" [min]="minDate" />
+                <input matInput [matDatepicker]="picker" formControlName="appointmentDate" placeholder="Choose a date"
+                    [min]="minDate" />
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentDate')?.hasError('required')">
@@ -60,10 +60,12 @@
                 <mat-label>Start Time</mat-label>
                 <input matInput formControlName="appointmentStartTime" placeholder="e.g. 10:00 AM" />
                 <mat-hint>Salon hours: 10:00 AM - 06:00 PM</mat-hint>
-                <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('required')">
+                <mat-error
+                    *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('required')">
                     Start Time is required
                 </mat-error>
-                <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('invalidTime')">
+                <mat-error
+                    *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('invalidTime')">
                     Enter time as e.g. 10:00 AM
                 </mat-error>
             </mat-form-field>
@@ -75,7 +77,8 @@
                 <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentEndTime')?.hasError('required')">
                     End Time is required
                 </mat-error>
-                <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentEndTime')?.hasError('invalidTime')">
+                <mat-error
+                    *ngIf="submitted && appointmentScheduleForm.get('appointmentEndTime')?.hasError('invalidTime')">
                     Enter time as e.g. 04:30 PM
                 </mat-error>
                 <mat-error *ngIf="submitted && appointmentScheduleForm.hasError('salonHours')">
@@ -86,7 +89,16 @@
             <!-- Status -->
             <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
-                <mat-select formControlName="appointmentStatus">
+
+                <!--Listening to the status change of the dropdown and sending the changed value to the ts file
+                    For this we use (selectionChange) event-->
+                <!-- if you use ($event), ts will receive
+                  {
+                    source: MatSelect
+                    value: CHECK-IN
+                  }-->
+                <!-- but when you use ($event.value), it will only send the status value to the ts file-->
+                <mat-select formControlName="appointmentStatus" (selectionChange)="onStatusChange($event.value)">
                     <mat-option *ngFor="let s of appointmentStatuses" [value]="s.value">
                         {{ s.viewValue }}
                     </mat-option>

@@ -79,6 +79,19 @@
         padding: 0;
         list-style: none;
         display: flex;
+        align-items: center;
+
+        .role-view-text {
+            align-self: center;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: var(--primary-100, #e3f2fd);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            white-space: nowrap;
+        }
 
         .layout-topbar-button {
             margin-left: 1rem;
@@ -123,6 +136,16 @@
 
             &.layout-topbar-menu-mobile-active {
                 display: block
+            }
+
+            .role-view-text {
+                align-self: stretch;
+                margin-bottom: 0.75rem;
+                margin-right: 0;
+                text-align: center;
+                border-radius: 8px;
+                padding: 0.5rem;
+                display: block;
             }
 
             .layout-topbar-button {

@@ -142,4 +142,16 @@ export class AppointmentSchedulingServiceService {
     return this.http.get<any[]>(requestUrl, { headers });
   }
 
+  // send status update to backend
+  sendStatusUpdates(id: number, status: string) {
+    console.log('Data sent from frontend successfully');
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/${id}`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.post(requestUrl, status, { headers });
+  }
+
 }

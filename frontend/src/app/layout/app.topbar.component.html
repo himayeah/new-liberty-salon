@@ -21,6 +21,9 @@
                 layoutService.state.profileSidebarVisible
         }"
     >
+        <span *ngIf="currentRoleViewName" class="role-view-text">
+            {{ currentRoleViewName }}
+        </span>
         <button class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
             <span>Profile</span>

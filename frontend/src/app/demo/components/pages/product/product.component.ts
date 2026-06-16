@@ -86,13 +86,15 @@ export class ProductComponent implements OnInit {
 
   deleteProduct(data: any): void {
     if (this.isReceptionist) return;
-    this.productService.deleteData(data.id).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Deleted Successfully!');
-        this.populateData();
-      },
-      error: (error) => this.handleError(error)
-    });
+    if (confirm(`Are you sure you want to delete product "${data.productName}"?`)) {
+      this.productService.deleteData(data.id).subscribe({
+        next: () => {
+          this.messageService.showSuccess('Deleted Successfully!');
+          this.populateData();
+        },
+        error: (error) => this.handleError(error)
+      });
+    }
   }
 
   applyFilter(event: Event): void {
@@ -114,7 +116,7 @@ export class ProductComponent implements OnInit {
 
   //helpers
   private handleError(error: any): void {
-    this.messageService.showError('Action failed:' + error.message);
+    this.messageService.showError('Action failed: ' + (error?.error?.message ?? error?.message ?? 'Unknown error'));
   }
 
   private highlightRow(action: 'add' | 'edit', rowData: any): void {

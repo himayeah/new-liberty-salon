@@ -25,6 +25,7 @@
           formControlName="loginName"
           placeholder="Enter username"
           class="form-control"
+          autocomplete="off"
         />
         <div *ngIf="formControl['loginName'].touched && formControl['loginName'].errors?.['required']" class="text-danger small">
           Username is required
@@ -35,11 +36,14 @@
       <div class="mb-3">
         <label for="password" class="form-label fw-semibold">Password</label>
         <input
+          #passwordInput
           id="password"
           type="password"
           formControlName="password"
           placeholder="Enter password"
           class="form-control"
+          readonly
+          (focus)="passwordInput.removeAttribute('readonly')"
         />
         <div *ngIf="formControl['password'].touched && formControl['password'].errors?.['required']" class="text-danger small">
           Password is required

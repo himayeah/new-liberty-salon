@@ -8,6 +8,7 @@ import com.bit.backend.repositories.ClientRegRepository;
 import com.bit.backend.services.ClientRegServiceI;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -100,6 +101,8 @@ public class ClientRegService implements ClientRegServiceI {
 
             clientRegRepository.deleteById(id);
             return clientRegMapper.toClientRegDto(optionalClientRegEntity.get());
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Cannot delete this client because they have active appointments, billings, or other associated records.", HttpStatus.CONFLICT);
         } catch (AppException e) {
             throw e;
         } catch (Exception e) {

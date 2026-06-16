@@ -20,6 +20,7 @@ public class AppointmentScheduleDto {
     private String clientEmail;
     private Long employeeId;
     private String employeeName;
+    private String employeeEmail;
     private Long serviceId;
     private String serviceName;
     private String appointmentDate;

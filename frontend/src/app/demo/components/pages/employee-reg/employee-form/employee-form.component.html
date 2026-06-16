@@ -18,7 +18,7 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Date Joined</mat-label>
-        <input matInput [matDatepicker]="joinPicker" formControlName="dateJoined" [min]="minDate">
+        <input matInput [matDatepicker]="joinPicker" formControlName="dateJoined">
         <mat-datepicker-toggle matSuffix [for]="joinPicker"></mat-datepicker-toggle>
         <mat-datepicker #joinPicker></mat-datepicker>
       </mat-form-field>

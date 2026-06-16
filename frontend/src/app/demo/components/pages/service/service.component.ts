@@ -90,16 +90,18 @@ export class ServiceComponent implements OnInit {
 
   deleteService(data: any): void {
     if (this.isReceptionist) return;
-    this.serviceService.deleteService(data.id).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Deleted Successfully!');
-        this.populateData();
-      },
-      error: (error) => {
-        console.error('Delete failed:', error);
-        this.messageService.showError('Delete Failed: ' + (error?.message ?? error?.statusText ?? 'Unknown error'))
-      }
-    });
+    if (confirm(`Are you sure you want to delete service "${data.serviceName}"?`)) {
+      this.serviceService.deleteService(data.id).subscribe({
+        next: () => {
+          this.messageService.showSuccess('Deleted Successfully!');
+          this.populateData();
+        },
+        error: (error) => {
+          console.error('Delete failed:', error);
+          this.messageService.showError('Delete Failed: ' + (error?.error?.message ?? error?.message ?? error?.statusText ?? 'Unknown error'))
+        }
+      });
+    }
   }
 
   applyFilter(event: Event): void {

@@ -14,6 +14,9 @@ public interface AppointmentScheduleServiceI {
 
     AppointmentScheduleDto updateAppointment(long id, AppointmentScheduleDto appointmentScheduleDto);
 
+    // status update notification.
+    AppointmentScheduleDto updateStatus(long id, AppointmentScheduleDto appointmentScheduleDto);
+
     AppointmentScheduleDto deleteAppointment(long id);
 
     // dashboard card

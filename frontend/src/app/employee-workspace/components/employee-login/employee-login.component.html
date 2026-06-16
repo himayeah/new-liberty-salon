@@ -26,7 +26,7 @@
             
             <mat-form-field appearance="outline" class="full-width-field">
               <mat-label>Email Address</mat-label>
-              <input matInput formControlName="email" placeholder="e.g. jane@newliberty.com" type="email">
+              <input matInput formControlName="email" placeholder="e.g. jane@newliberty.com" type="email" autocomplete="off">
               <mat-icon matPrefix>email</mat-icon>
               <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
                 Email is required
@@ -38,7 +38,15 @@
             
             <mat-form-field appearance="outline" class="full-width-field mt-3">
               <mat-label>Password</mat-label>
-              <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="Enter your password">
+              <input
+                #passwordInput
+                matInput
+                formControlName="password"
+                [type]="hidePassword ? 'password' : 'text'"
+                placeholder="Enter your password"
+                readonly
+                (focus)="passwordInput.removeAttribute('readonly')"
+              >
               <mat-icon matPrefix>lock</mat-icon>
               <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Toggle password visibility'">
                 <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>

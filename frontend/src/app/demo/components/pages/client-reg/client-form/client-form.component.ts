@@ -16,7 +16,7 @@ export class ClientFormComponent implements OnInit {
   // It switches to edit mode only when data.mode is set to 'edit' when opening the dialog
   isEditMode: boolean = false;
   employees: any[] = [];
-  minDate: Date = new Date();
+  maxDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -26,7 +26,7 @@ export class ClientFormComponent implements OnInit {
     private messageService: MessageServiceService,
     private employeeService: EmployeeRegServicesService
   ) {
-    this.minDate.setHours(0, 0, 0, 0);
+    this.maxDate.setHours(23, 59, 59, 999);
   }
 
   //
