@@ -107,13 +107,15 @@ export class ServiceCategoryComponent implements OnInit {
   //deleteData() method
   deleteData(data: any): void {
     if (this.isReceptionist) return;
-    this.serviceCategoryService.deleteData(data.id).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Deleted Successfully!');
-        this.populateData();
-      },
-      error: (error) => this.messageService.showError('Delete failed: ' + error.message)
-    });
+    if (confirm(`Are you sure you want to delete service category "${data.categoryName}"?`)) {
+      this.serviceCategoryService.deleteData(data.id).subscribe({
+        next: () => {
+          this.messageService.showSuccess('Deleted Successfully!');
+          this.populateData();
+        },
+        error: (error) => this.messageService.showError('Delete failed: ' + (error?.error?.message ?? error?.message ?? 'Unknown error'))
+      });
+    }
   }
 
   applyFilter(event: Event): void {

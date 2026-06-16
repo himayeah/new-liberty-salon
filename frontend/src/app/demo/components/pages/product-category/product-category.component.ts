@@ -86,13 +86,15 @@ export class ProductCategoryComponent implements OnInit {
 
   deleteData(data: any): void {
     if (this.isReceptionist) return;
-    this.productCategoryService.deleteData(data.id).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Category deleted successfully.');
-        this.populateData();
-      },
-      error: (error) => this.messageService.showError('Failed to delete category.')
-    });
+    if (confirm(`Are you sure you want to delete product category "${data.productCategoryName}"?`)) {
+      this.productCategoryService.deleteData(data.id).subscribe({
+        next: () => {
+          this.messageService.showSuccess('Category deleted successfully.');
+          this.populateData();
+        },
+        error: (error) => this.messageService.showError('Failed to delete category: ' + (error?.error?.message ?? error?.message ?? 'Unknown error'))
+      });
+    }
   }
 
   applyFilter(event: Event): void {

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CacheService } from '../services/CacheService';
 import { HttpService } from '../services/http.service';
 import { EmployeeAuthService } from '../employee-workspace/services/employee-auth.service';
+import { Role } from '../models/role.enum';
 
 @Component({
     selector: 'app-topbar',
@@ -36,5 +37,20 @@ export class AppTopBarComponent {
             this.httpService.removeToken();
             this.router.navigate(['/auth/login']);
         }
+    }
+
+    get currentRoleViewName(): string | null {
+        const role = this.employeeAuthService.getRole();
+        if (!role) {
+            return null;
+        }
+        const names: { [key: string]: string } = {
+            OWNER: 'Owner View',
+            MANAGER: 'Manager View',
+            RECEPTIONIST: 'Receptionist View',
+            STYLIST: 'Stylist View',
+            CLIENT: 'Client View'
+        };
+        return names[role] || `${role} View`;
     }
 }

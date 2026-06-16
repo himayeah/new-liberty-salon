@@ -23,8 +23,8 @@ public class AppointmentScheduleController {
     private final AppointmentScheduleServiceI appointmentScheduleServiceI;
 
     public AppointmentScheduleController(
-        AppointmentScheduleServiceI appointmentScheduleServiceI,
-        ReportAppointmentStatusService reportAppointmentStatusService) {
+            AppointmentScheduleServiceI appointmentScheduleServiceI,
+            ReportAppointmentStatusService reportAppointmentStatusService) {
         this.appointmentScheduleServiceI = appointmentScheduleServiceI;
     }
 
@@ -34,6 +34,29 @@ public class AppointmentScheduleController {
         try {
             AppointmentScheduleDto appointmentScheduleDtoResponse = appointmentScheduleServiceI
                     .addAppointment(appointmentScheduleDto);
+            return ResponseEntity.ok(appointmentScheduleDtoResponse);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/appointment-schedule-form/{id}")
+    public ResponseEntity<AppointmentScheduleDto> updateStatus(
+            // @PathVaruable and @Requestbody contains the data sent from frontend (id and
+            // AppointmentStatus)
+            @PathVariable long id,
+            // From frontend, we only send the appointment status. But here you see the full
+            // dto is used.
+            // what happenes is, Spring used Jackson Library and match the DTO with the
+            // values you sent from frontend ex:
+            // appointmentScheduleDto.appointmentStatus = "CHECK_IN"
+            // appointmentScheduleDto.clientName = null
+            // appointmentScheduleDto.date = null
+            // ...
+            @RequestBody AppointmentScheduleDto appointmentScheduleDto) {
+        try {
+            AppointmentScheduleDto appointmentScheduleDtoResponse = appointmentScheduleServiceI.updateStatus(id,
+                    appointmentScheduleDto);
             return ResponseEntity.ok(appointmentScheduleDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -61,7 +84,8 @@ public class AppointmentScheduleController {
         }
     }
 
-    //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+    // Retrieve the Max ID, Increment that value from 10 and return the fina Result
+    // - Q2
     @GetMapping("/appointment-schedule-form/max-id")
     public ResponseEntity<Long> getMaxId() {
         try {
@@ -150,6 +174,7 @@ public class AppointmentScheduleController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     // Dashboard (Top 5 employees)
     @GetMapping("/appointment-schedule-form/top-5-employees")
     public ResponseEntity<List<Object[]>> getTop5Employees() {
@@ -170,7 +195,5 @@ public class AppointmentScheduleController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 }

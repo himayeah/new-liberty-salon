@@ -24,6 +24,7 @@ public class EmailSender {
         message.setSubject(subject);
         message.setText(body);
         message.setFrom(fromEmail);
+        // message.setSentDate();
 
         mailSender.send(message);
 

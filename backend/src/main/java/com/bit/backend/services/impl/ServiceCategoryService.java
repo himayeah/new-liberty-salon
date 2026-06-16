@@ -9,6 +9,7 @@ import com.bit.backend.services.ServiceCategoryServiceI;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,8 +84,10 @@ public class ServiceCategoryService implements ServiceCategoryServiceI {
             }
             serviceCategoryRepository.deleteById(id);
             return serviceCategoryMapper.toServiceCategoryDto(optionalServiceCategoryEntity.get());
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Cannot delete this category because it contains active services or is referenced elsewhere.", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
+            throw new AppException("Request failed with error:" + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }

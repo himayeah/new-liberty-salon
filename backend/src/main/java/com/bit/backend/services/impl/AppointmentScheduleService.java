@@ -82,7 +82,8 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
                 responseDto.setClientPhone(savedItem.getClient().getPhoneNumber());
             }
 
-            // Send notifications via NotificationService
+            // Calls the sendAppointmentNotification() in NotificationService to send the
+            // Notification after client is added
             notificationService.sendAppointmentNotification(responseDto);
 
             return responseDto;
@@ -101,12 +102,13 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
     }
 
-    //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+    // Retrieve the Max ID, Increment that value from 10 and return the fina Result
+    // - Q2
     @Override
     public Long getMaxId() {
         try {
             Long maxId = appointmentScheduleRepository.getMaxId();
-            return (maxId*10);
+            return (maxId * 10);
         } catch (Exception e) {
             throw new AppException("Failed to fetch max ID: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -147,6 +149,17 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             normalizeAndValidateAppointmentTimes(entity);
             formatAppointmentDate(entity);
 
+            // STATUS CHANGE CHECK-IN NOTIFICATION
+            boolean isNewCheckIn = "CHECK_IN".equalsIgnoreCase(entity.getAppointmentStatus())
+                    || "CHECKED_IN".equalsIgnoreCase(entity.getAppointmentStatus());
+            boolean wasCheckIn = "CHECK_IN".equalsIgnoreCase(existingEntity.getAppointmentStatus())
+                    || "CHECKED_IN".equalsIgnoreCase(existingEntity.getAppointmentStatus());
+
+            if (isNewCheckIn && !wasCheckIn) {
+                AppointmentScheduleDto notificationDto = appointmentScheduleMapper.toAppointmentScheduleDto(entity);
+                notificationService.sendStylistCheckInNotification(notificationDto);
+            }
+
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
             return appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
         } catch (AppException e) {
@@ -154,6 +167,7 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         } catch (Exception e) {
             throw new AppException("Failed to update appointment: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 
     @Override
@@ -276,7 +290,9 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
 
         if (start.isBefore(SALON_OPENING_TIME) || end.isAfter(SALON_CLOSING_TIME) || !end.isAfter(start)) {
-            throw new AppException("Appointments must be booked between 10:00 AM and 06:00 PM, with end time after start time", HttpStatus.BAD_REQUEST);
+            throw new AppException(
+                    "Appointments must be booked between 10:00 AM and 06:00 PM, with end time after start time",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -314,6 +330,112 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         if (entity.getAppointmentDate() != null && entity.getAppointmentDate().contains("T")) {
             entity.setAppointmentDate(entity.getAppointmentDate().split("T")[0]);
         }
+    }
+
+    // Status update (Client check in)
+    // Compares the old status against the new status
+    // Only if the status has changed, the notification sends to stylist
+
+    // @Override
+    // public AppointmentScheduleDto updateStatus(long id, AppointmentScheduleDto
+    // appointmentScheduleDto) {
+    // try {
+    // Optional<AppointmentScheduleEntity> optionalEntity =
+    // appointmentScheduleRepository.findById(id);
+    // if (!optionalEntity.isPresent()) {
+    // throw new AppException("Appointment Schedule Does Not Exist",
+    // HttpStatus.NOT_FOUND);
+    // }
+    // AppointmentScheduleEntity entity = optionalEntity.get();
+
+    // String oldStatus = entity.getAppointmentStatus();
+    // String newStatus = appointmentScheduleDto.getAppointmentStatus();
+    // entity.setAppointmentStatus(newStatus);
+
+    // AppointmentScheduleEntity savedItem =
+    // appointmentScheduleRepository.save(entity);
+    // AppointmentScheduleDto responseDto =
+    // appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
+
+    // if (isCheckInStatus(newStatus) && !isCheckInStatus(oldStatus)) {
+    // notificationService.sendStylistCheckInNotification(responseDto);
+    // }
+
+    // return responseDto;
+    // } catch (AppException e) {
+    // throw e;
+    // } catch (Exception e) {
+    // throw new AppException("Request failed with error:" + e,
+    // HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // }
+
+    // private boolean isCheckInStatus(String status) {
+    // return "CHECK_IN".equalsIgnoreCase(status) ||
+    // "CHECKED_IN".equalsIgnoreCase(status);
+    // }
+
+    // We need to check whether the status sent from the frontend is CHECK_IN, if
+    // yes trigger the notification to Stylist
+    @Override
+    public AppointmentScheduleDto updateStatus(long id, AppointmentScheduleDto appointmentScheduleDto) {
+        try {
+            // checks whether the data exists in the backend
+            // If yes, DB will return an Entity like;
+            // Appointment #5
+            // status: BOOKED
+            // client: John
+            // date: ...
+            // If an Appointment with the requested ID doesn't exist, it will give
+            // "Appointment Not Found" with a 404 error (not found)
+            Optional<AppointmentScheduleEntity> optionalEntity = appointmentScheduleRepository.findById(id);
+            if (!optionalEntity.isPresent()) {
+                throw new AppException("Appointment Not Found", HttpStatus.NOT_FOUND);
+            }
+
+            // Open the box and take the appointment ou, now you have and entity;
+            // status = BOOKED
+            // client = John
+            // date = ...
+            // get the status and put it in a variable called oldStatus
+            AppointmentScheduleEntity entity = optionalEntity.get();
+
+            // get the old status from the entity returned from DB and put it in a variable
+            // called oldStatus
+            String oldStatus = entity.getAppointmentStatus();
+
+            // get the new status received from the frontend through appointmentScheduleDto
+            // and put it in a variable called newStatus
+            String newStatus = appointmentScheduleDto.getAppointmentStatus();
+
+            // set the new status into the entity returned from DB
+            // status = CHECKED_IN
+            // client = John
+            // ...
+            entity.setAppointmentStatus(newStatus);
+
+            AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
+            AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
+
+            // Is the NEW status CHECK_IN?
+            // Is the OLD status NOT CHECK_IN?
+            // If both conditions are true, then send the notification to stylist
+            if (isCheckInStatus(newStatus) && !isCheckInStatus(oldStatus)) {
+                notificationService.sendStylistCheckInNotification(responseDto);
+            }
+
+            // Send the response back to the frontend
+            return responseDto;
+
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean isCheckInStatus(String status) {
+        return "CHECK_IN".equalsIgnoreCase(status);
     }
 
 }

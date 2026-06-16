@@ -83,6 +83,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         const startCtrl = this.appointmentScheduleForm.get('appointmentStartTime');
         const serviceCtrl = this.appointmentScheduleForm.get('serviceId');
         const endCtrl = this.appointmentScheduleForm.get('appointmentEndTime');
+        const statusChange = this.appointmentScheduleForm.get('appointmentStatus');
 
         if (startCtrl) {
             this.subs.push(startCtrl.valueChanges.subscribe((value) => {
@@ -116,6 +117,19 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             this.computeEndTimeIfNeeded();
         }
     }
+
+    // You don't add the login here, Just pass the received data from html to frontend service
+    // The component received status string and forwards it to the Angular data service along with the Appointment's DB ID
+    onStatusChange(status: string): void {
+        //Angular injects the appointment object into your component: so 'this.data' contains the currently used Appointment Object's data
+        this.appointmentService.sendStatusUpdates(this.data.id, status).subscribe({
+            next: () => {
+                this.messageService.showSuccess('Data sent Successfully!');
+            },
+            error: (error) => this.messageService.showError('Data sent to backend Failed: ' + error.message)
+        });
+    }
+
 
     loadClients(): void {
         this.clientService.getData().subscribe(res => this.clients = (res as any[]) || []);

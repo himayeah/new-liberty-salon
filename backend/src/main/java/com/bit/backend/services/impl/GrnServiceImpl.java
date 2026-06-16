@@ -43,7 +43,9 @@ public class GrnServiceImpl implements GrnService {
     @Override
     public GrnDto getGrnByPurchaseOrderId(long id) {
         try {
+            System.out.println("ID: " + id);
             Optional<GrnEntity> optionalGrnEntity = grnRepository.findById(id);
+            System.out.println("Optional Grn Entity: " + optionalGrnEntity);
             if (!optionalGrnEntity.isPresent()) {
                 throw new AppException("Grn Does Not Exist", HttpStatus.NOT_FOUND);
             }

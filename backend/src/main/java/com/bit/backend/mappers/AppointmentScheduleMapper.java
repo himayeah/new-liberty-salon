@@ -20,6 +20,7 @@ public interface AppointmentScheduleMapper {
     @Mapping(source = "client.email", target = "clientEmail")
     @Mapping(source = "employee.id", target = "employeeId")
     @Mapping(source = "employee.employeeName", target = "employeeName")
+    @Mapping(source = "employee.email", target = "employeeEmail")
     @Mapping(source = "service.id", target = "serviceId")
     @Mapping(source = "service.serviceName", target = "serviceName")
     AppointmentScheduleDto toAppointmentScheduleDto(AppointmentScheduleEntity appointmentScheduleEntity);

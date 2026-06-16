@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.bit.backend.exceptions.AppException;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Service
 public class ProductService implements ProductServiceI {
@@ -80,6 +81,8 @@ public class ProductService implements ProductServiceI {
 
             productRepository.deleteById(id);
             return productMapper.toProductDto(productEntity);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Cannot delete this product because it is referenced in inventory, purchase orders, or GRNs.", HttpStatus.CONFLICT);
         } catch (AppException e) {
             throw e;
         } catch (Exception e) {

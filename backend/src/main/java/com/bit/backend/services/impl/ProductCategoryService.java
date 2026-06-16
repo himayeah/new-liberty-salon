@@ -9,6 +9,7 @@ import com.bit.backend.services.ProductCategoryServiceI;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,8 @@ public class ProductCategoryService implements ProductCategoryServiceI {
             }
             productCategoryRepository.deleteById(id);
             return productCategoryMapper.toProductCategoryDto(optionalProductCategoryEntity.get());
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException("Cannot delete this category because it contains active products or is referenced elsewhere.", HttpStatus.CONFLICT);
         } catch (AppException e) {
             throw e;
         } catch (Exception e) {
