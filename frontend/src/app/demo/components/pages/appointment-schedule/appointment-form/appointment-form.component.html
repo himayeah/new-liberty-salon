@@ -7,6 +7,7 @@
             <!-- Client Name -->
             <mat-form-field appearance="outline">
                 <mat-label>Client Name</mat-label>
+                <!--Form Control name is set in the ts file-->
                 <mat-select formControlName="clientId">
                     <mat-option *ngFor="let client of clients" [value]="client.id">
                         {{ client.firstName }} {{ client.lastName }}
@@ -22,6 +23,10 @@
                 <mat-label>Employee Name</mat-label>
                 <mat-select formControlName="employeeId">
                     <mat-option *ngFor="let employee of employees" [value]="employee.id">
+                        <!-- The lastname cout be empty too, hence ''-->
+                        <!-- String Interpolation: Angular evaluates anything inside {{}} and gives the output-->
+                        <!--String Interpolation connects the template to the ts file-->
+                        <!--'employee' is reffered as the single employee array from the list of arrays returned from the backend to the ts file-->
                         {{ employee.employeeName || (employee.firstName + ' ' + (employee.lastName || '')) }}
                     </mat-option>
                 </mat-select>
@@ -53,6 +58,10 @@
                 <mat-error *ngIf="submitted && appointmentScheduleForm.get('appointmentDate')?.hasError('required')">
                     Date is required
                 </mat-error>
+                <!--The .hasError('fullyBooked') method checks: "Does this control currently have an error key named 'fullyBooked' set to true?" 
+                If yes, the error message becomes visible to the user.-->
+                <mat-error *ngIf="appointmentScheduleForm.get('appointmentDate')?.hasError('fullyBooked')">The date is
+                    fully booked</mat-error>
             </mat-form-field>
 
             <!-- Start Time -->
@@ -118,17 +127,42 @@
                 </mat-error>
             </mat-form-field>
 
+            <!--Test Field: Discount Code-->
+            <!-- <mat-form-field appearance="outline">
+                <mat-label>Discount code</mat-label>
+                <input matInput formControlName="discountCode" placeholder="Enter Discount Code">
+            </mat-form-field> -->
+
             <!-- Notes -->
-            <mat-form-field appearance="outline" class="span-6">
+            <mat-form-field appearance="outline" class="span-6"
+                *ngIf="appointmentScheduleForm.get('bookingSource')?.value === 'ONLINE'">
                 <mat-label>Notes</mat-label>
                 <textarea matInput formControlName="notes" rows="2"></textarea>
+                <mat-error *ngIf="appointmentScheduleForm.get('notes')?.hasError('required')">The Note is
+                    Required when the Booking Source is ONLINE</mat-error>
             </mat-form-field>
 
             <!-- Cancellation Reason -->
+            <!--The fom field appears only if the appointmentStatus is CANCELLED
+                *ngIf only controls DOM(visuals): when *ngIf is false it only removes the element from the screen. 
+                But the CancellationReason control still exists in the ts formGroup-->
             <mat-form-field appearance="outline" class="span-6"
                 *ngIf="appointmentScheduleForm.get('appointmentStatus')?.value === 'CANCELLED'">
                 <mat-label>Cancellation Reason</mat-label>
                 <textarea matInput formControlName="cancellationReason" rows="2"></textarea>
+                <!--hasError() is an Angular formcontrol Object. Other similar are;
+                    getError() : returns the first error, null if no error
+                    valid(): returns true if all validators are passed
+                    errors(): returns an object containing all errors
+                    touched(): becomes true when the user touches the field 
+                    pristine(): returns true as long as the value is not changed
+                    dirty() : returns true if value is changed
+                    untouched() : returns false if value is changed
+                    setErrors({}): sets an error on the form control
+                -->
+                <mat-error *ngIf="appointmentScheduleForm.get('cancellationReason')?.hasError('minlength')">Cancellation
+                    reason must be atleast 5 characters long</mat-error>
+
             </mat-form-field>
 
             <!-- Cancelled Date (Read-only) -->
@@ -137,6 +171,17 @@
                 <mat-label>Cancelled Date</mat-label>
                 <input matInput formControlName="cancelledDate" readonly>
             </mat-form-field>
+
+            <!--Addtional requests checkbox-->
+            <!-- <mat-checkbox formControlName="additionalRequests">Additional requests</mat-checkbox> -->
+
+            <!--Additional requests Input field-->
+            <!-- <mat-form-field appearance="outline" *ngIf="additionalRequests.value === true"> -->
+            <!-- <mat-form-field appearance="outline" *ngIf="appointmentScheduleForm.get('additionalRequests')?.value">
+                <mat-label>Additional Requests</mat-label>
+                <input matInput formControlName="additionalRequestsInput" placeholder="Write your additional requests">
+            </mat-form-field> -->
+
         </div>
     </form>
 </mat-dialog-content>
@@ -145,6 +190,7 @@
 <mat-dialog-actions align="end" class="p-3">
     <button mat-button (click)="onCancel()">Cancel</button>
     <button mat-raised-button color="primary" [disabled]="isButtonDisabled" (click)="onSubmit()">
+        <!--? : tertiary operator-->
         {{ mode === 'add' ? 'Save Appointment' : 'Update Appointment' }}
     </button>
 </mat-dialog-actions>

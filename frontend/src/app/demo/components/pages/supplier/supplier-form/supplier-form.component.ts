@@ -49,15 +49,20 @@ export class SupplierFormComponent implements OnInit {
         if (data && data.supplier) {
             this.supplierForm.patchValue(data.supplier);
         }
+        sessionStorage.setItem("Form Data", this.supplierForm.value)
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+     
+     }
 
     get f() { return this.supplierForm.controls; }
 
     isInvalid(controlName: string, errorType: string): boolean {
         const control = this.f[controlName];
         return (control.touched || this.submitted) && control.hasError(errorType);
+
+
     }
 
     onSubmit(): void {

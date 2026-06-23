@@ -43,6 +43,7 @@ export class ProductComponent implements OnInit {
         this.dataSource = new MatTableDataSource(response || []);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        console.log("All products:", response);
       },
       error: (error) => {
         this.messageService.showError('Failed to fetch product data');

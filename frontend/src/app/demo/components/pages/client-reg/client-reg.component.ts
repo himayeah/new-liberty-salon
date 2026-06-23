@@ -31,10 +31,10 @@ export class ClientRegComponent implements OnInit {
         'dateOfBirth',
         'gender',
         'preferredStylist',
-        'allergies', 
+        'allergies',
         'totalVisits',
         'lastVisitedDate',
-        'lifetimeValue', 
+        'lifetimeValue',
         'actions'
     ];
 
@@ -60,7 +60,21 @@ export class ClientRegComponent implements OnInit {
         this.clientRegService.getData().subscribe({
             //next is a callback function of observable, It runs when the data is successfully returned
             // you can save the returned data in a variable : 'response'
-            next: (response: any[]) => { 
+            next: (response: any[]) => {
+
+                const filteredCients = (response || []).filter(client =>
+                    client.id && client.id >= 10
+                );
+
+                console.log("clients over id of 10", filteredCients);
+
+                const filteredDob = (response || []).filter(client =>
+                    client.dateOfBirth && client.dateOfBirth >= "2000-01-01"
+                );
+
+                console.log("clients over 2000", filteredDob);
+
+
                 // the response or a empty array (if response is null or undefined) is assigned to the dataSource of the table
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
@@ -185,7 +199,7 @@ export class ClientRegComponent implements OnInit {
             width: '600px',
             data: { mode: 'edit', client: data }
         });
- 
+
         this.selectedRow = data;
 
         dialogRef.afterClosed().subscribe(result => {
@@ -228,7 +242,7 @@ export class ClientRegComponent implements OnInit {
 
     // helpers
     // temporarily highlights the last edited or added row for 3 seconds
-   private highlightRow(type: 'add' | 'edit', response: any): void { 
+    private highlightRow(type: 'add' | 'edit', response: any): void {
         //tunneling response to the top to show the highlight effect
         // if a new client is added, store it in 'lastAddedRow', if a client is edited store it in 'lastEditedRow'
         if (type === 'add') this.lastAddedRow = response;

@@ -46,7 +46,7 @@ export class ClientNotesComponent implements OnInit {
       clientName: ['', Validators.required],
       stylistName: ['', Validators.required],
       noteType: ['', Validators.required],
-      noteContent: [''],
+      noteContent: ['', [Validators.maxLength(200), Validators.minLength(10)]],
       noteDate: ['', Validators.required]
     });
   }

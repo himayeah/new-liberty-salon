@@ -77,6 +77,8 @@ export class BillingComponent implements OnInit {
     });
   }
 
+ 
+
   openAddModal(preFillData?: any): void {
     const dataToUse = preFillData || this.preFillData;
     const dialogRef = this.dialog.open(BillingFormComponent, {
@@ -94,6 +96,8 @@ export class BillingComponent implements OnInit {
       }
     });
   }
+
+
 
   viewInvoiceDetails(data: any): void {
     const dialogRef = this.dialog.open(BillingFormComponent, {
@@ -128,14 +132,17 @@ export class BillingComponent implements OnInit {
     });
   }
 
-  deleteData(data: any): void {
-    this.billingService.deleteData(data.id).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Deleted Successfully!');
-        this.populateData();
-      },
-      error: (error) => this.messageService.showError('Delete failed: ' + error.message)
-    });
+  deleteData(e: any): void {
+    //  const result = alert("Delete data?" + e);
+    //  if (result){
+    //    this.billingService.deleteData(e.id).subscribe({
+    //     next: () => {
+    //     this.messageService.showSuccess('Deleted Successfully!');
+    //     this.populateData();
+    //   },
+    //   error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+    // });
+    //  }   
   }
 
   applyFilter(event: Event): void {

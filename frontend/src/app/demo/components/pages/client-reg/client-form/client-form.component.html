@@ -3,7 +3,7 @@
 
 <mat-dialog-content>
   <form [formGroup]="clientForm" class="form-container">
-    
+
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
@@ -21,7 +21,7 @@
         <mat-label>Email Address</mat-label>
         <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
       </mat-form-field>
-      
+
       <mat-form-field appearance="outline" class="flex-40">
         <mat-label>Phone Number</mat-label>
         <input matInput type="tel" formControlName="phoneNumber" placeholder="07XXXXXXXX">
@@ -62,7 +62,14 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Allergies & Medical Notes</mat-label>
-        <textarea matInput formControlName="allergies" rows="3" placeholder="Any known allergies or conditions..."></textarea>
+        <textarea matInput formControlName="allergies" rows="3"
+          placeholder="Any known allergies or conditions..."></textarea>
+        <mat-error *ngIf="clientForm.get('allergies')?.hasError('maxlength')">
+          Allergies should be less than 200 characters
+        </mat-error>
+        <mat-error *ngIf="clientForm.get('allergies')?.hasError('minlength')">
+          Allergies should be at least 10 characters
+        </mat-error>
       </mat-form-field>
     </div>
 

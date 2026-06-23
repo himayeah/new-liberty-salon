@@ -40,7 +40,7 @@ export class AppointmentScheduleComponent implements OnInit {
 
     noShowAppointments: any[] = [];
     appointmentIDs: any[] = [];
-
+    showData: any[] = [];
 
     constructor(
         private appointmentService: AppointmentSchedulingServiceService,
@@ -55,7 +55,87 @@ export class AppointmentScheduleComponent implements OnInit {
 
     populateData(): void {
         this.appointmentService.getData().subscribe({
+
+            //  const filteredCients = (response || []).filter(client =>
+                //     client.id && client.id >= 10
+                // );
+
+            //next is a callback function of observable, It runs when the data is successfully returned
+            // you can save the returned data in a variable : 'response'
             next: (response: any[]) => {
+
+                //client filter
+                // Takes the response received from backend, takes one client object as 'client' and accessses it's property 'clientName
+
+                // Optimise search using trim()
+                const trimmedAmaya = (response || []).filter(client =>
+                    client.clientName && client.clientName.trim().toLowerCase() === 'amaya ratnayake'
+                );
+
+                console.log("Trimmed client Name :", trimmedAmaya);
+
+                const filteredData = (response || []).filter(client =>
+                    client.clientName && client.clientName.toLowerCase().startsWith('a')
+                );
+
+                console.log("Client Filtered Data: ", filteredData);
+
+                //replace(searchFor, replaceWith
+                const replaceHypen = (response || []).filter(client =>
+                    client.clientName && client.clientName.replace('-', ' ').toLowerCase() === 'amaya ratnayake'
+                );
+
+                console.log("Hyphen replaced Name:", replaceHypen);
+
+
+                // using ("Clients name starting with letter A:" + filteredData); PLUS (+) will result in string concatenation,
+                // filteredData is an array and Angular will try to convert it into string and it won't give you response
+                // Instead when you use "," what happenes is that the String ("Clients name starting with letter A:") 
+                // and the array (fiteredData) gets passed as 2 separate arguments to console.log
+
+                console.log("Clients name starting with letter A:", filteredData);
+
+                // console.log("Response received from Backend :", response);
+
+                // const filteredAppointments =(response || []).filter(appointment =>
+                //     appointment.appointmentStatus === 'BOOKED'
+                // );
+                // console.log("Filtered Appointments:", filteredAppointments);
+
+
+
+                // Filter all IDs after 10
+                const filteredIDAfter10 = (response || []).filter(client =>
+                    // The DB value
+                    client.id && client.id >= 10
+                );
+
+                console.log("IDs After 10:", filteredIDAfter10);
+
+                // Filter BOOKED appointments by client name = Amaya
+                // includes(), startsWith() are string methods
+                // other similar; 
+                // 1. trim() = remove spaces from both end
+                // 2. toLowerCase() = convert to lowercase
+                // 3. toUpperCase() = convert to uppercase
+                // 4. length = get length of string
+                // 5. replace(searchfor, replaceWith) = replace string with another string
+                // 6. replaceAll(searchFor, replaceWith) = replace all occurrence of string with another string
+                // 7. slice(startIndex, endIndex) = extract a section of string
+                // 8. substring(startIndex, endIndex) = extract a section of string
+                // 9. trim() = remove spaces from both end
+                // 10.trimStart() = remove spaces from start
+                // 11.trimEnd() = remove spaces from end
+                // 12.indexOf() = return the index of the first occurrence of a string
+                // 13.lastIndexOf() = return the index of the last occurrence of a string
+                // 14. concat() = concatenate two strings
+                // 15. charAt() = return the character at the specified index
+                // 16.includes(searchFor) = check if string contains another string
+                const filteredName = (response || []).filter(client =>
+                    client.appointmentStatus == 'BOOKED' && client.clientName.toLowerCase().includes('amaya')
+                );
+                console.log("Filtered Name Amaya: ", filteredName);
+
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -69,52 +149,56 @@ export class AppointmentScheduleComponent implements OnInit {
         });
     }
 
-    //Show ID, Names of All Persons who's Appointment Status = "No-Show" - Q1
-    getNoShowAppointments(): void {
-        this.appointmentService.getData().subscribe( {
-            next: (response: any[]) => {
+    // //Show ID, Names of All Persons who's Appointment Status = "No-Show" - Q1
+    // getNoShowAppointments(): void {
+    //     this.appointmentService.getData().subscribe({
+    //         next: (response: any[]) => {
 
-                this.noShowAppointments = response
-                    .filter(appointments => appointments.appointmentStatus === 'NO_SHOW')
-                    .map(appointments => ({
-                        id : appointments.id,
-                        clientName : appointments.clientName
-                    }))
-                console.log(this.noShowAppointments);
-            }
-        })
-    }
+    //             this.noShowAppointments = response
+    //                 .filter(appointments => appointments.appointmentStatus === 'NO_SHOW')
+    //                 .map(appointments => ({
+    //                     id: appointments.id,
+    //                     clientName: appointments.clientName
+    //                 }))
+    //             console.log(this.noShowAppointments);
+    //         }
+    //     })
+    // }
 
     //Show Appointment IDs after 10
     getIDAfter10(): void {
-        this.appointmentService.getData().subscribe( {
+        this.appointmentService.getData().subscribe({
             next: (response: any[]) => {
 
                 this.appointmentIDs = response
-                .filter(appointments => appointments.id > 10)
-                //ASC
-                 .sort((a, b) => a.id - b.id)
-                //DESC ((a,b) => b.id - a.id)
-                .map(appointments => ({
-                    id : appointments.id,
-                }
-            ))
+                    .filter(appointments => appointments.id > 10)
+                    //ASC
+                    .sort((a, b) => a.id - b.id)
+                    //DESC ((a,b) => b.id - a.id)
+                    .map(appointments => ({
+                        id: appointments.id,
+                    }
+                    ))
                 console.log(this.appointmentIDs);
             }
         })
     }
 
-    //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+    //Retrieve the Max ID, Increment that value from 10 and return the final Result - Q2
     getMaxId(): void {
-        this.appointmentService.getMaxId().subscribe( {
+        this.appointmentService.getMaxId().subscribe({
             next: (response: number) => {
-                console.log(response);
-            }, 
+                console.log("Max Id + 10 = ", response);
+            },
             error: (error) => {
                 this.messageService.showError('Error fetching max ID: ' + error.message);
             }
         })
-    } 
+    }
+
+    showAlert(){
+
+    }
 
     private checkAndMarkNoShows(appointments: any[]): void {
         const now = new Date();
@@ -123,7 +207,7 @@ export class AppointmentScheduleComponent implements OnInit {
 
         const appointmentsToUpdate = appointments.filter(app => {
             if (!app.appointmentDate) return false;
-            
+
             const appDate = new Date(app.appointmentDate);
             appDate.setHours(0, 0, 0, 0);
 
@@ -216,6 +300,7 @@ export class AppointmentScheduleComponent implements OnInit {
     deleteData(data: any): void {
         this.appointmentService.deleteData(data.id).subscribe({
             next: () => {
+                
                 this.messageService.showSuccess('Deleted Successfully!');
                 this.populateData();
             },

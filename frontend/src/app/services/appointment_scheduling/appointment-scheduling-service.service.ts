@@ -151,7 +151,7 @@ export class AppointmentSchedulingServiceService {
     if (token !== null) {
       headers = headers.set('Authorization', 'Bearer ' + token);
     }
-    return this.http.post(requestUrl, status, { headers });
+    return this.http.post(requestUrl, { appointmentStatus: status }, { headers });
   }
 
 }
