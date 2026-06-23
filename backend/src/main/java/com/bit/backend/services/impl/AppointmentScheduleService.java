@@ -435,7 +435,7 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     }
 
     private boolean isCheckInStatus(String status) {
-        return "CHECK_IN".equalsIgnoreCase(status);
+        return "CHECK_IN".equalsIgnoreCase(status) || "CHECKED_IN".equalsIgnoreCase(status);
     }
 
 }

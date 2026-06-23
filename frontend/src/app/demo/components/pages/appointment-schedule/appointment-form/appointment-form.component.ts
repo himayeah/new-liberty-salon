@@ -14,7 +14,17 @@ import { MessageServiceService } from 'src/app/services/message-service/message-
     styleUrls: ['./appointment-form.component.scss']
 })
 export class AppointmentFormComponent implements OnInit, OnDestroy {
+    // define the class properties
+    // Form-related state: appointmentScheduleForm, submitted, isButtonDisabled
+    // Mode/control flags: mode, endTimeAutoCalculated
+    // Data sources: clients, employees, services
+    // UI constraints/config: minDate, salonOpeningTime, salonClosingTime
+    // Dropdown options: appointmentStatuses, bookingSources
+    // Lifecycle management: subs
+    // are defined here
+
     appointmentScheduleForm: FormGroup;
+    // defined the property 'mode', and you can pass this as an argument to a function
     mode: 'add' | 'edit' = 'add';
     clients: any[] = [];
     employees: any[] = [];
@@ -24,7 +34,9 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     minDate: Date = new Date();
     readonly salonOpeningTime = '10:00';
     readonly salonClosingTime = '18:00';
+    fullyBooked: boolean = false;
 
+    // UI Appointment Status Dropdown options defined
     appointmentStatuses = [
         { value: 'BOOKED', viewValue: 'Booked' },
         { value: 'CHECKED_IN', viewValue: 'Checked In' },
@@ -54,8 +66,10 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         public dialogRef: MatDialogRef<AppointmentFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
+        // sets the date as today's date (00:00:00) -> user can't select a previous date
         this.minDate.setHours(0, 0, 0, 0);
         this.mode = data.mode || 'add';
+
         this.appointmentScheduleForm = this.fb.group({
             clientId: [null, [Validators.required]],
             employeeId: [null, [Validators.required]],
@@ -63,11 +77,15 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             appointmentDate: [null, [Validators.required]],
             appointmentStartTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
             appointmentEndTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
+            // form control Name
             appointmentStatus: ['BOOKED', [Validators.required]],
             bookingSource: [null, [Validators.required]],
+            // //discountCode: ['2026ABC'],
             notes: [null],
             cancellationReason: [null],
             cancelledDate: [null],
+            // additionalRequests: [false],
+            // additionalRequestsInput: [null],
         }, { validators: this.validateSalonHours.bind(this) });
     }
 
@@ -98,6 +116,57 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             this.subs.push(endCtrl.valueChanges.subscribe((value) => {
                 this.applyTimeFormatting(endCtrl);
                 this.endTimeAutoCalculated = false;
+            }));
+        }
+
+        // Disable cancellationReason Validators if the appointmentStatus != 'CANCELLED'
+        // Because *ngIf only removes the cancellationReason field from the UI and it's validators(minLength and required) are validated by Angular
+        // This might cause issues
+
+        const statusCtrl = this.appointmentScheduleForm.get('appointmentStatus');
+        const cancellationReasonCtrl = this.appointmentScheduleForm.get('cancellationReason');
+        const bookingSourceCtrl = this.appointmentScheduleForm.get('bookingSource');
+        const notesCtrl = this.appointmentScheduleForm.get('notes');
+
+        // Set initial validation for cancellationReason
+        if (statusCtrl?.value === 'CANCELLED') {
+            cancellationReasonCtrl?.setValidators([Validators.required, Validators.minLength(5)]);
+        } else {
+            cancellationReasonCtrl?.clearValidators();
+        }
+        cancellationReasonCtrl?.updateValueAndValidity();
+
+        // Liisten to the value change of statusCtrl, if the status is CANCELLED then set the required and minLength validatos,
+        // If not, remove the validators
+        if (statusCtrl) {
+            this.subs.push(statusCtrl.valueChanges.subscribe(status => {
+                if (status === 'CANCELLED') {
+                    cancellationReasonCtrl?.setValidators([Validators.required, Validators.minLength(5)]);
+                } else {
+                    cancellationReasonCtrl?.clearValidators();
+                }
+                // This will make Angular re-run all the validators of the field again (required and minLength)
+                cancellationReasonCtrl?.updateValueAndValidity();
+            }));
+        }
+
+        // Set initial validation for notes
+        if (bookingSourceCtrl?.value === 'ONLINE') {
+            notesCtrl?.setValidators([Validators.required, Validators.minLength(5), Validators.maxLength(500)]);
+        } else {
+            notesCtrl?.clearValidators();
+        }
+        notesCtrl?.updateValueAndValidity();
+
+        // Listen to bookingSource changes
+        if (bookingSourceCtrl) {
+            this.subs.push(bookingSourceCtrl.valueChanges.subscribe(source => {
+                if (source === 'ONLINE') {
+                    notesCtrl?.setValidators([Validators.required, Validators.minLength(5), Validators.maxLength(500)]);
+                } else {
+                    notesCtrl?.clearValidators();
+                }
+                notesCtrl?.updateValueAndValidity();
             }));
         }
     }
@@ -145,7 +214,19 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
 
     onSubmit(): void {
         this.submitted = true;
-        if (this.appointmentScheduleForm.invalid) return;
+
+        // In this, Angular built in Validation is used to check the vaidity of the form
+        // This is preffered because of cleaner code
+        if (this.appointmentScheduleForm.invalid) {
+            this.appointmentScheduleForm.markAllAsTouched();
+            return;
+        }
+
+        // We have created a custom flag called 'submitted' as a method of checking
+        // All required field errors appear because submitted === true 
+        // (Usually all validationd don't appear until the user has touched those fields)
+        // this.submitted = true;
+        // if (this.appointmentScheduleForm.invalid) return;
 
         this.isButtonDisabled = true;
         const formValue = { ...this.appointmentScheduleForm.value };
@@ -177,6 +258,8 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             formValue.appointmentDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
+        // if the Backend returns 409 it means there is an overlapping appointment or another issue
+
         if (this.mode === 'add') {
             this.appointmentService.serviceCall(formValue).subscribe({
                 next: (response) => {
@@ -197,7 +280,14 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     }
 
     private handleError(error: any): void {
-        this.messageService.showError('Action failed: ' + error.message);
+        if (error.status === 409) {
+            this.appointmentScheduleForm.get('appointmentData')?.setErrors({
+                fullyBooked: true
+            });
+            this.messageService.showError("The salon is fully booked at the requested time slot");
+        } else {
+            this.messageService.showError("Action failed: " + error.message);
+        }
         this.isButtonDisabled = false;
     }
 

@@ -75,7 +75,7 @@ export class ClientFormComponent implements OnInit {
       dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required],
       preferredStylist: [''],
-      allergies: ['']
+      allergies: ['', [Validators.minLength(10), Validators.maxLength(200)]]
     });
   }
 
@@ -135,7 +135,7 @@ export class ClientFormComponent implements OnInit {
           error: (err) => this.messageService.showError('Update failed: ' + err.message)
         });
 
-      // if the form is not in edit mode, meaning it's adding a new client, hence call the serviceCall() method to add a new client
+        // if the form is not in edit mode, meaning it's adding a new client, hence call the serviceCall() method to add a new client
       } else {
         this.clientService.serviceCall(formValue).subscribe({
           next: (response) => {
@@ -146,7 +146,7 @@ export class ClientFormComponent implements OnInit {
         });
       }
     } else {
-        this.messageService.showError('Please fill in all required fields');
+      this.messageService.showError('Please fill in all required fields');
     }
   }
 

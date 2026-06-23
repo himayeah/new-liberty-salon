@@ -40,7 +40,7 @@ public class AppointmentScheduleController {
         }
     }
 
-    @PutMapping("/appointment-schedule-form/{id}")
+    @PostMapping("/appointment-schedule-form/{id}")
     public ResponseEntity<AppointmentScheduleDto> updateStatus(
             // @PathVaruable and @Requestbody contains the data sent from frontend (id and
             // AppointmentStatus)
@@ -68,13 +68,10 @@ public class AppointmentScheduleController {
         try {
             List<AppointmentScheduleDto> appointmentScheduleDtoList = appointmentScheduleServiceI.getAppointments();
 
-            // print walk-in clients
+            // stream and filter dto list
             appointmentScheduleDtoList.stream()
-                    .filter(dto -> "WALK_IN".equalsIgnoreCase(dto.getBookingSource()))
-                    .forEach(dto -> System.out.println("WALK_IN Client: " + dto.getClientName()));
-
-            // print all appointments
-            appointmentScheduleDtoList.forEach(System.out::println);
+                    .filter(dto -> dto != null && "BOOKED".equalsIgnoreCase(dto.getAppointmentStatus()))
+                    .forEach(dto -> System.out.println("Active Appointment: " + dto));
 
             // convert into string so i can get a readable output in the terminal
             return ResponseEntity.ok(appointmentScheduleDtoList);

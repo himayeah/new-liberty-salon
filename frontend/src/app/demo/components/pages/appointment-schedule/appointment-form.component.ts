@@ -132,7 +132,22 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
                     this.messageService.showSuccess('Saved Successfully!');
                     this.dialogRef.close(response);
                 },
-                error: (error) => this.handleError(error)
+                // error: (error) => this.handleError(error)
+                error: (error) => {
+                    if (error.status === 409) {
+                        this.appointmentScheduleForm.get('appointmentDate')?.setErrors({
+                            fullyBooked: true
+                        });
+                        this.messageService.showError("The stylist is fully booked for this slot. Please try another date or a Stylist. Thank you!");
+                        this.isButtonDisabled = false;
+                    } else {
+                        this.messageService.showError(error.error.message);
+                        // When isButtonDisabled is set to true, the browser greys out the button and makes it completely unclickable
+                        // If you forget this, the button will remain greyed out and unclickable forever. 
+                        // The user will be stuck and forced to close the entire form and reopen it just to try again
+                        this.isButtonDisabled = false;
+                    }
+                }
             });
         } else {
             this.appointmentService.editData(this.data.appointment.id, formValue).subscribe({
