@@ -72,6 +72,8 @@ export class AppMenuComponent implements OnInit {
 
     private setReceptionistEntitlements(menuArray: any[]): void {
         const allowedLinks = [
+            // dashboard added for Receptionist
+            // '/dashboard',
             '/pages/client-reg',
             '/pages/appointment-schedule',
             '/pages/employee-attendance',
@@ -125,6 +127,30 @@ export class AppMenuComponent implements OnInit {
             '/pages/employee-reg'
         ];
 
+        menuArray.forEach(group => {
+            let hasVisibleItems = false;
+            if (group.items && group.items.length > 0) {
+                group.items.forEach((item: any) => {
+                    const link = item.routerLink && item.routerLink[0];
+                    if (link && allowedLinks.includes(link)) {
+                        item.isVisible = true;
+                        hasVisibleItems = true;
+                    } else {
+                        item.isVisible = false;
+                    }
+                });
+                group.isVisible = hasVisibleItems;
+            } else {
+                group.isVisible = false;
+            }
+        });
+    }
+
+    // setting sidebar for STYLIST
+    private setStylistEntitlements(menuArray: any[]): void {
+        const allowedLinks = [
+            '/pages/appointment-schedule',
+        ];
         menuArray.forEach(group => {
             let hasVisibleItems = false;
             if (group.items && group.items.length > 0) {
