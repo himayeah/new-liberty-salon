@@ -8,8 +8,8 @@
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" placeholder="John">
+        <mat-error *ngIf="clientForm.get('firstName')?.hasError('pattern')"> Your first name can only contain letters </mat-error>
       </mat-form-field>
-
       <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
         <input matInput formControlName="lastName" placeholder="Doe">

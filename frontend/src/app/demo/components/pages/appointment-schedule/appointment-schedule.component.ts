@@ -41,12 +41,12 @@ export class AppointmentScheduleComponent implements OnInit {
     noShowAppointments: any[] = [];
     appointmentIDs: any[] = [];
     showData: any[] = [];
-
+ 
     constructor(
         private appointmentService: AppointmentSchedulingServiceService,
         private messageService: MessageServiceService,
         private dialog: MatDialog,
-        private router: Router
+        private router: Router,
     ) { }
 
     ngOnInit(): void {
@@ -54,8 +54,9 @@ export class AppointmentScheduleComponent implements OnInit {
     }
 
     populateData(): void {
+       
         this.appointmentService.getData().subscribe({
-
+            
             //  const filteredCients = (response || []).filter(client =>
                 //     client.id && client.id >= 10
                 // );
@@ -66,7 +67,6 @@ export class AppointmentScheduleComponent implements OnInit {
 
                 //client filter
                 // Takes the response received from backend, takes one client object as 'client' and accessses it's property 'clientName
-
                 // Optimise search using trim()
                 const trimmedAmaya = (response || []).filter(client =>
                     client.clientName && client.clientName.trim().toLowerCase() === 'amaya ratnayake'
@@ -136,6 +136,9 @@ export class AppointmentScheduleComponent implements OnInit {
                 );
                 console.log("Filtered Name Amaya: ", filteredName);
 
+                // this.sort.active = 'clientId'; // sort by cloumn clientId
+                // this.sort.direction = 'desc'; // sort in desc order
+
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -194,10 +197,6 @@ export class AppointmentScheduleComponent implements OnInit {
                 this.messageService.showError('Error fetching max ID: ' + error.message);
             }
         })
-    }
-
-    showAlert(){
-
     }
 
     private checkAndMarkNoShows(appointments: any[]): void {
@@ -298,14 +297,18 @@ export class AppointmentScheduleComponent implements OnInit {
     }
 
     deleteData(data: any): void {
-        this.appointmentService.deleteData(data.id).subscribe({
-            next: () => {
-                
-                this.messageService.showSuccess('Deleted Successfully!');
-                this.populateData();
-            },
-            error: (error) => this.messageService.showError('Delete failed: ' + error.message)
-        });
+        const confirmed = confirm("Are you sure you want to delete this appointment?");
+            if (confirmed){
+                this.appointmentService.deleteData(data.id).subscribe({
+                next: () => {
+                    this.messageService.showSuccess('Deleted Successfully!');
+                    this.populateData();
+                },
+                error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+            });
+            } else {
+                alert("Appointment Not Deleted");
+            }
     }
 
     applyFilter(event: Event): void {
@@ -329,5 +332,24 @@ export class AppointmentScheduleComponent implements OnInit {
             this.lastEditedRow = null;
         }, 3000);
     }
+
+
+    // How MatSort works:
+    // ------------------
+    // To reverse the sort order for all headers, set the matSortStart to desc on the matSort directive
+    // To reverse the order only for a specific header, set the start input only on the header instead
+    // To prevent the user from clearing the sort sort state from an already sorted column, set matSortDisableClear to true
+    // MatSort = controls sorting for the whole table, MatSortHeader = makes each column clickable for sorting (HTML)
+
+    // start: 'asc' | 'desc' -> Default direction when first clicked
+    // active: string -> Which column is currently sorted
+    // direction: 'asc' | 'desc' | '' -> Sort order
+    // @Output() sortChange: EventEmitter<Sort> -> Fires when the User changes sort
+    // {
+    //   active: 'clientName',
+    //   direction: 'asc' | 'desc'
+    // }
+    // Ex:      // this.sort.active = 'clientId'; // sort by cloumn clientId
+                // this.sort.direction = 'desc';
 
 }

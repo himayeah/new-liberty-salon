@@ -27,6 +27,8 @@ export class ServiceComponent implements OnInit {
   lastAddedRow: any = null;
   lastEditedRow: any = null;
   isReceptionist = false;
+  isManager = false;
+  // disableButton = false;
 
   constructor(
     private serviceService: ServiceService,
@@ -37,6 +39,7 @@ export class ServiceComponent implements OnInit {
 
   ngOnInit(): void {
     this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
+    this.isManager = this.employeeAuthService.getRole() === Role.MANAGER;
     this.populateData();
   }
 
@@ -71,24 +74,45 @@ export class ServiceComponent implements OnInit {
   }
 
   editService(data: any): void {
-    if (this.isReceptionist) return;
-    const dialogRef = this.dialog.open(ServiceFormComponent, {
-      width: '600px',
-      data: { mode: 'edit', service: data }
-    });
-
-    this.selectedRow = data;
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.populateData();
-        this.highlightRow('edit', result);
-      }
-      this.selectedRow = null;
-    });
+    // if the Receptionist is trying to edit Service, show a Informative message they aren't allowed to
+    if (this.isReceptionist) {
+      alert("Only The Manager can edit Services");
+      return;
+    } else {
+      const dialogRef = this.dialog.open(ServiceFormComponent, {
+        width: '600px',
+        data: { mode: 'edit', service: data }
+      });
+      this.selectedRow = data;
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.populateData();
+          this.highlightRow('edit', result);
+        }
+        this.selectedRow = null;
+      });
+    }
   }
 
+  //   if (this.isReceptionist) return;
+  //   const dialogRef = this.dialog.open(ServiceFormComponent, {
+  //     width: '600px',
+  //     data: { mode: 'edit', service: data }
+  //   });
+
+  //   this.selectedRow = data;
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       this.populateData();
+  //       this.highlightRow('edit', result);
+  //     }
+  //     this.selectedRow = null;
+  //   });
+  // }
+
   deleteService(data: any): void {
+    // If the Receptionist Role is deleting, return (Delete doesn't happen)
     if (this.isReceptionist) return;
     if (confirm(`Are you sure you want to delete service "${data.serviceName}"?`)) {
       this.serviceService.deleteService(data.id).subscribe({

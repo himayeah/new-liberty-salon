@@ -68,10 +68,14 @@ export class ClientFormComponent implements OnInit {
   //everytime you click 'edit' button, initForm() creates a new form and add these fields and patch the values from the client object
   initForm(): void {
     this.clientForm = this.fb.group({
-      firstName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
+      //exampleValidator(can contain letters, numbers (0-9), and the character limit should be between 3-10): 
+      // ['', Validators.pattern('^[a-zA-Z0-9]{3,10}$')],
+      //exampleValidator(can contain letters, numbers (0-9), and the characters & and #: 
+      // ['', Validators.pattern('^[a-zA-Z0-9&#]+$')],
       dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required],
       preferredStylist: [''],

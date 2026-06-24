@@ -58,8 +58,24 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
+        // create a route for STYIST. They will Initially be navigated into this appointment-schedule UI 
+        // with filtered appointments ony showing their appointments
+         if (role === Role.STYLIST) {
+            const allowedStylistPrefixes = [
+                '/pages/appointment-schedule',
+            ];
+            const isAllowed = allowedStylistPrefixes.some(prefix => url === prefix || url.startsWith(prefix + '/') || url.startsWith(prefix + '?'));
+            if (isAllowed) {
+                return true;
+            }
+            this.router.navigate(['/pages/appointment-schedule']);
+            return false;
+        }
+
         if (role === Role.RECEPTIONIST) {
             const allowedReceptionistPrefixes = [
+                // Allow dashboard access to receptionist
+                '/dashboard',
                 '/pages/client-reg',
                 '/pages/client-profile',
                 '/pages/appointment-schedule',
@@ -75,10 +91,13 @@ export class AuthGuard implements CanActivate {
                 '/pages/product-category',
                 '/notfound'
             ];
+            // Is the current URL part of the allowed Receptionist pages? 
+            // (A Route Guard which checks whether the Role is abe to access the page)
             const isAllowed = allowedReceptionistPrefixes.some(prefix => url === prefix || url.startsWith(prefix + '/') || url.startsWith(prefix + '?'));
             if (isAllowed) {
                 return true;
             }
+            // means Initially the user sees the appointment-schedule page once they log in
             this.router.navigate(['/pages/appointment-schedule']);
             return false;
         }
