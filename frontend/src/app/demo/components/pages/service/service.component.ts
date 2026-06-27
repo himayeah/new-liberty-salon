@@ -39,7 +39,8 @@ export class ServiceComponent implements OnInit {
 
   ngOnInit(): void {
     this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
-    this.isManager = this.employeeAuthService.getRole() === Role.MANAGER;
+    const currentRole = this.employeeAuthService.getRole();
+    this.isManager = currentRole === Role.MANAGER || currentRole === Role.SENIORSTYIST;
     this.populateData();
   }
 

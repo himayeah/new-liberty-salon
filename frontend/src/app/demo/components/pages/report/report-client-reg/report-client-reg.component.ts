@@ -60,12 +60,14 @@ export class ReportClientRegComponent implements OnInit {
     };
   }
 
+  // Registration Breakdown by Gender Table
   fetchData(): void {
     this.loading = true;
     this.reportService.getRegistrationData().subscribe({
       next: (data) => {
         this.clientsData = data || [];
         this.loading = false;
+        console.log("Registration Breakdown by Gender:", this.clientsData);
       },
       error: (err) => {
         console.error('Failed to load report data', err);
@@ -107,6 +109,6 @@ export class ReportClientRegComponent implements OnInit {
     };
   }
 
-  
+
 
 }

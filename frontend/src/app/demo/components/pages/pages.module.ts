@@ -63,6 +63,7 @@ import { ReportProcurementComponent } from './report/report-procurement/report-p
 import { CustomerRegComponent } from './customer-reg/customer-reg.component';
 import { CustomerRegFormComponent } from './customer-reg/customer-reg-form/customer-reg-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { EmployeeCommissionsComponent } from './employee-commissions/employee-commissions.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ReportAppointmentStatusComponent,
     ReportProcurementComponent,
     CustomerRegComponent,
-    CustomerRegFormComponent
+    CustomerRegFormComponent,
+    EmployeeCommissionsComponent
   ],
 
   imports: [

@@ -15,16 +15,37 @@ export class EmployeeAuthService {
   /**
    * Stores the authenticated employee data in sessionStorage.
    */
-  login(employeeData: any): void {
-    let role = Role.STYLIST;
+
+  /** What the login() function does
+   * The login() method logs a user into the application by creating and saving their session.
+        It:
+        Checks the employee's designation.
+        Assigns a role (Manager, Receptionist, or Stylist).
+        Creates a session object with employee details and login time.
+        Stores that session in sessionStorage.
+   */
+  login(employeeData: any): void { 
+    let role = Role.STYLIST; //--> By default a user is set as Stylist
     if (employeeData && employeeData.designation) {
       const designation = employeeData.designation.trim().toUpperCase();
       if (designation === 'RECEPTIONIST') {
         role = Role.RECEPTIONIST;
       } else if (designation === 'MANAGER') {
         role = Role.MANAGER;
+      } else if (designation === 'SENIOR STYLIST') {
+        role = Role.SENIORSTYIST;
+      } else if (designation === 'STYLIST') {
+        role = Role.STYLIST;
       }
     }
+    /**
+     * The session stores:
+        Who is logged in
+        Their role (Manager, Receptionist, Stylist)
+        Login time
+        This lets the app remember the user across pages without making them log in again every time they navigate.
+        sessionStorage lasts until the browser tab/window is closed.
+     */
     const session = {
       employee: employeeData,
       role: role,
@@ -69,6 +90,9 @@ export class EmployeeAuthService {
    * Returns the current user's role, or null if not logged in.
    */
   getRole(): Role | null {
+    if (window.localStorage.getItem('auth_token')) {
+      return Role.OWNER;
+    }
     const session = sessionStorage.getItem(this.STORAGE_KEY);
     if (session) {
       return JSON.parse(session).role;
@@ -76,9 +100,6 @@ export class EmployeeAuthService {
     const loginName = window.localStorage.getItem('user_name');
     if (loginName === 'libertysalonmanager@gmail.com') {
       return Role.MANAGER;
-    }
-    if (window.localStorage.getItem('auth_token')) {
-      return Role.OWNER;
     }
     return null;
   }

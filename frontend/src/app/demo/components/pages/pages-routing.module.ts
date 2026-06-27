@@ -26,8 +26,7 @@ import { ReportAppointmentStatusComponent } from './report/report-appointment-st
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
 import { BillingComponent } from './billing/billing.component';
 import { CustomerRegComponent } from './customer-reg/customer-reg.component';
-
-
+import { EmployeeCommissionsComponent } from './employee-commissions/employee-commissions.component';
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -68,6 +67,7 @@ export const PagesRoutes: Routes = [
         { path: 'report-appointment-status', component: ReportAppointmentStatusComponent },
         { path: 'report-procurement', component: ReportProcurementComponent },
         { path: 'customer-reg', component: CustomerRegComponent },
+        { path: 'employee-commissions', component: EmployeeCommissionsComponent },
         { path: '**', redirectTo: '/notfound' },
 
     ])],
