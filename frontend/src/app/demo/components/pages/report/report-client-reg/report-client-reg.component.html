@@ -104,4 +104,63 @@
             </mat-card-content>
         </mat-card>
     </div>
+
+    <!--Client Registration By Gender (Pie Chart)-->
+    <div class="chart-section">
+        <mat-card class="report-card">
+            <mat-card-header
+                style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
+                <mat-card-title style="margin: 0;">
+                    <mat-icon style="vertical-align: middle; margin-right: 8px;">pie_chart</mat-icon>
+                    Client Registration By Age Group
+                </mat-card-title>
+                <!---->
+                <!-- <span class="dashboard-card__subtitle" style="margin: 0;">
+                    <ng-container [ngSwitch]="selectedDuration">
+                        <span *ngSwitchCase="'allTime'">All Time</span>
+                        <span *ngSwitchCase="'last1Month'">Last 1 Month</span>
+                        <span *ngSwitchCase="'last3Months'">Last 3 Months</span>
+                        <span *ngSwitchCase="'custom'">
+                            <span *ngIf="customStartDate && customEndDate; else noDateRange"> -->
+                <!-- | is a pipe; It says take the startDate and enddate and make them in the format of yyyy-MM-dd-->
+                <!-- {{ customStartDate | date:'yyyy-MM-dd' }} to {{ customEndDate | date:'yyyy-MM-dd' }} -->
+                <!-- </span>
+                            <ng-template #noDateRange>Select date range</ng-template>
+                        </span>
+                    </ng-container>
+                </span> -->
+            </mat-card-header>
+
+            <mat-card-content>
+                <!--Date Filter-->
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; align-items: center;">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Select Duration</mat-label>
+                        <mat-select [(value)]="selectedDuration" (selectionChange)="onDurationChange()">
+                            <mat-option value="allTime">All Time</mat-option>
+                            <mat-option value="last1Month">Last 1 Month</mat-option>
+                            <mat-option value="last3Months">Last 3 Months</mat-option>
+                            <mat-option value="custom">Custom Date Range</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="selectedDuration === 'custom'" appearance="outline" style="width: 300px;">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker" [max]="maxDate">
+                            <input matStartDate placeholder="Start date" [(ngModel)]="customStartDate"
+                                (dateChange)="onDateRangeChange()">
+                            <input matEndDate placeholder="End date" [(ngModel)]="customEndDate"
+                                (dateChange)="onDateRangeChange()">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <div class="chart-wrapper">
+                    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" height="300px"></p-chart>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+    </div>
+
 </div>

@@ -115,4 +115,38 @@ public class ReportClientRegServiceSubImpl implements ReportClientRegService {
         }
     }
 
+    // Client Registrations By Age Group (Pie Chart)
+    @Override
+    public List<ClientRegDto> getRegistrationsByAgeGroup(String startDate, String endDate) {
+        try {
+            String start = (startDate == null || startDate.trim().isEmpty()) ? "1970-01-01" : startDate;
+            String end = (endDate == null || endDate.trim().isEmpty()) ? "9999-12-31" : endDate;
+
+            List<Object[]> results = clientRegRepository.getRegistrationsByAgeGroup(start, end);
+
+            // Accessing Object Array elements
+            for (Object[] row : results) {
+                System.out.println("Age Group: " + row[0]);
+                System.out.println("----------------------");
+                System.out.println("Total Client Count: " + row[1]);
+            }
+
+            return results.stream()
+                    .map(obj -> {
+                        Object[] array = (Object[]) obj;
+                        ClientRegDto dto = new ClientRegDto();
+                        dto.setClientAgeGroup(array[0] != null ? array[0].toString() : null);
+                        dto.setTotalClientCount(((Number) array[1]).intValue());
+                        System.out.println("Registrations By Age Group:" + dto);
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("Error fetching registration data: " + e.getMessage());
+            e.printStackTrace();
+            throw new com.bit.backend.exceptions.AppException("Error fetching registration data",
+                    org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

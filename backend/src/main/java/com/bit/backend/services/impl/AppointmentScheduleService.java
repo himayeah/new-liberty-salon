@@ -252,7 +252,10 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     // Dashboard pie chart (Get Top 3 services)
     @Override
     public List<Object[]> getTop3Services() {
-        return appointmentScheduleRepository.getTop3Services();
+        List<Object[]> result = appointmentScheduleRepository.getTop3Services();
+        //System out should come before return
+        System.out.println("Dashboard Pie Chart Top 3 Appointments:" + result );
+        return result;
     }
 
     // Dashboard (Get Top 5 employees)
