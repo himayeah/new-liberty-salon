@@ -221,6 +221,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             //labels = ["Female- Haircut", "Male-Haircut", "Nails",..]
             //counts = [10, 12, 15,...]
             next: (data) => {
+
                 const labels = data.map((item) => item[0]);
                 const counts = data.map((item) => item[1]);
 
@@ -242,6 +243,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         },
                     ],
                 };
+
+                console.log("This is Pie Chart Data:", data);
+
             },
             error: (error) => {
                 console.error('Failed to load chart data', error);

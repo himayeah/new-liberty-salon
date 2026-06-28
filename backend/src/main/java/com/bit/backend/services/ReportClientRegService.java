@@ -1,7 +1,8 @@
 package com.bit.backend.services;
 
-import com.bit.backend.dtos.ClientRegDto;
 import java.util.List;
+
+import com.bit.backend.dtos.ClientRegDto;
 
 public interface ReportClientRegService {
     List<ClientRegDto> getRegistrationsByYear();
@@ -9,4 +10,7 @@ public interface ReportClientRegService {
     List<ClientRegDto> getAllClientsData();
 
     List<ClientRegDto> getRegistrationsByGender();
+
+     List<ClientRegDto> getRegistrationsByAgeGroup(String startDate, String endDate);
+
 }

@@ -23,8 +23,40 @@ export class AuthGuard implements CanActivate {
         const role = this.employeeAuthService.getRole();
         const url = state.url;
 
+        // define roles in role.enum.ts
         if (role === Role.OWNER) {
             return true;
+        }
+
+        if (role === Role.SENIORSTYIST){
+             const allowedSeniorStylistPrefixes = [
+                '/dashboard',
+                '/pages/client-reg',
+                '/pages/client-profile',
+                '/pages/appointment-schedule',
+                '/pages/employee-attendance',
+                '/pages/employee-schedule',
+                '/pages/employee-leave',
+                '/pages/billing',
+                '/pages/report-client-reg',
+                '/pages/report-product-sales',
+                '/pages/report-appointment-status',
+                '/pages/report-procurement',
+                '/pages/inventory',
+                '/pages/product',
+                '/pages/service',
+                '/pages/product-category',
+                '/pages/service-category',
+                '/pages/employee-reg',
+                '/pages/employee-profile',
+                '/notfound'
+            ];
+            const isAllowed = allowedSeniorStylistPrefixes.some(prefix => url === prefix || url.startsWith(prefix + '/') || url.startsWith(prefix + '?'));
+            if (isAllowed) {
+                return true;
+            }
+            this.router.navigate(['/dashboard']);
+            return false;
         }
 
         if (role === Role.MANAGER) {

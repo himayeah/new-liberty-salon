@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     window.localStorage.clear();
+    sessionStorage.clear();
     this.clearCacheIfUnauthorized();
     this.cacheSubscription = this.cacheService.cache$.subscribe(data => {
       this.cachedData = data;
@@ -85,6 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       const { loginName, password } = this.loginForm.value;
       const response = await this.httpService.request('POST', '/login', { login: loginName, password });
 
+      sessionStorage.clear();
       this.httpService.setAuthToken(response.token);
       this.httpService.setUserId(response.id);
       this.httpService.setLoginNameToCache(response.login);

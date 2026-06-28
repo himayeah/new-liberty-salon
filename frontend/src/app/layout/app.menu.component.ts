@@ -30,7 +30,7 @@ export class AppMenuComponent implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     public setEntitlements(
         navigationArray: any[],
@@ -146,30 +146,7 @@ export class AppMenuComponent implements OnInit {
         });
     }
 
-    // setting sidebar for STYLIST
-    private setStylistEntitlements(menuArray: any[]): void {
-        const allowedLinks = [
-            '/pages/appointment-schedule',
-        ];
-        menuArray.forEach(group => {
-            let hasVisibleItems = false;
-            if (group.items && group.items.length > 0) {
-                group.items.forEach((item: any) => {
-                    const link = item.routerLink && item.routerLink[0];
-                    if (link && allowedLinks.includes(link)) {
-                        item.isVisible = true;
-                        hasVisibleItems = true;
-                    } else {
-                        item.isVisible = false;
-                    }
-                });
-                group.isVisible = hasVisibleItems;
-            } else {
-                group.isVisible = false;
-            }
-        });
-    }
-
+    // desiced which side menu items a role sees after logging in 
     public setAuthStatusInNavItems(authId: number[]) {
         if (this.employeeAuthService.isAuthenticated()) {
             const role = this.employeeAuthService.getRole();
