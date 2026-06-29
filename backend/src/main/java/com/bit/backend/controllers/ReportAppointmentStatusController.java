@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,8 +52,23 @@ public class ReportAppointmentStatusController {
     @GetMapping("/bookings-by-source")
     public ResponseEntity<List<ReportAppointmentStatusDto>> getBookingsBySource() {
         try {
-            List<ReportAppointmentStatusDto> reportAppointmentStatusDtoList = reportAppointmentStatusService.getAppointmentsBySource();
+            List<ReportAppointmentStatusDto> reportAppointmentStatusDtoList = reportAppointmentStatusService
+                    .getAppointmentsBySource();
             return ResponseEntity.ok(reportAppointmentStatusDtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Report- get AppointmentCountByStatus (bar chart)
+    @GetMapping(value = "/count-by-status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentScheduleDto>> getAppointmentCountByStatus() {
+        try {
+            System.out.println("rHIMAYAA-----------------------------------Controlle");
+            List<AppointmentScheduleDto> reportAppointmentScheduleDtoList = reportAppointmentStatusService
+                    .getAppointmentCountByStatus();
+            System.out.println("Data:" + reportAppointmentScheduleDtoList);
+            return ResponseEntity.ok(reportAppointmentScheduleDtoList);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

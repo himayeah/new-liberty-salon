@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
+import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.entities.AppointmentScheduleEntity;
 
 public interface AppointmentScheduleRepository extends JpaRepository<AppointmentScheduleEntity, Long> {
@@ -101,8 +102,17 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "GROUP BY booking_source", nativeQuery = true)
         List<ReportAppointmentStatusDto> getAppointmentsBySource();
 
-        //Retrieve the Max ID, Increment that value from 10 and return the fina Result - Q2
+        // Retrieve the Max ID, Increment that value from 10 and return the fina Result
+        // - Q2
         @Query(value = "SELECT MAX(id) FROM appointment_schedule as max_id", nativeQuery = true)
         Long getMaxId();
+
+        // Appointment count by status (Bar chart)
+        @Query(value = "SELECT appointment_status, COUNT(id) as total_count " +
+                        "FROM appointment_schedule " +
+                        "WHERE appointment_status IN('BOOKED','COMPLETED','CANCELLED') " +
+                        "GROUP BY appointment_status " +
+                        "ORDER BY appointment_status", nativeQuery = true)
+        List<AppointmentScheduleDto> getAppointmentCountByStatus();
 
 }

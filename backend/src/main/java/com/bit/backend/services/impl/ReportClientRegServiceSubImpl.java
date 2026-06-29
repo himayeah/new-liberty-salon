@@ -116,6 +116,9 @@ public class ReportClientRegServiceSubImpl implements ReportClientRegService {
     }
 
     // Client Registrations By Age Group (Pie Chart)
+    // IMPORTANT:
+    // You only do object mapping when the repository returns Object[].
+    // If it already returns a DTO → mapping is NOT needed.
     @Override
     public List<ClientRegDto> getRegistrationsByAgeGroup(String startDate, String endDate) {
         try {
