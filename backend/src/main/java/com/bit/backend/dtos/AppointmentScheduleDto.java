@@ -36,4 +36,7 @@ public class AppointmentScheduleDto {
     private boolean reminderSent;
     private boolean dashboardNotified;
 
+    // Report DTOs
+    private Long totalCount;
+
 }

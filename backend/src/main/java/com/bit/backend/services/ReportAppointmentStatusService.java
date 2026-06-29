@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
+import com.bit.backend.dtos.AppointmentScheduleDto;
 
 public interface ReportAppointmentStatusService {
 
@@ -12,5 +13,7 @@ public interface ReportAppointmentStatusService {
     List<ReportCancelledAppointmentScheduleDto> getCancelledAppointmentDetails();
 
     List<ReportAppointmentStatusDto> getAppointmentsBySource();
+
+    List<AppointmentScheduleDto> getAppointmentCountByStatus();
 
 }

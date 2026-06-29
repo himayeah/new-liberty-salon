@@ -46,5 +46,4 @@ export class ReportClientRegService {
     }
     return this.http.get<any[]>(requestUrl, { headers });
   }
-
 }
