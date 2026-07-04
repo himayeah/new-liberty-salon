@@ -35,6 +35,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     readonly salonOpeningTime = '10:00';
     readonly salonClosingTime = '18:00';
     fullyBooked: boolean = false;
+    appointments: any[] = [];
 
     // UI Appointment Status Dropdown options defined
     appointmentStatuses = [
@@ -89,10 +90,13 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         }, { validators: this.validateSalonHours.bind(this) });
     }
 
+
+
     ngOnInit(): void {
         this.loadClients();
         this.loadEmployees();
         this.loadServices();
+        this.loadAppointments();
 
         if (this.mode === 'edit' && this.data.appointment) {
             this.patchForm(this.data.appointment);
@@ -117,6 +121,31 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
                 this.applyTimeFormatting(endCtrl);
                 this.endTimeAutoCalculated = false;
             }));
+        }
+
+        const dateCtrl = this.appointmentScheduleForm.get('appointmentDate');
+        const startTimeCtrl = this.appointmentScheduleForm.get('appointmentStartTime');
+        const endTimeCtrl = this.appointmentScheduleForm.get('appointmentEndTime');
+
+        const checkAvailabilityAndReset = () => {
+            const employeeIdCtrl = this.appointmentScheduleForm.get('employeeId');
+            const currentEmployeeId = employeeIdCtrl?.value;
+            if (currentEmployeeId) {
+                const selectedEmployee = this.employees.find(emp => emp.id === currentEmployeeId);
+                if (selectedEmployee && (this.isEmployeeUnavailable(selectedEmployee) || this.isEmployeeBooked(selectedEmployee))) {
+                    employeeIdCtrl.setValue(null);
+                }
+            }
+        };
+
+        if (dateCtrl) {
+            this.subs.push(dateCtrl.valueChanges.subscribe(() => checkAvailabilityAndReset()));
+        }
+        if (startTimeCtrl) {
+            this.subs.push(startTimeCtrl.valueChanges.subscribe(() => checkAvailabilityAndReset()));
+        }
+        if (endTimeCtrl) {
+            this.subs.push(endTimeCtrl.valueChanges.subscribe(() => checkAvailabilityAndReset()));
         }
 
         // Disable cancellationReason Validators if the appointmentStatus != 'CANCELLED'
@@ -443,5 +472,76 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
 
     onCancel(): void {
         this.dialogRef.close();
+    }
+
+    loadAppointments(): void {
+        this.appointmentService.getData().subscribe(
+            res => this.appointments = (res as any[]) || []
+        );
+    }
+
+    // checks if the employee is unavailable (weekly off days), if yes he will be displayed disabled
+    isEmployeeUnavailable(employee: any): boolean {
+        const selectedDate = this.appointmentScheduleForm.get('appointmentDate')?.value;
+        if (!selectedDate || !employee.weeklyOffDays) {
+            return false;
+        }
+
+        const dateObj = new Date(selectedDate);
+        // Fixed: only retrieve the weekday name (e.g., "Monday") so it matches weeklyOffDays string
+        const currentDayName = dateObj.toLocaleString('default', {
+            weekday: 'long'
+        });
+        console.log("Current weekday Name:", currentDayName);
+
+        return employee.weeklyOffDays.includes(currentDayName);
+    }
+
+    // checks whether the employee is already booked, if yes he will be displayed disabled
+    isEmployeeBooked(employee: any): boolean {
+
+        const selectedDate = this.appointmentScheduleForm.get('appointmentDate')?.value;
+        const selectedStart = this.toMinutes(this.parseTimeInput(this.appointmentScheduleForm.get('appointmentStartTime')?.value));
+        const selectedEnd = this.toMinutes(this.parseTimeInput(this.appointmentScheduleForm.get('appointmentEndTime')?.value));
+
+        if (!selectedDate || selectedStart == null || selectedEnd == null) {
+            return false;
+        }
+
+        const d = new Date(selectedDate);
+        const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+        for (const appointment of this.appointments) {
+
+            // Ignore cancelled appointments and the current appointment when editing
+            if (
+                appointment.appointmentStatus === 'CANCELLED' ||
+                appointment.id === this.data.appointment?.id
+            ) {
+                continue;
+            }
+
+            // Skip if different employee or different date
+            if (
+                appointment.employeeId !== employee.id ||
+                appointment.appointmentDate !== date
+            ) {
+                continue;
+            }
+
+            const bookedStart = this.toMinutes(
+                this.parseTimeInput(appointment.appointmentStartTime)
+            );
+            const bookedEnd = this.toMinutes(
+                this.parseTimeInput(appointment.appointmentEndTime)
+            );
+
+            // Standard overlap check
+            if (selectedStart < bookedEnd && selectedEnd > bookedStart) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -22,11 +22,9 @@
             <mat-form-field appearance="outline">
                 <mat-label>Employee Name</mat-label>
                 <mat-select formControlName="employeeId">
-                    <mat-option *ngFor="let employee of employees" [value]="employee.id">
-                        <!-- The lastname cout be empty too, hence ''-->
-                        <!-- String Interpolation: Angular evaluates anything inside {{}} and gives the output-->
-                        <!--String Interpolation connects the template to the ts file-->
-                        <!--'employee' is reffered as the single employee array from the list of arrays returned from the backend to the ts file-->
+                    <!--calls the employeeUnavailable funtion, if it returns true the employeeName is disabled-->
+                    <mat-option *ngFor="let employee of employees" [value]="employee.id"
+                        [disabled]="isEmployeeUnavailable(employee) || isEmployeeBooked(employee)">
                         {{ employee.employeeName || (employee.firstName + ' ' + (employee.lastName || '')) }}
                     </mat-option>
                 </mat-select>
