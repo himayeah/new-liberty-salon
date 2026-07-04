@@ -52,13 +52,12 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         List<Object[]> getCancelledAppointmentDetails();
 
         // Dashboard chart (getAppointmentCountsByMonth)
-        @Query(value = "SELECT " +
-                        "DATE_FORMAT(STR_TO_DATE(appointment_date, '%Y-%m-%d'), '%M') AS month_name, " +
-                        "COUNT(*) AS appointment_count " +
+        @Query(value = "SELECT" +
+                        "monthname((CAST(appointment_date AS DATE))) AS appointment_month, " +
+                        "COUNT(id) AS appointment_count " +
                         "FROM appointment_schedule " +
-                        "WHERE STR_TO_DATE(appointment_date, '%Y-%m-%d') >= CURRENT_DATE - INTERVAL 6 MONTH " +
-                        "GROUP BY month_name, MONTH(STR_TO_DATE(appointment_date, '%Y-%m-%d')) " +
-                        "ORDER BY MONTH(STR_TO_DATE(appointment_date, '%Y-%m-%d'))", nativeQuery = true)
+                        "WHERE CAST(appointment_date AS DATE) >= current_date - INTERVAL 6 MONTH " +
+                        "GROUP BY monthname((CAST(appointment_date AS DATE)))", nativeQuery = true)
         List<Object[]> getAppointmentCountsByMonth();
 
         // Dashboard pie chart- Top 3 services
@@ -113,6 +112,7 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "WHERE appointment_status IN('BOOKED','COMPLETED','CANCELLED') " +
                         "GROUP BY appointment_status " +
                         "ORDER BY appointment_status", nativeQuery = true)
+        // native query is directly executed against db
         List<AppointmentScheduleDto> getAppointmentCountByStatus();
 
 }

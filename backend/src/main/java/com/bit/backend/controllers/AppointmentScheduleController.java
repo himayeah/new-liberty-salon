@@ -150,7 +150,7 @@ public class AppointmentScheduleController {
         }
     }
 
-    // Dashboard chart (Get appointment counts by month for the last 6 months)
+    // Dashboard line chart (Get appointment counts by month for the last 6 months)
     @GetMapping("/appointment-schedule-form/count-by-month")
     public ResponseEntity<List<Object[]>> getAppointmentCountsByMonth() {
         try {
