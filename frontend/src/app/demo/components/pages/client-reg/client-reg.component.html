@@ -21,7 +21,6 @@
         </mat-form-field>
       </div>
 
-      
       <div class="table-container">
         <!-- Point 1: Connecting the Angular Material data table, datasource contains the data 
           'DataSource' Instance is used to send data to the table'-->
@@ -98,10 +97,10 @@
           </ng-container>
 
           <!-- Rows -->
-           <!-- Point 4: displayedColumns in the .ts file connected in the template-->
-            <!-- *matHeaderRowDef= a structural directive of Angular, says to use these columns and create the table-->
+          <!-- Point 4: displayedColumns in the .ts file connected in the template-->
+          <!-- *matHeaderRowDef= a structural directive of Angular, says to use these columns and create the table-->
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          
+
           <!-- *matRowDef = ANguar structural directive, create one row for each item in the data source
                [ngClass] is used to add CSS classes based on conditions, if selectedRow exists, apply the css class selected-Row -->
           <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{

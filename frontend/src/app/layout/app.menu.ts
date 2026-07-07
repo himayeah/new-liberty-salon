@@ -57,13 +57,6 @@ const navigationModel = [
                 icon: 'pi pi-calendar', // attendance/time
                 routerLink: ['/pages/employee-schedule'],
             },
-             {
-                label: 'Employee Commissions',
-                isVisible: false,
-                auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-cash', 
-                routerLink: ['/pages/employee-commissions'],
-            },
             {
                 label: 'Employee Leave',
                 isVisible: false,

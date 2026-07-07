@@ -34,6 +34,7 @@ export class ClientFormComponent implements OnInit {
     this.isEditMode = this.data.mode === 'edit';
     this.initForm();
     this.loadEmployees();
+    this.getClientLastVisitedDate();
 
     // if the mode is edit and client data exists, patch the form with existing client data 
     // Data table's 'edit' button will pass the client data to the dialog, and data will be autofilled in the form
@@ -156,6 +157,10 @@ export class ClientFormComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  getClientLastVisitedDate(): void {
+    this.clientService.getData()
   }
 
 }

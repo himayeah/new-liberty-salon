@@ -1,5 +1,6 @@
 package com.bit.backend.services.impl;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -115,8 +116,18 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     }
 
     @Override
+    // passes updated appointment payload with the id of the appointment
     public AppointmentScheduleDto updateAppointment(long id, AppointmentScheduleDto appointmentScheduleDto) {
         try {
+            // getter (getClientId()) is used to retrieve the value of a hidden (private)
+            // variable from a class
+            // findByIdByGivenClientId is a custom method used to find the client by the
+            // given client ID
+            ClientRegEntity object = clientRegRepository.findByIdByGivenClientId(appointmentScheduleDto.getClientId());
+            // retrirves the appointment's date from the payload and sets that date to the
+            // relavent client's last visited date
+            object.setLastVisitedDate(appointmentScheduleDto.getAppointmentDate());
+            clientRegRepository.save(object);
             AppointmentScheduleEntity existingEntity = appointmentScheduleRepository.findById(id)
                     .orElseThrow(() -> new AppException("Appointment Schedule Does Not Exist", HttpStatus.NOT_FOUND));
 
@@ -253,8 +264,8 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     @Override
     public List<Object[]> getTop3Services() {
         List<Object[]> result = appointmentScheduleRepository.getTop3Services();
-        //System out should come before return
-        System.out.println("Dashboard Pie Chart Top 3 Appointments:" + result );
+        // System out should come before return
+        System.out.println("Dashboard Pie Chart Top 3 Appointments:" + result);
         return result;
     }
 

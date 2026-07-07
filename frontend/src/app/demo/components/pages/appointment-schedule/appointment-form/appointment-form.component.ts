@@ -7,6 +7,7 @@ import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-
 import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 import { ServiceService } from 'src/app/services/service/service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
+import { EmployeeLeaveServiceService } from 'src/app/services/employee-leave/employee-leave-service.service';
 
 @Component({
     selector: 'app-appointment-form',
@@ -36,6 +37,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     readonly salonClosingTime = '18:00';
     fullyBooked: boolean = false;
     appointments: any[] = [];
+    employeeLeaveData: any[] = [];
 
     // UI Appointment Status Dropdown options defined
     appointmentStatuses = [
@@ -64,6 +66,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         private employeeService: EmployeeRegServicesService,
         private serviceService: ServiceService,
         private messageService: MessageServiceService,
+        private employeeLeaveService: EmployeeLeaveServiceService,
         public dialogRef: MatDialogRef<AppointmentFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
@@ -78,15 +81,11 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             appointmentDate: [null, [Validators.required]],
             appointmentStartTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
             appointmentEndTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
-            // form control Name
             appointmentStatus: ['BOOKED', [Validators.required]],
             bookingSource: [null, [Validators.required]],
-            // //discountCode: ['2026ABC'],
             notes: [null],
             cancellationReason: [null],
             cancelledDate: [null],
-            // additionalRequests: [false],
-            // additionalRequestsInput: [null],
         }, { validators: this.validateSalonHours.bind(this) });
     }
 
@@ -97,6 +96,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         this.loadEmployees();
         this.loadServices();
         this.loadAppointments();
+        this.loadEmployeeLeaveData();
 
         if (this.mode === 'edit' && this.data.appointment) {
             this.patchForm(this.data.appointment);
@@ -542,6 +542,38 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             }
         }
 
+        return false;
+    }
+
+    loadEmployeeLeaveData(): void {
+        this.employeeLeaveService.getData().subscribe({
+            next: (response: any[]) => {
+                this.employeeLeaveData = response || [];
+                console.log("Employee Leave Data:", this.employeeLeaveData);
+            },
+            error: (err) =>
+                this.messageService.showError('Employee Leave data retrieval failed: ' + err.message)
+        });
+    }
+
+    isEmployeeOnLeave(employee: any): boolean {
+        const selectedDate = this.appointmentScheduleForm.get('appointmentDate')?.value;
+        if (!selectedDate || !employee) {
+            return false;
+        }
+        const selectedDateObject = new Date(selectedDate);
+        const selectedDateFormatted = selectedDateObject.toISOString().split('T')[0];
+        const employeeName = employee.employeeName;
+
+        for (const leave of this.employeeLeaveData) {
+            if (leave.employeeName !== employeeName) {
+                continue;
+            }
+
+            if (selectedDateFormatted >= leave.startDate && selectedDateFormatted <= leave.endDate) {
+                return true;
+            }
+        }
         return false;
     }
 }
