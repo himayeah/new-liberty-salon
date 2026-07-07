@@ -43,10 +43,10 @@ public class ClientRegService implements ClientRegServiceI {
 
     @Override
     public List<ClientRegDto> getData() {
-
         try {
             List<ClientRegEntity> clientRegEntityList = clientRegRepository.findAll();
             List<ClientRegDto> clientRegDtoList = clientRegMapper.toClientRegDtoList(clientRegEntityList);
+            System.out.println("Getting all Client Data: " + clientRegDtoList);
             return clientRegDtoList;
         } catch (Exception e) {
             throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -102,7 +102,9 @@ public class ClientRegService implements ClientRegServiceI {
             clientRegRepository.deleteById(id);
             return clientRegMapper.toClientRegDto(optionalClientRegEntity.get());
         } catch (DataIntegrityViolationException e) {
-            throw new AppException("Cannot delete this client because they have active appointments, billings, or other associated records.", HttpStatus.CONFLICT);
+            throw new AppException(
+                    "Cannot delete this client because they have active appointments, billings, or other associated records.",
+                    HttpStatus.CONFLICT);
         } catch (AppException e) {
             throw e;
         } catch (Exception e) {
@@ -132,5 +134,12 @@ public class ClientRegService implements ClientRegServiceI {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // // get client Last Visited Date
+    // @Override
+    // public List<ClientRegDto> getClientLastVisitedDate() {
+    // System.out.println("'hello himaya'");
+    // return clientRegRepository.getClientLastVisitedDate();
+    // }
 
 }

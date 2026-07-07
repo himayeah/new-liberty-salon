@@ -102,4 +102,15 @@ export class ClientRegServiceService {
     return this.http.get<number>(requestUrl, { headers });
   }
 
+  // get client last visited Date
+  // getClientLastVisitedDate() {
+  //   const requestUrl = `${environment.baseUrl}/api/v1/client-reg/last-visited-date`;
+  //   let headers = new HttpHeaders();
+  //   const token = this.httpService.getAuthToken();
+  //   if (token !== null) {
+  //     headers = headers.set('Authorization', 'Bearer ' + token);
+  //   }
+  //   return this.http.get(requestUrl, { headers });
+  // }
+
 }

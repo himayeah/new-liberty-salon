@@ -54,6 +54,7 @@ export class ClientRegComponent implements OnInit {
     ngOnInit(): void {
         sessionStorage.clear();
         this.populateData();
+        // this.clientLastVisitedDate();
     }
 
     populateData(): void {
@@ -129,12 +130,10 @@ export class ClientRegComponent implements OnInit {
     //     });
     // }
 
-    // // Add timeout
-    //  populateData(): void {
-    //     this.clientRegService.getData()
-    //     .pipe(timeout(500))
-    //     .subscribe({
+    // clientLastVisitedDate() {
+    //     this.clientRegService.getClientLastVisitedDate().subscribe({
     //         next: (response: any[]) => {
+    //             console.log("Client Last Visited Date: ", response);
     //             this.dataSource = new MatTableDataSource(response || []);
     //             this.dataSource.paginator = this.paginator;
     //             this.dataSource.sort = this.sort;
@@ -144,30 +143,6 @@ export class ClientRegComponent implements OnInit {
     //         }
     //     });
     // }
-
-    //  // display a new field combining first name and last name
-    //  populateData(): void {
-    //     this.clientRegService.getData()
-    //       .pipe(
-    //         map((response: any[]) =>
-    //             response.map(client => ({
-    //                 ...client,
-    //                 displayName: client.firstName + ' ' + client.lastName
-    //             }))
-    //         )
-    //     )
-    //     .subscribe({
-    //         next: (response: any[]) => {
-    //             this.dataSource = new MatTableDataSource(response || []);
-    //             this.dataSource.paginator = this.paginator;
-    //             this.dataSource.sort = this.sort;
-    //         },
-    //         error: (error) => {
-    //             this.messageService.showError('Error fetching data: ' + error.message);
-    //         }
-    //     });
-    // }
-
 
     // The modal that openes for 'Add New' Button
     openAddClientModal(): void {

@@ -19,6 +19,7 @@ import com.bit.backend.dtos.ClientRegDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.ClientRegServiceI;
 import com.bit.backend.services.ReportClientRegService;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api/v1/client-reg") // Base path for all client-reg endpoints
@@ -68,7 +69,7 @@ public class ClientRegController {
         }
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClientRegDto>> getData() {
 
         try {
@@ -156,5 +157,17 @@ public class ClientRegController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // // get client last visited date
+    // @GetMapping("/last-visited-date")
+    // public ResponseEntity<List<ClientRegDto>> getClientLastVisitedDate() {
+    // try {
+    // List<ClientRegDto> clientDate = clientRegServiceI.getClientLastVisitedDate();
+    // return ResponseEntity.ok(clientDate);
+    // } catch (Exception e) {
+    // throw new AppException("Request failed with error:" + e,
+    // HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
+    // }
 
 }

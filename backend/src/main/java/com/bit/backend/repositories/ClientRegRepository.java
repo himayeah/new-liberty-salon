@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.bit.backend.dtos.ClientRegDto;
 import com.bit.backend.entities.ClientRegEntity;
 
 //mention where you named the database Table(ClientRegEntity) and the table's id type (Long)
@@ -21,6 +22,9 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
         // Dashboard card (New Clients within last 30 days)
         @Query(value = "SELECT COUNT(*) FROM client_registration WHERE registration_date BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
         long countClientRegistrationsLast30Days();
+
+        @Query(value = "SELECT * FROM client_registration WHERE id = :id", nativeQuery = true)
+        ClientRegEntity findByIdByGivenClientId(@Param("id") Long id);
 
         @Query(value = "SELECT YEAR(registration_date) AS registration_year, " +
                         "DATE_FORMAT(registration_date, '%M') AS registration_month, " +
@@ -70,5 +74,12 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
         // for (Object[] row = resul) {
         // System.out.println(row[0])
         // }
+
+        @Query(value = "SELECT client.id, MAX(appointment.appointment_date) AS lastVisitedDate " +
+                        "FROM client_registration client " +
+                        "JOIN appointment_schedule AS appointment ON appointment.client_id = client.id " +
+                        "WHERE appointment.appointment_status = 'COMPLETED' " +
+                        "GROUP BY client.id", nativeQuery = true)
+        List<ClientRegDto> getClientLastVisitedDate();
 
 }

@@ -24,7 +24,7 @@
                 <mat-select formControlName="employeeId">
                     <!--calls the employeeUnavailable funtion, if it returns true the employeeName is disabled-->
                     <mat-option *ngFor="let employee of employees" [value]="employee.id"
-                        [disabled]="isEmployeeUnavailable(employee) || isEmployeeBooked(employee)">
+                        [disabled]="isEmployeeUnavailable(employee) || isEmployeeBooked(employee) || isEmployeeOnLeave(employee)">
                         {{ employee.employeeName || (employee.firstName + ' ' + (employee.lastName || '')) }}
                     </mat-option>
                 </mat-select>
