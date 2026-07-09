@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 import com.bit.backend.entities.ClientRegEntity;
 
 //mention where you named the database Table(ClientRegEntity) and the table's id type (Long)
@@ -62,24 +63,26 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
         List<Object[]> getRegistrationsByAgeGroup(@Param("startDate") String startDate,
                         @Param("endDate") String endDate);
 
-        // The backend will return an Object Array like;
-        // -----------------------------------------------
-        // List<Object[]> results = [
-        // ["15-25", 12],
-        // ["25-35", 20],
-        // ["35-45", 8]
-        // ];
-
-        // To access this object Array in the serviceImpl;
-        // for (Object[] row = resul) {
-        // System.out.println(row[0])
-        // }
-
         @Query(value = "SELECT client.id, MAX(appointment.appointment_date) AS lastVisitedDate " +
                         "FROM client_registration client " +
                         "JOIN appointment_schedule AS appointment ON appointment.client_id = client.id " +
                         "WHERE appointment.appointment_status = 'COMPLETED' " +
                         "GROUP BY client.id", nativeQuery = true)
         List<ClientRegDto> getClientLastVisitedDate();
+
+        @Query(value = "SELECT client.id AS client_id, COUNT(appointment.id) AS total_visits " +
+                        "FROM client_registration client " +
+                        "JOIN appointment_schedule appointment " +
+                        "ON appointment.client_id = client.id " +
+                        "GROUP BY client.id", nativeQuery = true)
+        List<ClientRegTotalVisitsDto> getClientTotalVisits();
+
+        @Query(value = "SELECT client.id, SUM(service.price) AS lifetimeValue " +
+                        "FROM client_registration client " +
+                        "JOIN appointment_schedule AS appointment ON appointment.client_id = client.id " +
+                        "JOIN service ON appointment.service_id = service.id " +
+                        "WHERE appointment.appointment_status = 'COMPLETED' " +
+                        "GROUP BY client.id", nativeQuery = true)
+        List<ClientRegDto> getClientLifetimeValue();
 
 }

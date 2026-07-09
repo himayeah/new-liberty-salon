@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.ClientRegServiceI;
 import com.bit.backend.services.ReportClientRegService;
@@ -77,6 +78,19 @@ public class ClientRegController {
             return ResponseEntity.ok(clientRegDtoList);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // calculate Total client visits
+    @PutMapping("/calculate-total-visits")
+    public ResponseEntity<List<ClientRegTotalVisitsDto>> calculateClientVisits() throws AppException {
+        try {
+            List<ClientRegTotalVisitsDto> updatedClients = clientRegServiceI.calculateClientVisits();
+            return ResponseEntity.ok(updatedClients);
+        } catch (Exception e) {
+            throw new AppException(
+                    "Request failed with error: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -157,17 +171,5 @@ public class ClientRegController {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // // get client last visited date
-    // @GetMapping("/last-visited-date")
-    // public ResponseEntity<List<ClientRegDto>> getClientLastVisitedDate() {
-    // try {
-    // List<ClientRegDto> clientDate = clientRegServiceI.getClientLastVisitedDate();
-    // return ResponseEntity.ok(clientDate);
-    // } catch (Exception e) {
-    // throw new AppException("Request failed with error:" + e,
-    // HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
 
 }

@@ -1,6 +1,7 @@
 package com.bit.backend.services.impl;
 
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 import com.bit.backend.entities.ClientRegEntity;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.mappers.ClientRegMapper;
@@ -61,7 +62,6 @@ public class ClientRegService implements ClientRegServiceI {
             if (!optionalClientRegEntity.isPresent()) {
                 throw new AppException("Client Reg Does Not Exist", HttpStatus.NOT_FOUND);
             }
-
             ClientRegEntity newClientRegEntity = clientRegMapper.toClientRegEntity(clientRegDto);
             newClientRegEntity.setId(id);
             ClientRegEntity clientRegEntity = clientRegRepository.save(newClientRegEntity);
@@ -135,11 +135,25 @@ public class ClientRegService implements ClientRegServiceI {
         }
     }
 
-    // // get client Last Visited Date
-    // @Override
-    // public List<ClientRegDto> getClientLastVisitedDate() {
-    // System.out.println("'hello himaya'");
-    // return clientRegRepository.getClientLastVisitedDate();
-    // }
+    // get Client Total Visits
+    // run query, get id and count results, add them to clientreg entity columns so
+    // they get saved in db
+    // convert entity back to dto and send response back to controller
+    @Override
+    public List<ClientRegTotalVisitsDto> calculateClientVisits() {
+        try {
+            List<ClientRegTotalVisitsDto> clientRegTotalVisitsDtoList = clientRegRepository.getClientTotalVisits();
+            System.out.println("Client Total Visits DTO List: " + clientRegTotalVisitsDtoList);
+            for (ClientRegTotalVisitsDto clientRegTotalVisitsDto : clientRegTotalVisitsDtoList) {
+                ClientRegEntity clientRegEntity = clientRegRepository.findById(clientRegTotalVisitsDto.getClientId())
+                        .get();
+                clientRegEntity.setTotalVisits(clientRegTotalVisitsDto.getTotalVisits());
+                clientRegRepository.save(clientRegEntity);
+            }
+            return clientRegTotalVisitsDtoList;
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

@@ -3,7 +3,6 @@ package com.bit.backend.controllers;
 import org.springframework.http.HttpStatus;
 import com.bit.backend.dtos.GrnDto;
 import com.bit.backend.services.GrnService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,15 +18,15 @@ public class GrnController {
         this.grnService = grnService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<GrnDto>> getGrnRecords() {
-        try {
-            List<GrnDto> grnDtoResponse = grnService.getAllGrn();
-            return ResponseEntity.ok(grnDtoResponse);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+    // @GetMapping
+    // public ResponseEntity<List<GrnDto>> getGrnRecords() {
+    // try {
+    // List<GrnDto> grnDtoResponse = grnService.getAllGrn();
+    // return ResponseEntity.ok(grnDtoResponse);
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    // }
+    // }
 
     @GetMapping("/by-purchase-order/{id}")
     public ResponseEntity<List<GrnDto>> getPurchaseOrderId(@PathVariable Long id) {

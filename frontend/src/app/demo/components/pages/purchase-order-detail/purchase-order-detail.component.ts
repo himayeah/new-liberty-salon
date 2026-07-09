@@ -16,11 +16,11 @@ import { GrnFormComponent } from '../grn/grn-form/grn-form.component';
 export class PurchaseOrderDetailComponent implements OnInit {
   purchaseOrderId: any;
   purchaseOrder: any;
-  
+
   // PO Details
   poDataSource = new MatTableDataSource<any>([]);
   poColumns: string[] = ['productName', 'unitPrice', 'quantityOrdered', 'actions'];
-  
+
   // GRN Details
   grnDataSource = new MatTableDataSource<any>([]);
   grnColumns: string[] = ['productName', 'orderedQuantity', 'receivedQuantity', 'receivedDate', 'status', 'remarks', 'actions'];
@@ -32,7 +32,7 @@ export class PurchaseOrderDetailComponent implements OnInit {
     private purchaseOrderDetailService: PurchaseOrderDetailServiceService,
     private grnService: GrnService,
     private messageService: MessageServiceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.purchaseOrderId = this.route.snapshot.paramMap.get('id');
@@ -91,6 +91,7 @@ export class PurchaseOrderDetailComponent implements OnInit {
   }
 
   // --- GRN CRUD ---
+  // Passes the current PO id
   loadGrnDetails(): void {
     this.grnService.getByPurchaseOrderId(this.purchaseOrderId).subscribe({
       next: (data) => this.grnDataSource.data = data,
