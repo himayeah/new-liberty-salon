@@ -75,7 +75,6 @@ export class ClientRegComponent implements OnInit {
 
                 console.log("clients over 2000", filteredDob);
 
-
                 // the response or a empty array (if response is null or undefined) is assigned to the dataSource of the table
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
@@ -184,6 +183,20 @@ export class ClientRegComponent implements OnInit {
             }
             this.selectedRow = null;
         });
+    }
+
+    // calculate Total Visit button
+    calculateTotalVisits(): void {
+        this.clientRegService.calculateTotalVisitsPerClient().subscribe({
+            next: (response: any) => {
+                console.log("Total Visits: ", response);
+                alert("Total Visits Updated")
+                this.populateData();
+            },
+            error: (error) => {
+                this.messageService.showError('Error fetching data: ' + error.message);
+            }
+        })
     }
 
     viewData(data: any): void {

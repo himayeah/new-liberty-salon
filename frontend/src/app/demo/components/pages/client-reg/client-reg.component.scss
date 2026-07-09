@@ -43,6 +43,12 @@
   flex-wrap: wrap;
 }
 
+.right-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .search-field {
   flex: 0 0 350px;
   max-width: 100%;

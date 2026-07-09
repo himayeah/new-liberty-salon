@@ -9,16 +9,25 @@
 
     <div class="content-section">
       <div class="actions-bar">
-        <button mat-raised-button color="primary" (click)="openAddClientModal()">
-          <mat-icon class="material-icons">add</mat-icon> Add New Client
-        </button>
 
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Filter</mat-label>
-          <!--keyup is an event that fires when the user releases a key on the keyboard after pressing it-->
-          <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" #input />
-          <mat-icon matSuffix class="material-icons">search</mat-icon>
-        </mat-form-field>
+        <div class="left-content">
+          <button mat-raised-button color="primary" (click)="openAddClientModal()">
+            <mat-icon class="material-icons">add</mat-icon> Add New Client
+          </button>
+        </div>
+
+        <div class="right-content">
+          <button mat-raised-button color="secondary" (click)="calculateTotalVisits()">
+            <mat-icon class="material-icons">add</mat-icon> Calculate Total Visits
+          </button>
+
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Filter</mat-label>
+            <!--keyup is an event that fires when the user releases a key on the keyboard after pressing it-->
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search clients" #input />
+            <mat-icon matSuffix class="material-icons">search</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="table-container">

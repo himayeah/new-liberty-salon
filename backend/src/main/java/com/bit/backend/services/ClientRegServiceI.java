@@ -1,6 +1,7 @@
 package com.bit.backend.services;
 
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 
 import java.util.List;
 
@@ -22,6 +23,6 @@ public interface ClientRegServiceI {
     // For Public Booking Login
     ClientRegDto findByFirstNameAndEmail(String firstName, String email);
 
-    // List<ClientRegDto> getClientLastVisitedDate();
+    List<ClientRegTotalVisitsDto> calculateClientVisits();
 
 }

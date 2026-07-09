@@ -13,21 +13,15 @@ export class GrnService {
 
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
-  private getHeaders() {
-    let headers = new HttpHeaders();
-    const token = this.httpService.getAuthToken();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-    return headers;
-  }
-
-  getAllGrn(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl, { headers: this.getHeaders() });
-  }
+  // getAllGrn(): Observable<any[]> {
+  //   return this.http.get<any[]>(this.baseUrl, { headers: this.getHeaders() });
+  // }
 
   addGrn(data: any): Observable<any> {
     return this.http.post<any>(this.baseUrl, data, { headers: this.getHeaders() });
+  }
+  getHeaders(): HttpHeaders | { [header: string]: string | string[]; } {
+    throw new Error('Method not implemented.');
   }
 
   updateGrn(id: any, data: any): Observable<any> {

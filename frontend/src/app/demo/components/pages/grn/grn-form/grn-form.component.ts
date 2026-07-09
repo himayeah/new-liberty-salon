@@ -109,11 +109,12 @@ export class GrnFormComponent implements OnInit {
     onSubmit(): void {
         this.submitted = true;
         if (this.grnForm.invalid) return;
-
+        debugger
         this.isButtonDisabled = true;
         const formValue = this.grnForm.getRawValue();
 
         if (this.data.mode === 'add') {
+            console.log("GRN data:", formValue);
             this.grnService.addGrn(formValue).subscribe({
                 next: (response) => {
                     this.messageService.showSuccess('GRN Saved Successfully!');
