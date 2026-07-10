@@ -114,4 +114,15 @@ export class ClientRegServiceService {
     return this.http.put(requestUrl, {}, { headers });
   }
 
+  getClientLifeTimeValue(): Observable<any> {
+    const requestUrl = `${environment.baseUrl}/api/v1/client-reg/calculate-client-life-time-value`;
+    let headers = new HttpHeaders();
+
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.put(requestUrl, {}, { headers });
+  }
+
 }

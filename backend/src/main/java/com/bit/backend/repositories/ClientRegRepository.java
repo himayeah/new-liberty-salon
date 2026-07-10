@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.bit.backend.dtos.ClientRegDto;
+import com.bit.backend.dtos.ClientLifeTimeValueDto;
 import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 import com.bit.backend.entities.ClientRegEntity;
 
@@ -77,12 +78,12 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
                         "GROUP BY client.id", nativeQuery = true)
         List<ClientRegTotalVisitsDto> getClientTotalVisits();
 
-        @Query(value = "SELECT client.id, SUM(service.price) AS lifetimeValue " +
+        @Query(value = "SELECT client.id AS client_id, SUM(service.price) AS lifetimeValue " +
                         "FROM client_registration client " +
                         "JOIN appointment_schedule AS appointment ON appointment.client_id = client.id " +
                         "JOIN service ON appointment.service_id = service.id " +
                         "WHERE appointment.appointment_status = 'COMPLETED' " +
                         "GROUP BY client.id", nativeQuery = true)
-        List<ClientRegDto> getClientLifetimeValue();
+        List<ClientLifeTimeValueDto> getClientLifetimeValue();
 
 }

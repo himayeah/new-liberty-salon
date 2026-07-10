@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bit.backend.dtos.ClientLifeTimeValueDto;
 import com.bit.backend.dtos.ClientRegDto;
 import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 import com.bit.backend.exceptions.AppException;
@@ -81,6 +82,47 @@ public class ClientRegController {
         }
     }
 
+    @PutMapping("/{id}")
+    // @RequestBody ClientRegDto clientRegDto → Gets the JSON sent from the frontend
+    // and converts it into a ClientRegDto object
+    // ResponseEntity<ClientRegDto> → Sends the updated ClientRegDto back to the
+    // frontend as the response
+    public ResponseEntity<ClientRegDto> updateClientReg(@PathVariable long id, @RequestBody ClientRegDto clientRegDto) {
+        try {
+            System.out.println("Data Received");
+            System.out.println("Client Data July:" + clientRegDto);
+            ClientRegDto responseClientRegDto = clientRegServiceI.updateClientReg(id, clientRegDto);
+            return ResponseEntity.ok(responseClientRegDto);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientRegDto> getById(@PathVariable long id) {
+        try {
+            ClientRegDto clientRegDto = clientRegServiceI.getById(id);
+            return ResponseEntity.ok(clientRegDto);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ClientRegDto> deleteClientReg(@PathVariable long id) {
+
+        try {
+            // Defines a method that takes the id from the URL path and returns a
+            // ResponseEntity containing a ClientRegDto object.
+            ClientRegDto clientRegDto = clientRegServiceI.deleteClientReg(id);
+            // Calls a service method to delete the client with the given id, and stores the
+            // deleted client's data in clientRegDto.
+            return ResponseEntity.ok(clientRegDto);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // calculate Total client visits
     @PutMapping("/calculate-total-visits")
     public ResponseEntity<List<ClientRegTotalVisitsDto>> calculateClientVisits() throws AppException {
@@ -88,9 +130,18 @@ public class ClientRegController {
             List<ClientRegTotalVisitsDto> updatedClients = clientRegServiceI.calculateClientVisits();
             return ResponseEntity.ok(updatedClients);
         } catch (Exception e) {
-            throw new AppException(
-                    "Request failed with error: " + e.getMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new AppException("Request failed with error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // calculate client life time value
+    @PutMapping("/calculate-client-life-time-value")
+    public ResponseEntity<List<ClientLifeTimeValueDto>> calculateClientLifeTimeValue() throws AppException {
+        try {
+            List<ClientLifeTimeValueDto> updatedClients = clientRegServiceI.calculateClientLifeTimeValue();
+            return ResponseEntity.ok(updatedClients);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -111,47 +162,6 @@ public class ClientRegController {
         try {
             long count = clientRegServiceI.countClientRegistrationsLast30Days();
             return ResponseEntity.ok(count);
-        } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientRegDto> getById(@PathVariable long id) {
-        try {
-            ClientRegDto clientRegDto = clientRegServiceI.getById(id);
-            return ResponseEntity.ok(clientRegDto);
-        } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ClientRegDto> updateClientReg(
-            @PathVariable long id,
-            @RequestBody ClientRegDto clientRegDto) {
-        try {
-            System.out.println("Data Received");
-            ClientRegDto responseClientRegDto = clientRegServiceI.updateClientReg(id, clientRegDto);
-            return ResponseEntity.ok(responseClientRegDto);
-        } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ClientRegDto> deleteClientReg(@PathVariable long id) {
-
-        try {
-            // Defines a method that takes the id from the URL path and returns a
-            // ResponseEntity containing a ClientRegDto object.
-            ClientRegDto clientRegDto = clientRegServiceI.deleteClientReg(id);
-            // Calls a service method to delete the client with the given id, and stores the
-            // deleted client's data in clientRegDto.
-            return ResponseEntity.ok(clientRegDto);
-            // Returns an HTTP 200 OK response with the deleted client's data in the
-            // response body.
-            // Next Step: Go to ClientRegServiceI
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
