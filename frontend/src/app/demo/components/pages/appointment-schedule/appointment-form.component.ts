@@ -132,6 +132,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
                     this.messageService.showSuccess('Saved Successfully!');
                     this.dialogRef.close(response);
                 },
+
                 // error: (error) => this.handleError(error)
                 error: (error) => {
                     if (error.status === 409) {
@@ -150,6 +151,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
+            // this.data => is the data object injected into the dialog via the constructor
             this.appointmentService.editData(this.data.appointment.id, formValue).subscribe({
                 next: (response) => {
                     this.messageService.showSuccess('Updated Successfully!');

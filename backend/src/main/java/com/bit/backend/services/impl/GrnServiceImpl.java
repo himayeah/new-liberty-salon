@@ -176,10 +176,4 @@ public class GrnServiceImpl implements GrnService {
         po.setStatus(newPoStatus);
         purchaseOrderRepository.save(po);
     }
-
-    @Override
-    public List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getGrnByPurchaseOrderId'");
-    }
 }

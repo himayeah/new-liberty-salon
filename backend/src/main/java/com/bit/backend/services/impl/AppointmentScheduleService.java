@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
+import com.bit.backend.dtos.ClientLifeTimeValueDto;
 import com.bit.backend.dtos.UserDto;
 import com.bit.backend.entities.AppointmentScheduleEntity;
 import com.bit.backend.entities.ClientRegEntity;
@@ -115,63 +116,147 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
     }
 
+    // @Override
+    // // passes updated appointment payload with the id of the appointment
+    // public AppointmentScheduleDto updateAppointment(long id,
+    // AppointmentScheduleDto appointmentScheduleDto) {
+    // try {
+    // ClientRegEntity object =
+    // clientRegRepository.findByIdByGivenClientId(appointmentScheduleDto.getClientId());
+    // // retrirves the appointment's date from the payload and sets that date to
+    // the
+    // // relavent client's last visited date
+    // object.setLastVisitedDate(appointmentScheduleDto.getAppointmentDate());
+    // clientRegRepository.save(object);
+    // AppointmentScheduleEntity existingEntity =
+    // appointmentScheduleRepository.findById(id)
+    // .orElseThrow(() -> new AppException("Appointment Schedule Does Not Exist",
+    // HttpStatus.NOT_FOUND));
+
+    // AppointmentScheduleEntity entity = appointmentScheduleMapper
+    // .toAppointmentScheduleEntity(appointmentScheduleDto);
+    // entity.setId(id);
+    // setRelations(entity, appointmentScheduleDto);
+
+    // // Preserve audit fields and reminder status
+    // entity.setCreatedDate(existingEntity.getCreatedDate());
+    // entity.setCreatedBy(existingEntity.getCreatedBy());
+    // entity.setReminderSent(existingEntity.getReminderSent());
+
+    // String now =
+    // LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd
+    // HH:mm:ss"));
+
+    // // Update cancelled date if status changed to CANCELLED
+    // if ("CANCELLED".equals(entity.getAppointmentStatus())) {
+    // if (!"CANCELLED".equals(existingEntity.getAppointmentStatus())) {
+    // // Status just changed to CANCELLED
+    // entity.setCancelledDate(now);
+    // } else {
+    // // Status was already CANCELLED, preserve the original date
+    // entity.setCancelledDate(existingEntity.getCancelledDate());
+    // }
+    // } else {
+    // // Status is not CANCELLED, clear the date
+    // entity.setCancelledDate(null);
+    // }
+
+    // normalizeAndValidateAppointmentTimes(entity);
+    // formatAppointmentDate(entity);
+
+    // // STATUS CHANGE CHECK-IN NOTIFICATION
+    // boolean isNewCheckIn =
+    // "CHECK_IN".equalsIgnoreCase(entity.getAppointmentStatus())
+    // || "CHECKED_IN".equalsIgnoreCase(entity.getAppointmentStatus());
+    // boolean wasCheckIn =
+    // "CHECK_IN".equalsIgnoreCase(existingEntity.getAppointmentStatus())
+    // || "CHECKED_IN".equalsIgnoreCase(existingEntity.getAppointmentStatus());
+
+    // if (isNewCheckIn && !wasCheckIn) {
+    // AppointmentScheduleDto notificationDto =
+    // appointmentScheduleMapper.toAppointmentScheduleDto(entity);
+    // notificationService.sendStylistCheckInNotification(notificationDto);
+    // }
+
+    // AppointmentScheduleEntity savedItem =
+    // appointmentScheduleRepository.save(entity);
+    // return appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
+    // } catch (AppException e) {
+    // throw e;
+    // } catch (Exception e) {
+    // throw new AppException("Failed to update appointment: " + e.getMessage(),
+    // HttpStatus.BAD_REQUEST);
+    // }
+
+    // }
+
     @Override
-    // passes updated appointment payload with the id of the appointment
     public AppointmentScheduleDto updateAppointment(long id, AppointmentScheduleDto appointmentScheduleDto) {
         try {
-            // getter (getClientId()) is used to retrieve the value of a hidden (private)
-            // variable from a class
-            // findByIdByGivenClientId is a custom method used to find the client by the
-            // given client ID
-            ClientRegEntity object = clientRegRepository.findByIdByGivenClientId(appointmentScheduleDto.getClientId());
-            // retrirves the appointment's date from the payload and sets that date to the
-            // relavent client's last visited date
-            object.setLastVisitedDate(appointmentScheduleDto.getAppointmentDate());
-            clientRegRepository.save(object);
+            // retireves the entire client entity of the given client ID
+            ClientRegEntity clientRegEntity = clientRegRepository
+                    .findByIdByGivenClientId(appointmentScheduleDto.getClientId());
+            clientRegEntity.setLastVisitedDate(appointmentScheduleDto.getAppointmentDate());
+            clientRegRepository.save(clientRegEntity);
+
+            // gets the existing record for the given id
             AppointmentScheduleEntity existingEntity = appointmentScheduleRepository.findById(id)
                     .orElseThrow(() -> new AppException("Appointment Schedule Does Not Exist", HttpStatus.NOT_FOUND));
 
-            AppointmentScheduleEntity entity = appointmentScheduleMapper
+            AppointmentScheduleEntity appointmentScheduleEntity = appointmentScheduleMapper
                     .toAppointmentScheduleEntity(appointmentScheduleDto);
-            entity.setId(id);
-            setRelations(entity, appointmentScheduleDto);
+            // sets the id retireved from URL for best practice
+            appointmentScheduleEntity.setId(id);
 
-            // Preserve audit fields and reminder status
-            entity.setCreatedDate(existingEntity.getCreatedDate());
-            entity.setCreatedBy(existingEntity.getCreatedBy());
-            entity.setReminderSent(existingEntity.getReminderSent());
+            // When you update an appointment, the frontend sends only the fields the user
+            // changed. frontend doesn't update createdDate, createdBy etc
+            // so you get the existing entity and update those fields here
+            setRelations(appointmentScheduleEntity, appointmentScheduleDto);
+            appointmentScheduleEntity.setCreatedDate(existingEntity.getCreatedDate());
+            appointmentScheduleEntity.setCreatedBy(existingEntity.getCreatedBy());
+            appointmentScheduleEntity.setReminderSent(existingEntity.getReminderSent());
 
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-            // Update cancelled date if status changed to CANCELLED
-            if ("CANCELLED".equals(entity.getAppointmentStatus())) {
+            if ("CANCELLED".equals(appointmentScheduleEntity.getAppointmentStatus())) {
                 if (!"CANCELLED".equals(existingEntity.getAppointmentStatus())) {
-                    // Status just changed to CANCELLED
-                    entity.setCancelledDate(now);
+                    appointmentScheduleEntity.setCancelledDate(now);
                 } else {
-                    // Status was already CANCELLED, preserve the original date
-                    entity.setCancelledDate(existingEntity.getCancelledDate());
+                    appointmentScheduleEntity.setCancelledDate(existingEntity.getCancelledDate());
                 }
             } else {
-                // Status is not CANCELLED, clear the date
-                entity.setCancelledDate(null);
+                appointmentScheduleEntity.setCancelledDate(null);
             }
 
-            normalizeAndValidateAppointmentTimes(entity);
-            formatAppointmentDate(entity);
+            normalizeAndValidateAppointmentTimes(appointmentScheduleEntity);
+            formatAppointmentDate(appointmentScheduleEntity);
 
-            // STATUS CHANGE CHECK-IN NOTIFICATION
-            boolean isNewCheckIn = "CHECK_IN".equalsIgnoreCase(entity.getAppointmentStatus())
-                    || "CHECKED_IN".equalsIgnoreCase(entity.getAppointmentStatus());
+            boolean isNewCheckIn = "CHECK_IN".equalsIgnoreCase(appointmentScheduleEntity.getAppointmentStatus())
+                    || "CHECKED_IN".equalsIgnoreCase(appointmentScheduleEntity.getAppointmentStatus());
             boolean wasCheckIn = "CHECK_IN".equalsIgnoreCase(existingEntity.getAppointmentStatus())
                     || "CHECKED_IN".equalsIgnoreCase(existingEntity.getAppointmentStatus());
 
             if (isNewCheckIn && !wasCheckIn) {
-                AppointmentScheduleDto notificationDto = appointmentScheduleMapper.toAppointmentScheduleDto(entity);
+                AppointmentScheduleDto notificationDto = appointmentScheduleMapper
+                        .toAppointmentScheduleDto(appointmentScheduleEntity);
                 notificationService.sendStylistCheckInNotification(notificationDto);
             }
 
-            AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
+            if ("COMPLETED".equals(appointmentScheduleDto.getAppointmentStatus())) {
+                // All client details related to given client id of the updating appointment
+                ClientRegEntity newClientRegEntity = clientRegRepository
+                        .findByIdByGivenClientId(appointmentScheduleDto.getClientId());
+                // A list of clientId and lifeTimeValues
+                List<ClientLifeTimeValueDto> clientLifeTimeValueDto = clientRegRepository.getClientLifetimeValue();
+                for (ClientLifeTimeValueDto newClientLifeTimeValueDto : clientLifeTimeValueDto) {
+                    if (newClientLifeTimeValueDto.getClientId() == appointmentScheduleDto.getClientId()) {
+                        newClientRegEntity.setLifetimeValue(newClientLifeTimeValueDto.getLifetimeValue());
+                        clientRegRepository.save(newClientRegEntity);
+                    }
+                }
+            }
+
+            AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(appointmentScheduleEntity);
             return appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
         } catch (AppException e) {
             throw e;

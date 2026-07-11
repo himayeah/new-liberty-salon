@@ -6,7 +6,7 @@ import java.util.List;
 public interface GrnService {
     List<GrnDto> getAllGrn();
 
-    List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId);
+    // List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId);
 
     GrnDto saveGrn(GrnDto dto);
 
