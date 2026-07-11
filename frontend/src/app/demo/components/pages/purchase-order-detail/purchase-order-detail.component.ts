@@ -97,6 +97,7 @@ export class PurchaseOrderDetailComponent implements OnInit {
       next: (data) => this.grnDataSource.data = data,
       error: () => this.messageService.showError('Error loading GRN records')
     });
+    console.log("Purchase order update:", this.grnDataSource.data);
   }
 
   openGrnModal(mode: 'add' | 'edit', grn?: any): void {

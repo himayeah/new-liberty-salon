@@ -92,13 +92,10 @@ export class GrnFormComponent implements OnInit {
         this.isButtonDisabled = true;
         const formValue = this.grnForm.value;
 
-        //fetch error
-        console.log("orderedDate:", formValue.orderedDate); // 👈 ADD HERE
-        console.log("FULL PAYLOAD:", formValue);
-
         if (this.data.mode === 'add') {
             this.grnService.addGrn(formValue).subscribe({
                 next: (response) => {
+                    console.log("This is grn data:", response);
                     this.messageService.showSuccess('GRN Saved Successfully!');
                     this.dialogRef.close(response);
                 },

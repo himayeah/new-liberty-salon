@@ -41,7 +41,7 @@ export class AppointmentScheduleComponent implements OnInit {
     noShowAppointments: any[] = [];
     appointmentIDs: any[] = [];
     showData: any[] = [];
- 
+
     constructor(
         private appointmentService: AppointmentSchedulingServiceService,
         private messageService: MessageServiceService,
@@ -54,12 +54,12 @@ export class AppointmentScheduleComponent implements OnInit {
     }
 
     populateData(): void {
-       
+
         this.appointmentService.getData().subscribe({
-            
+
             //  const filteredCients = (response || []).filter(client =>
-                //     client.id && client.id >= 10
-                // );
+            //     client.id && client.id >= 10
+            // );
 
             //next is a callback function of observable, It runs when the data is successfully returned
             // you can save the returned data in a variable : 'response'
@@ -86,13 +86,6 @@ export class AppointmentScheduleComponent implements OnInit {
                 );
 
                 console.log("Hyphen replaced Name:", replaceHypen);
-
-
-                // using ("Clients name starting with letter A:" + filteredData); PLUS (+) will result in string concatenation,
-                // filteredData is an array and Angular will try to convert it into string and it won't give you response
-                // Instead when you use "," what happenes is that the String ("Clients name starting with letter A:") 
-                // and the array (fiteredData) gets passed as 2 separate arguments to console.log
-
                 console.log("Clients name starting with letter A:", filteredData);
 
                 // console.log("Response received from Backend :", response);
@@ -101,8 +94,6 @@ export class AppointmentScheduleComponent implements OnInit {
                 //     appointment.appointmentStatus === 'BOOKED'
                 // );
                 // console.log("Filtered Appointments:", filteredAppointments);
-
-
 
                 // Filter all IDs after 10
                 const filteredIDAfter10 = (response || []).filter(client =>
@@ -151,6 +142,53 @@ export class AppointmentScheduleComponent implements OnInit {
             }
         });
     }
+
+    deleteData(data: any): void {
+        const confirmed = confirm("Are you sure you want to delete this appointment?");
+        if (confirmed) {
+            this.appointmentService.deleteData(data.id).subscribe({
+                next: () => {
+                    this.messageService.showSuccess('Deleted Successfully!');
+                    this.populateData();
+                },
+                error: (error) => this.messageService.showError('Delete failed: ' + error.message)
+            });
+        } else {
+            alert("Appointment Not Deleted");
+        }
+    }
+
+    editData(data: any): void {
+        const dialogRef = this.dialog.open(AppointmentFormComponent, {
+            width: '800px',
+            data: { mode: 'edit', appointment: data }
+        });
+
+        this.selectedRow = data;
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.populateData();
+                this.highlightRow('edit', result);
+            }
+            this.selectedRow = null;
+        });
+    }
+
+    openAddModal(): void {
+        const dialogRef = this.dialog.open(AppointmentFormComponent, {
+            width: '800px',
+            data: { mode: 'add' }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.populateData();
+                this.highlightRow('add', result);
+            }
+        });
+    }
+
 
     // //Show ID, Names of All Persons who's Appointment Status = "No-Show" - Q1
     // getNoShowAppointments(): void {
@@ -245,36 +283,6 @@ export class AppointmentScheduleComponent implements OnInit {
         }
     }
 
-    openAddModal(): void {
-        const dialogRef = this.dialog.open(AppointmentFormComponent, {
-            width: '800px',
-            data: { mode: 'add' }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.populateData();
-                this.highlightRow('add', result);
-            }
-        });
-    }
-
-    editData(data: any): void {
-        const dialogRef = this.dialog.open(AppointmentFormComponent, {
-            width: '800px',
-            data: { mode: 'edit', appointment: data }
-        });
-
-        this.selectedRow = data;
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.populateData();
-                this.highlightRow('edit', result);
-            }
-            this.selectedRow = null;
-        });
-    }
 
     //preparing some data and redirecting the user to the billing page.
     proceedToBilling(appointment: any): void {
@@ -294,21 +302,6 @@ export class AppointmentScheduleComponent implements OnInit {
         this.router.navigate(['/pages/billing'], {
             state: { data: billingData }
         });
-    }
-
-    deleteData(data: any): void {
-        const confirmed = confirm("Are you sure you want to delete this appointment?");
-            if (confirmed){
-                this.appointmentService.deleteData(data.id).subscribe({
-                next: () => {
-                    this.messageService.showSuccess('Deleted Successfully!');
-                    this.populateData();
-                },
-                error: (error) => this.messageService.showError('Delete failed: ' + error.message)
-            });
-            } else {
-                alert("Appointment Not Deleted");
-            }
     }
 
     applyFilter(event: Event): void {
@@ -350,6 +343,6 @@ export class AppointmentScheduleComponent implements OnInit {
     //   direction: 'asc' | 'desc'
     // }
     // Ex:      // this.sort.active = 'clientId'; // sort by cloumn clientId
-                // this.sort.direction = 'desc';
+    // this.sort.direction = 'desc';
 
 }

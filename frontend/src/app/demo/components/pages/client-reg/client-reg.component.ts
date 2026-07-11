@@ -199,6 +199,22 @@ export class ClientRegComponent implements OnInit {
         })
     }
 
+    // calls service.ts file 
+    // subscribes and gets the response it returns
+    // pass it to template to update the UI
+    calculateClientLifeTimeValue() {
+        this.clientRegService.getClientLifeTimeValue().subscribe({
+            next: (response: any) => {
+                console.log("This is client LifeTime Values:", response);
+                alert("Client LifeTime Values calculates successfully!");
+                this.populateData();
+            },
+            error: (error) => {
+                this.messageService.showError('Error fetching data: ' + error.message);
+            }
+        })
+    }
+
     viewData(data: any): void {
         this.router.navigate(['/pages/client-profile', data.id]);
     }

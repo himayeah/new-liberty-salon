@@ -1,5 +1,6 @@
 package com.bit.backend.services;
 
+import com.bit.backend.dtos.ClientLifeTimeValueDto;
 import com.bit.backend.dtos.ClientRegDto;
 import com.bit.backend.dtos.ClientRegTotalVisitsDto;
 
@@ -24,5 +25,7 @@ public interface ClientRegServiceI {
     ClientRegDto findByFirstNameAndEmail(String firstName, String email);
 
     List<ClientRegTotalVisitsDto> calculateClientVisits();
+
+    List<ClientLifeTimeValueDto> calculateClientLifeTimeValue();
 
 }
