@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
-import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.mappers.AppointmentScheduleMapper;
 import com.bit.backend.repositories.AppointmentScheduleRepository;
@@ -36,23 +35,31 @@ public class ReportAppointmentStatusServiceImpl implements ReportAppointmentStat
         }
     }
 
-    // Client Name | Service Name | Cancelled Date | Cancelled Reason of Cancelled
-    // Appointments within last 3 Months
+    // appointment cancallation table
     @Override
-    public List<ReportCancelledAppointmentScheduleDto> getCancelledAppointmentDetails() {
-        List<Object[]> results = appointmentScheduleRepository.getCancelledAppointmentDetails();
-        List<ReportCancelledAppointmentScheduleDto> dtoList = new ArrayList<>();
-        for (Object[] row : results) {
+    public List<ReportAppointmentStatusDto> getCancelledAppointmentDetails() {
 
-            // inside loop → create fresh object for each row
-            ReportCancelledAppointmentScheduleDto dto = new ReportCancelledAppointmentScheduleDto();
-            dto.setClientName(row[0] != null ? row[0].toString() : null);
-            dto.setServiceName(row[1] != null ? row[1].toString() : null);
-            dto.setCancelledDate(row[2] != null ? row[2].toString() : null);
-            dto.setCancellationReason(row[3] != null ? row[3].toString() : null);
-            dtoList.add(dto);
+        List<Object[]> rows = appointmentScheduleRepository.getCancelledAppointmentDetails();
+
+        // create an empty array List
+        List<ReportAppointmentStatusDto> list = new ArrayList<>();
+
+        for (Object[] row : rows) {
+
+            // creates a new Dto, as the for loop iterates through earch row, data is mapped to the Dto and added to the list.
+            // If you don't create a new Dto object inside the loop, the same object will be updated and added to the list multiple times,
+            // resulting in a list with duplicate references to the same object.
+            ReportAppointmentStatusDto dto = new ReportAppointmentStatusDto();
+
+            dto.setClientName((String) row[0]);
+            dto.setServiceName((String) row[1]);
+            dto.setCancelledDate((String) row[2]);
+            dto.setCancellationReason((String) row[3]);
+            list.add(dto);
+
         }
-        return dtoList;
+        
+        return list;
 
     }
 
@@ -65,43 +72,6 @@ public class ReportAppointmentStatusServiceImpl implements ReportAppointmentStat
             throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // Appointment Count By Status (bar chart) --------> ******HIMAYA- You only have
-    // to manually map if you are returning Repo query in a List<Object[]>, for
-    // @Override
-    // public List<AppointmentScheduleDto> getAppointmentCountByStatus() {
-    // try {
-
-    // List<AppointmentScheduleDto> results =
-    // appointmentScheduleRepository.getAppointmentCountByStatus();
-
-    // Accessing Object Array elements
-    // for (Object[] row : results) {
-    // System.out.println("Age Group: " + row[0]);
-    // System.out.println("----------------------");
-    // System.out.println("Total Client Count: " + row[1]);
-    // }
-
-    // return results.stream()
-    // .map(obj -> {
-    // Object[] array = (Object[]) obj;
-    // AppointmentScheduleDto dto = new AppointmentScheduleDto();
-    // dto.setAppointmentStatus(array[0] != null ? array[0].toString() : null);
-    // dto.totalCount(((Number) array[1]).longValue());
-    // System.out.println("Registrations By Age Group:" + dto);
-    // return dto;
-    // })
-    // .collect(Collectors.toList());
-    // } catch (Exception e) {
-    // System.err.println("Error fetching registration data: " + e.getMessage());
-    // e.printStackTrace();
-    // throw new com.bit.backend.exceptions.AppException("Error fetching
-    // registration data",
-    // org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
-
 
    @Override
    public List<ReportAppointmentStatusDto> getAppointmentCountByStatus() {
