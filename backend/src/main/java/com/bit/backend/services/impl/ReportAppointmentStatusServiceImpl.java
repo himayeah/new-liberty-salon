@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
@@ -105,20 +104,25 @@ public class ReportAppointmentStatusServiceImpl implements ReportAppointmentStat
 
 
    @Override
-   public List<AppointmentScheduleDto> getAppointmentCountByStatus() {
+   public List<ReportAppointmentStatusDto> getAppointmentCountByStatus() {
     try {
         List<Object[]> rows = appointmentScheduleRepository.getAppointmentCountByStatus();
 
-        List<AppointmentScheduleDto> list = new ArrayList<>();
+        // Create an empty array List
+        List<ReportAppointmentStatusDto> list = new ArrayList<>();
 
         for (Object[] row : rows) {
 
-            AppointmentScheduleDto appointmentScheduleDto = new AppointmentScheduleDto();
+            // creates a new Dto, as the for loop iterates through earch row, data is mapped to the Dto and added to the list.
+            // If you don't create a new Dto object inside the loop, the same object will be updated and added to the list multiple times,
+            // resulting in a list with duplicate references to the same object.
+            ReportAppointmentStatusDto reportAppointmentStatusDto = new ReportAppointmentStatusDto();
 
-            appointmentScheduleDto.setAppointmentStatus((String) row[0]);
-            appointmentScheduleDto.setTotalCount(((Number) row[1]).longValue());
+            reportAppointmentStatusDto.setAppointmentStatus((String) row[0]);
+            reportAppointmentStatusDto.setAppointmentCount(((Number) row[1]).longValue());
 
-            list.add(appointmentScheduleDto);
+            // the final dto is added to the list
+            list.add(reportAppointmentStatusDto);
         }
 
         return list;

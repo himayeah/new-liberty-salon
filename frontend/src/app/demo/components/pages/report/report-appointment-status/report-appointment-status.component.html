@@ -108,8 +108,9 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-wrapper">
-                        <p-chart type="bar" [data]="appointmentCountByStatusData"
-                            [options]="appointmentCountByStatusData" height="300px"></p-chart>
+                        <!--[data] contains the chart data which connects with ts file-->
+                        <!--[options] controls how the chart looks and behaves, ex: draw x and y axis like this-->
+                        <p-chart type="bar" [data]="appointmentCountByStatusData" [options]="appointmentCountByStatusData" height="300px"></p-chart>
                     </div>
                 </mat-card-content>
             </mat-card>

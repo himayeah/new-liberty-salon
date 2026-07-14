@@ -1,9 +1,18 @@
 package com.bit.backend.dtos;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public interface ReportAppointmentStatusDto {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ReportAppointmentStatusDto {
 
-    String getBookingSource();
-
-    long getTotalCount();
-
+    private String bookingSource;
+    private long totalCount;
+    private long appointmentCount;
+    private String appointmentStatus;
+      
 }
