@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
@@ -61,11 +60,11 @@ public class ReportAppointmentStatusController {
 
     // Report- get AppointmentCountByStatus (bar chart)
     @GetMapping(value = "/count-by-status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AppointmentScheduleDto>> getAppointmentCountByStatus() {
+    public ResponseEntity<List<ReportAppointmentStatusDto>> getAppointmentCountByStatus() {
         try {
-            List<AppointmentScheduleDto> reportAppointmentScheduleDtoList = reportAppointmentStatusService.getAppointmentCountByStatus();
-            System.out.println("Data:" + reportAppointmentScheduleDtoList);
-            return ResponseEntity.ok(reportAppointmentScheduleDtoList);
+            List<ReportAppointmentStatusDto> reportAppointmentStatusDtoList = reportAppointmentStatusService.getAppointmentCountByStatus();
+            System.out.println("Data:" + reportAppointmentStatusDtoList);
+            return ResponseEntity.ok(reportAppointmentStatusDtoList);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

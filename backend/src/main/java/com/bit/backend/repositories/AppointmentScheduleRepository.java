@@ -106,7 +106,7 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         Long getMaxId();
 
         // Appointment count by status (Bar chart)
-        @Query(value = "SELECT appointment_status as appointment_status, COUNT(id) as _count " +
+        @Query(value = "SELECT appointment_status as appointment_status, COUNT(id) as appointment_count " +
                         "FROM appointment_schedule " +
                         "WHERE appointment_date >= CURRENT_DATE - INTERVAL 30 DAY " +
                         "AND appointment_status IN('BOOKED','COMPLETED','CANCELLED') " +

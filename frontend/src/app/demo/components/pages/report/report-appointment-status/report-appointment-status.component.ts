@@ -135,6 +135,7 @@ export class ReportAppointmentStatusComponent implements OnInit {
     this.reportService.getAppointmentsBySource().subscribe({
 
       next: (data) => {
+        // map the JSON data you receive from backend. use console.log to check the data field
         const labels = data.map(item => item.bookingSource);
         const counts = data.map(item => item.totalCount); //Appointment count as the data
 
@@ -182,9 +183,10 @@ export class ReportAppointmentStatusComponent implements OnInit {
     this.reportService.getAppointmentCountByStatus().subscribe({
 
       next: (data) => {
-        console.log("HIMAYA");
-        const labels = data.map(item => item.bookingSource);
-        const counts = data.map(item => item.totalCount); //Appointment count as the data
+        console.log("Appointment count by Status data:", data);
+         // map the JSON data you receive from backend. use console.log to check the data field
+        const labels = data.map(item => item.appointmentStatus);
+        const counts = data.map(item => item.appointmentCount); //Appointment count as the data
 
         this.appointmentCountByStatusData = {
           labels: labels,

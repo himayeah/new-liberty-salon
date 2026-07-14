@@ -2,7 +2,6 @@ package com.bit.backend.services;
 
 import java.util.List;
 
-import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 
@@ -14,6 +13,6 @@ public interface ReportAppointmentStatusService {
 
     List<ReportAppointmentStatusDto> getAppointmentsBySource();
 
-    List<AppointmentScheduleDto> getAppointmentCountByStatus();
+    List<ReportAppointmentStatusDto> getAppointmentCountByStatus();
 
 }
