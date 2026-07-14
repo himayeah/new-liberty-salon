@@ -42,6 +42,17 @@ export class ReportAppointmentStatusService {
     return this.http.get<any[]>(requestUrl, { headers });
   }
 
+  // top 3 services (Pie chart)
+  getTop3Services(): Observable<any[]> {
+    const requestUrl = `${environment.baseUrl}/report-appointment-status/top-3-services`;
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get<any[]>(requestUrl, { headers });
+  }
+
   // Appointment Count By Status(bar chart)
   getAppointmentCountByStatus(): Observable<any[]> {
     const requestUrl = `${environment.baseUrl}/report-appointment-status/count-by-status`;

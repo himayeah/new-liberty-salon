@@ -60,14 +60,15 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         List<Object[]> getAppointmentCountsByMonth();
 
         // Dashboard pie chart- Top 3 services
-        @Query(value = "SELECT " +
-                        "s.service_name, " +
-                        "COUNT(a.id) AS total_count " +
+        @Query(value =  "SELECT " +
+                        "s.service_name AS top_service_name, " +
+                        "COUNT(a.id) AS total_appointment_count " +
                         "FROM appointment_schedule a " +
                         "JOIN service s ON s.id = a.service_id " +
+                        // converts String to date format 
                         "WHERE STR_TO_DATE(a.appointment_date, '%Y-%m-%d') >= CURRENT_DATE() - INTERVAL 30 DAY " +
                         "GROUP BY s.service_name " +
-                        "ORDER BY total_count DESC " +
+                        "ORDER BY total_appointment_count DESC " +
                         "LIMIT 3 ", nativeQuery = true)
         List<Object[]> getTop3Services();
 
@@ -106,7 +107,7 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         Long getMaxId();
 
         // Appointment count by status (Bar chart)
-        @Query(value = "SELECT appointment_status as appointment_status, COUNT(id) as appointment_count " +
+        @Query(value = "SELECT appointment_status as appointment_status, COUNT(id) as _count " +
                         "FROM appointment_schedule " +
                         "WHERE appointment_date >= CURRENT_DATE - INTERVAL 30 DAY " +
                         "AND appointment_status IN('BOOKED','COMPLETED','CANCELLED') " +

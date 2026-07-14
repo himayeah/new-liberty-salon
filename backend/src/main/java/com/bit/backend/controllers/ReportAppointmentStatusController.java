@@ -56,6 +56,17 @@ public class ReportAppointmentStatusController {
         }
     }
 
+    // Report - top 3 services (pie chart)
+    @GetMapping("/top-3-services")
+    public ResponseEntity<List<ReportAppointmentStatusDto>> getTop3Services() {
+        try {
+            List<ReportAppointmentStatusDto> reportAppointmentStatusDtoList = reportAppointmentStatusService.getTop3Services();
+            return ResponseEntity.ok(reportAppointmentStatusDtoList);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // Report- get AppointmentCountByStatus (bar chart)
     @GetMapping(value = "/count-by-status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReportAppointmentStatusDto>> getAppointmentCountByStatus() {
