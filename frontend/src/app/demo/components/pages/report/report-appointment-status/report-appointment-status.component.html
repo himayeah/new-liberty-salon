@@ -25,8 +25,7 @@
             </mat-card>
         </div>
 
-        <!--Client Name | Service Name | Cancelled Date | Cancelled Reason of Cancelled Appointments within last 3 Months-->
-        <!--Table-->
+        <!-- appointment cancellation details table-->
         <div class="table-section" style="grid-column: 1 / -1;">
             <mat-card class="report-card">
                 <mat-card-header>
@@ -35,6 +34,7 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="table-container">
+                        <!--connect "appointmentCancellationData" from the ts file to the HTML dataSource to display data in the table-->
                         <table mat-table [dataSource]="appointmentCancellationData" class="full-width-table">
 
                             <ng-container matColumnDef="clientName">

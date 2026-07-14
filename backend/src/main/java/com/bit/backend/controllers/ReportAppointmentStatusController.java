@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
-import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.ReportAppointmentStatusService;
 
@@ -33,15 +32,14 @@ public class ReportAppointmentStatusController {
         }
     }
 
-    // Client Name | Service Name | Cancelled Date | Cancelled Reason of Cancelled
-    // Appointments within last 3 Months
-    @GetMapping("/details")
-    public ResponseEntity<List<ReportCancelledAppointmentScheduleDto>> getData() {
-        try {
-            List<ReportCancelledAppointmentScheduleDto> reportCancelledAppointmentScheduleDtoList = reportAppointmentStatusService
-                    .getCancelledAppointmentDetails();
-            return ResponseEntity.ok(reportCancelledAppointmentScheduleDtoList);
-        } catch (Exception e) {
+    // appointment cancellation table
+    @GetMapping("/cancellation-details")
+    public ResponseEntity<List<ReportAppointmentStatusDto>> getCancelledAppointmentDetails() {
+        try{
+            List<ReportAppointmentStatusDto>  reportAppointmentStatusDto = reportAppointmentStatusService.getCancelledAppointmentDetails();
+            return ResponseEntity.ok(reportAppointmentStatusDto);
+        }
+        catch(Exception e){
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

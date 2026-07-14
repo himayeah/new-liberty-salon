@@ -23,7 +23,7 @@ export class ReportAppointmentStatusService {
   }
 
   getAppointmentCancellationDetails(): Observable<any[]> {
-    const requestUrl = `${environment.baseUrl}/report-appointment-status/details`;
+    const requestUrl = `${environment.baseUrl}/report-appointment-status/cancellation-details`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token) {

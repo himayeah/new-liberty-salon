@@ -65,31 +65,13 @@ export class ReportAppointmentStatusComponent implements OnInit {
     };
   }
 
-  // OLD VERSION (ARRAY BASED)
-  // fetchData(): void {
-  //   this.loading = true;
-  //   this.reportService.getAppointmentCancellationData().subscribe({
-  //     next: (data) => {
-  //       this.appointmentCancellationData = data || [];
-  //       this.prepareChartData();
-  //       this.loading = false;
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to load report data', err);
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
-
-  // NEW VERSION (COUNT BASED)
+  // appointment cancellation count chart
   fetchData(): void {
     this.loading = true;
-
     this.reportService.getAppointmentCancellationData().subscribe({
       next: (data) => {
-        console.log('API DATA:', data); // should be a number
-
-        this.prepareChartData(data); // pass count directly
+        console.log('Cancellation details:', data); 
+        this.prepareChartData(data); 
         this.loading = false;
       },
       error: (err) => {
@@ -115,11 +97,11 @@ export class ReportAppointmentStatusComponent implements OnInit {
   }
 
 
-  //Table Data
+  // appointmentcancellation details table
   loadAppointmentCancellationData(): void {
     this.reportService.getAppointmentCancellationDetails().subscribe({
       next: (data) => {
-        console.log('TABLE DATA:', data);
+        console.log('cancellation table details:', data);
         this.appointmentCancellationData = data;
       },
       error: (err) => {
