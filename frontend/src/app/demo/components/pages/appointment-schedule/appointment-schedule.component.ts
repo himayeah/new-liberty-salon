@@ -65,6 +65,52 @@ export class AppointmentScheduleComponent implements OnInit {
             // you can save the returned data in a variable : 'response'
             next: (response: any[]) => {
 
+                console.log("All Data :", response);
+
+                // push to a new Array
+                const completedAppointments = [];
+                (response || []).forEach(appointment => {
+                    if (appointment.bookingSource === 'ONLINE') {
+                        completedAppointments.push(appointment);
+                    }
+                });
+                console.log("my completed Appointments :", completedAppointments);
+
+                // 
+
+                const newAppointmentArray = [];
+                (response || []).forEach(appointment => {
+                    newAppointmentArray.push({
+                        newId: appointment.id,
+                        status: appointment.appointmentStatus
+                    }
+                    );
+                });
+                console.log("Appointment Array:", newAppointmentArray);
+
+
+                // (response || []).forEach(appointment => {
+                //     if (appointment.appointmentStatus === 'COMPLETED') {
+                //         console.log("my Completed Appointments:", appointment);
+                //     }
+                // }
+                // );
+
+                // Accessing Array Elements
+                console.log("First Appointment Status:", response[0].appointmentStatus);
+
+                const appointment52 = (response || []).find(appointment =>
+                    appointment.id === 52
+                );
+                console.log("ID 52 Booking Source:", (appointment52.bookingSource));
+
+
+                // FIND today's COMPLETED APPOINTMENTS
+                const todayVisits = (response || []).filter(appointment => {
+                    appointment.appointmentDate == '2026-07-11' && appointment.appointmentStatus == 'COMPLETED'
+                });
+                console.log("today Visits:", todayVisits);
+
                 //client filter
                 // Takes the response received from backend, takes one client object as 'client' and accessses it's property 'clientName
                 // Optimise search using trim()
@@ -84,24 +130,6 @@ export class AppointmentScheduleComponent implements OnInit {
                 const replaceHypen = (response || []).filter(client =>
                     client.clientName && client.clientName.replace('-', ' ').toLowerCase() === 'amaya ratnayake'
                 );
-
-                console.log("Hyphen replaced Name:", replaceHypen);
-                console.log("Clients name starting with letter A:", filteredData);
-
-                // console.log("Response received from Backend :", response);
-
-                // const filteredAppointments =(response || []).filter(appointment =>
-                //     appointment.appointmentStatus === 'BOOKED'
-                // );
-                // console.log("Filtered Appointments:", filteredAppointments);
-
-                // Filter all IDs after 10
-                const filteredIDAfter10 = (response || []).filter(client =>
-                    // The DB value
-                    client.id && client.id >= 10
-                );
-
-                console.log("IDs After 10:", filteredIDAfter10);
 
                 // Filter BOOKED appointments by client name = Amaya
                 // includes(), startsWith() are string methods

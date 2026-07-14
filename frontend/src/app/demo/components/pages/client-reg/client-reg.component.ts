@@ -42,6 +42,7 @@ export class ClientRegComponent implements OnInit {
     selectedRow = null;
     lastAddedRow: any = null;
     lastEditedRow: any = null;
+    totalValue: number = 0;
 
     constructor(
         private clientRegService: ClientRegServiceService,
@@ -59,26 +60,56 @@ export class ClientRegComponent implements OnInit {
 
     populateData(): void {
         this.clientRegService.getData().subscribe({
-            //next is a callback function of observable, It runs when the data is successfully returned
-            // you can save the returned data in a variable : 'response'
+
             next: (response: any[]) => {
 
-                const filteredCients = (response || []).filter(client =>
-                    client.id && client.id >= 10
+                console.log("CLIENTS:", response);
+
+                // SORT
+                const sortedAppointments = (response || []).sort((a, b) =>
+                    new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime()
                 );
 
-                console.log("clients over id of 10", filteredCients);
+                this.dataSource = new MatTableDataSource(sortedAppointments);
+                this.dataSource.sort = this.sort;
 
-                const filteredDob = (response || []).filter(client =>
-                    client.dateOfBirth && client.dateOfBirth >= "2000-01-01"
-                );
 
-                console.log("clients over 2000", filteredDob);
+                // const sortedClients = (response || []).sort((a, b) =>
+                //     b.lifetimeValue - a.lifetimeValue
+                // );
 
-                // the response or a empty array (if response is null or undefined) is assigned to the dataSource of the table
+                // this.dataSource = new MatTableDataSource(sortedClients);
+                // this.dataSource.sort = this.sort;
+
+                // Calculate total LTV for all clients
+
+                // (response || []).forEach(client => {
+                //     this.totalValue = this.totalValue + client.lifetimeValue;
+                // });
+                // console.log("Total LTV:", this.totalValue);
+
+
+                // dataSource.filter examples
+
+                // console.log("July 11 Client Data:", response);
+                // const filteredCients = (response || []).filter(client =>
+                //     client.id && client.id >= 10
+                // );
+
+                // const filteredVisits = (response || []).filter(client =>
+                //     client.totalVisits >= 2
+                // );
+                // console.log("July 11 Client Total Visits Over 2:", filteredCients);
+
+                // console.log("clients over id of 10", filteredCients);
+                // const filteredDob = (response || []).filter(client =>
+                //     client.dateOfBirth && client.dateOfBirth >= "2000-01-01"
+                // );
+
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
+
             },
             // error is a callback function of observable
             // Just like response stores the data emitted by next, the (error) stores the error object emitted by the Observable when something goes wrong.
