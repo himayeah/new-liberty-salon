@@ -24,6 +24,10 @@ public class ReportAppointmentStatusDto {
     private String cancelledDate;
     private String cancellationReason;
 
+    // top 3 services (Pie chart)
+    private String topServiceName;
+    private long totalAppointmentCount;
+
 
 
 }

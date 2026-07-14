@@ -14,4 +14,6 @@ public interface ReportAppointmentStatusService {
 
     List<ReportAppointmentStatusDto> getAppointmentCountByStatus();
 
+    List<ReportAppointmentStatusDto> getTop3Services();
+
 }

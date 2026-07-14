@@ -75,7 +75,7 @@
             </mat-card>
         </div>
 
-        // Replace [Data] and [Options] with actual properties when Re-using
+        <!-- Replace [Data] and [Options] with actual properties when Re-using -->
         <div class="chart-section">
             <mat-card class="report-card">
                 <mat-card-header
@@ -88,14 +88,16 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-wrapper">
-                        <p-chart type="pie" [data]="appointmentsBySourceData" [options]="appointmentsBySourceOptions"
+                        <!--[data] contains the chart data which connects with ts file-->
+                        <!---[options] controls how the chart looks and behaves, ex: draw x and y axis like this-->
+                        <p-chart type="pie" [data]="top3ServicesData" [options]="top3ServicesOptions"
                             height="300px"></p-chart>
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
 
-        // Appointment Count by Status
+        <!-- Appointment Count by Status -->
         <div class="chart-section">
             <mat-card class="report-card">
                 <mat-card-header

@@ -16,6 +16,10 @@ export class ReportAppointmentStatusComponent implements OnInit {
   appointmentsBySourceData: any;
   appointmentsBySourceOptions: any;
   appointmentCountByStatusData: any;
+  appointmentCountByStatusOptions: any;
+  top3ServicesData: any;
+  top3ServicesOptions: any;
+
 
   constructor(private reportService: ReportAppointmentStatusService) { }
 
@@ -25,6 +29,7 @@ export class ReportAppointmentStatusComponent implements OnInit {
     this.loadAppointmentCancellationData();
     this.loadAppointmentsBySourcePieChart();
     this.loadAppointmentCountByStatus();
+    this.loadTop3ServicesData();
   }
 
   initChartOptions(): void {
@@ -101,7 +106,7 @@ export class ReportAppointmentStatusComponent implements OnInit {
   loadAppointmentCancellationData(): void {
     this.reportService.getAppointmentCancellationDetails().subscribe({
       next: (data) => {
-        console.log('cancellation table details:', data);
+        console.log('cancellation details:', data);
         this.appointmentCancellationData = data;
       },
       error: (err) => {
@@ -147,6 +152,57 @@ export class ReportAppointmentStatusComponent implements OnInit {
     });
 
     this.appointmentsBySourceOptions = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+            color: textColor
+          }
+        }
+      }
+    };
+  }
+
+  // appointmentsBySource (Pie Chart)
+  loadTop3ServicesData() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    this.reportService.getTop3Services().subscribe({
+
+      next: (data) => {
+
+        console.log("Top 3 services data:", data);
+
+        // map the JSON data you receive from backend. use console.log to check the data field
+        const labels = data.map(item => item.topServiceName);
+        const counts = data.map(item => item.totalAppointmentCount); //Appointment count as the data
+
+        this.top3ServicesData = {
+          labels: labels,
+          datasets: [
+            {
+              data: counts,
+              backgroundColor: [
+                '#B6C787',
+                '#ABD5FF',
+                '#FFCDCF'
+              ],
+              hoverBackgroundColor: [
+                '#A5B676',
+                '#9CC4EE',
+                '#EEBCC0'
+              ]
+            },
+          ],
+        };
+      },
+      error: (error) => {
+        console.error('Failed to load chart data', error);
+        this.top3ServicesData = { labels: [], datasets: [] };
+      },
+    });
+
+    this.top3ServicesOptions = {
       plugins: {
         legend: {
           labels: {
