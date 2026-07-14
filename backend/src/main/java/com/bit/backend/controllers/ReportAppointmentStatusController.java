@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
-import com.bit.backend.dtos.ClientRegDto;
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
@@ -64,9 +63,7 @@ public class ReportAppointmentStatusController {
     @GetMapping(value = "/count-by-status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentScheduleDto>> getAppointmentCountByStatus() {
         try {
-            System.out.println("rHIMAYAA-----------------------------------Controlle");
-            List<AppointmentScheduleDto> reportAppointmentScheduleDtoList = reportAppointmentStatusService
-                    .getAppointmentCountByStatus();
+            List<AppointmentScheduleDto> reportAppointmentScheduleDtoList = reportAppointmentStatusService.getAppointmentCountByStatus();
             System.out.println("Data:" + reportAppointmentScheduleDtoList);
             return ResponseEntity.ok(reportAppointmentScheduleDtoList);
         } catch (Exception e) {

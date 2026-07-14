@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
-import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.entities.AppointmentScheduleEntity;
 
 public interface AppointmentScheduleRepository extends JpaRepository<AppointmentScheduleEntity, Long> {
@@ -52,12 +51,12 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         List<Object[]> getCancelledAppointmentDetails();
 
         // Dashboard chart (getAppointmentCountsByMonth)
-        @Query(value = "SELECT" +
-                        "monthname((CAST(appointment_date AS DATE))) AS appointment_month, " +
+        @Query(value = "SELECT " +
+                        "monthname(CAST(appointment_date AS DATE)) AS appointment_month, " +
                         "COUNT(id) AS appointment_count " +
                         "FROM appointment_schedule " +
                         "WHERE CAST(appointment_date AS DATE) >= current_date - INTERVAL 6 MONTH " +
-                        "GROUP BY monthname((CAST(appointment_date AS DATE)))", nativeQuery = true)
+                        "GROUP BY monthname(CAST(appointment_date AS DATE))", nativeQuery = true)
         List<Object[]> getAppointmentCountsByMonth();
 
         // Dashboard pie chart- Top 3 services
@@ -107,12 +106,13 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
         Long getMaxId();
 
         // Appointment count by status (Bar chart)
-        @Query(value = "SELECT appointment_status, COUNT(id) as total_count " +
+        @Query(value = "SELECT appointment_status as appointment_status, COUNT(id) as _count " +
                         "FROM appointment_schedule " +
-                        "WHERE appointment_status IN('BOOKED','COMPLETED','CANCELLED') " +
+                        "WHERE appointment_date >= CURRENT_DATE - INTERVAL 30 DAY " +
+                        "AND appointment_status IN('BOOKED','COMPLETED','CANCELLED') " +
                         "GROUP BY appointment_status " +
                         "ORDER BY appointment_status", nativeQuery = true)
         // native query is directly executed against db
-        List<AppointmentScheduleDto> getAppointmentCountByStatus();
+        List<Object[]> getAppointmentCountByStatus();
 
 }

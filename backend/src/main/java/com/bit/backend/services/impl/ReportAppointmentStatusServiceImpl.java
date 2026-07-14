@@ -2,13 +2,11 @@ package com.bit.backend.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
-import com.bit.backend.dtos.ClientRegDto;
 import com.bit.backend.dtos.ReportAppointmentStatusDto;
 import com.bit.backend.dtos.ReportCancelledAppointmentScheduleDto;
 import com.bit.backend.exceptions.AppException;
@@ -104,17 +102,39 @@ public class ReportAppointmentStatusServiceImpl implements ReportAppointmentStat
     // }
     // }
 
-    @Override
-    public List<AppointmentScheduleDto> getAppointmentCountByStatus() {
-        System.out.println("HELLO");
-        try {
-            System.out.println("HEY");
-            List<AppointmentScheduleDto> results = appointmentScheduleRepository.getAppointmentCountByStatus();
-            System.out.println("HIMAYAA-----------------------------------" + results);
-            return results;
-        } catch (Exception e) {
-            throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+   @Override
+   public List<AppointmentScheduleDto> getAppointmentCountByStatus() {
+    try {
+        List<Object[]> rows = appointmentScheduleRepository.getAppointmentCountByStatus();
+
+        List<AppointmentScheduleDto> list = new ArrayList<>();
+
+        for (Object[] row : rows) {
+
+            AppointmentScheduleDto appointmentScheduleDto = new AppointmentScheduleDto();
+
+            appointmentScheduleDto.setAppointmentStatus((String) row[0]);
+            appointmentScheduleDto.setTotalCount(((Number) row[1]).longValue());
+
+            list.add(appointmentScheduleDto);
         }
+
+        return list;
+
+    } catch (Exception e) {
+        throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
+
+
+
+
+
+
+
+ 
 
 }
