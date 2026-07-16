@@ -233,6 +233,25 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         this.clientService.getData().subscribe(res => this.clients = (res as any[]) || []);
     }
 
+    // preffered stylist auto fill according to the selected client
+    clientChanged(clientId: number): void {
+        const selectedClient = this.clients.find(
+            client => client.id === clientId
+        );
+        console.log("this is the selected client:", selectedClient);
+        if (selectedClient && selectedClient.preferredStylist) {
+            const matchingEmployee = this.employees.find(
+                emp => emp.employeeName === selectedClient.preferredStylist
+            );
+            console.log("this is the matching employee:", matchingEmployee);
+            if (matchingEmployee) {
+                this.appointmentScheduleForm.patchValue({
+                    employeeId: matchingEmployee.id
+                });
+            }
+        }
+    }
+
     loadEmployees(): void {
         this.employeeService.getData().subscribe(res => this.employees = (res as any[]) || []);
     }

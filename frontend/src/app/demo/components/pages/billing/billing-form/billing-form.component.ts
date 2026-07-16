@@ -175,6 +175,7 @@ export class BillingFormComponent implements OnInit {
       this.allServices = Array.isArray(res) ? res : (res?.data || []);
     });
     this.productService.getData().subscribe((res: any) => {
+      console.log("These are product Data:", res);
       this.allProducts = Array.isArray(res) ? res : (res?.data || []);
     });
   }
@@ -234,9 +235,9 @@ export class BillingFormComponent implements OnInit {
 
     // Check all common price fields used in the system for services and products
     // products use sellingPrice, services typically use price or servicePrice
-    const price = selectedItem.sellingPrice !== undefined ? selectedItem.sellingPrice : 
-                  (selectedItem.price !== undefined ? selectedItem.price : 
-                  (selectedItem.servicePrice !== undefined ? selectedItem.servicePrice : 0));
+    const price = selectedItem.sellingPrice !== undefined ? selectedItem.sellingPrice :
+      (selectedItem.price !== undefined ? selectedItem.price :
+        (selectedItem.servicePrice !== undefined ? selectedItem.servicePrice : 0));
 
     group.patchValue({
       name: selectedItem, // Save the whole object; getItemLabel and submission logic handle it
@@ -282,7 +283,7 @@ export class BillingFormComponent implements OnInit {
     if (this.billingForm.invalid) return;
 
     this.isButtonDisabled = true;
-    const formValue = { 
+    const formValue = {
       ...this.billingForm.value,
       paymentStatus: 'Completed' // Automatically set status to Completed as requested
     };
@@ -292,9 +293,9 @@ export class BillingFormComponent implements OnInit {
     const appointmentObj = this.data.preFill?.appointment || this.data.billing?.appointment;
 
     if (appointmentId && appointmentObj) {
-      const updatedAppointment = { 
-        ...appointmentObj, 
-        appointmentStatus: 'Completed' 
+      const updatedAppointment = {
+        ...appointmentObj,
+        appointmentStatus: 'Completed'
       };
       this.appointmentService.editData(appointmentId, updatedAppointment).subscribe({
         next: () => console.log('Appointment status updated to Completed'),

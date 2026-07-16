@@ -1,6 +1,5 @@
 package com.bit.backend.services.impl;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ public class BillingServiceImpl implements BillingService {
     private final BillingRepository billingRepository;
     private final BillingMapper billingMapper;
 
-    public BillingServiceImpl(BillingRepository billingRepository, BillingMapper billingMapper){
+    public BillingServiceImpl(BillingRepository billingRepository, BillingMapper billingMapper) {
         this.billingMapper = billingMapper;
         this.billingRepository = billingRepository;
     }

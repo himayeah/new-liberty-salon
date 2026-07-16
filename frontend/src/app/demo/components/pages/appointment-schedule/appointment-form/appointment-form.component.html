@@ -8,7 +8,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Client Name</mat-label>
                 <!--Form Control name is set in the ts file-->
-                <mat-select formControlName="clientId">
+                <mat-select formControlName="clientId" (selectionChange)="clientChanged($event.value)">
                     <mat-option *ngFor="let client of clients" [value]="client.id">
                         {{ client.firstName }} {{ client.lastName }}
                     </mat-option>
