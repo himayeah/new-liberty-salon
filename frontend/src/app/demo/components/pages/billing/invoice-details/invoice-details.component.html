@@ -1,0 +1,114 @@
+<h2 mat-dialog-title class="invoice-title">Invoice Details</h2>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="mat-typography p-4 invoice-container">
+    <div *ngIf="loading" class="d-flex justify-content-center align-items-center p-5">
+        <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading && invoice">
+        <!-- Invoice Header -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-6">
+                <div class="brand-title">New Liberty Salon</div>
+                <div class="text-muted">Professional Hair & Beauty Salon</div>
+            </div>
+            <div class="col-6 text-end">
+                <h3 class="m-0 text-primary">{{ invoice.invoiceNumber }}</h3>
+                <div class="mt-1">
+                    <span class="badge rounded-pill bg-success px-3 py-2">
+                        {{ invoice.paymentStatus }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider class="mb-4"></mat-divider>
+
+        <!-- Invoice Meta Info -->
+        <div class="row mb-4">
+            <div class="col-6">
+                <div class="meta-label">Billed To:</div>
+                <div class="meta-value">{{ invoice.clientName }}</div>
+            </div>
+            <div class="col-3">
+                <div class="meta-label">Date:</div>
+                <div class="meta-value">{{ formatInvoiceDate(invoice.invoiceDate) }}</div>
+            </div>
+            <div class="col-3">
+                <div class="meta-label">Due Date:</div>
+                <div class="meta-value">{{ formatInvoiceDate(invoice.dueDate) }}</div>
+            </div>
+        </div>
+
+        <!-- Invoice Items Table -->
+        <h4 class="mb-2 mt-4 font-bold text-slate-700">Invoice Items</h4>
+        <table class="table table-striped table-hover align-middle invoice-table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Service / Product Name</th>
+                    <th scope="col" class="text-end">Qty</th>
+                    <th scope="col" class="text-end">Unit Price</th>
+                    <th scope="col" class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of invoice.items; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <span class="item-type" [class.type-service]="item.lineItemType === 'SERVICE'" [class.type-product]="item.lineItemType !== 'SERVICE'">
+                            {{ item.lineItemType }}
+                        </span>
+                    </td>
+                    <td>{{ item.serviceProductName }}</td>
+                    <td class="text-end">{{ item.quantity }}</td>
+                    <td class="text-end">{{ item.unitPrice | number:'1.2-2' }}</td>
+                    <td class="text-end font-semibold">{{ item.lineTotal | number:'1.2-2' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Invoice Summary -->
+        <div class="row justify-content-end mt-4">
+            <div class="col-5">
+                <table class="summary-table w-100">
+                    <tr>
+                        <td class="label-cell text-muted">Subtotal</td>
+                        <td class="value-cell text-end font-semibold">{{ invoice.totalAmount | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell text-muted">Tax</td>
+                        <td class="value-cell text-end font-semibold">{{ invoice.taxAmount | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr *ngIf="invoice.discountAmount > 0">
+                        <td class="label-cell text-muted">Discount</td>
+                        <td class="value-cell text-end text-danger font-semibold">-{{ invoice.discountAmount | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr class="total-row border-top">
+                        <td class="label-cell font-bold pt-2 text-slate-800">Total Amount</td>
+                        <td class="value-cell text-end font-bold pt-2 text-primary fs-5">{{ invoice.totalAmountAfterTaxAndDiscount | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr class="paid-row border-top">
+                        <td class="label-cell pt-2 text-muted">Amount Paid</td>
+                        <td class="value-cell text-end pt-2 text-success font-semibold">{{ invoice.amountPaid | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr class="due-row border-top border-bottom">
+                        <td class="label-cell font-bold pt-2 pb-2 text-slate-800">Balance Due</td>
+                        <td class="value-cell text-end font-bold pt-2 pb-2 text-danger fs-6">{{ invoice.balanceDue | number:'1.2-2' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && !invoice" class="text-center text-danger p-5">
+        Failed to load invoice details. Please try again.
+    </div>
+</mat-dialog-content>
+
+<mat-divider></mat-divider>
+<mat-dialog-actions align="end" class="p-3">
+    <button mat-raised-button color="primary" (click)="onClose()">Close</button>
+</mat-dialog-actions>
