@@ -56,6 +56,7 @@ import { PurchaseOrderDetailFormComponent } from './purchase-order-detail/purcha
 import { GrnFormComponent } from './grn/grn-form/grn-form.component';
 import { BillingComponent } from './billing/billing.component';
 import { BillingFormComponent } from './billing/billing-form/billing-form.component';
+import { InvoiceDetailsComponent } from './billing/invoice-details/invoice-details.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
 import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
@@ -96,6 +97,7 @@ import { EmployeeCommissionsComponent } from './employee-commissions/employee-co
     ProductFormComponent,
     PurchaseOrderDetailFormComponent,
     BillingComponent,
+    InvoiceDetailsComponent,
     ReportClientRegComponent,
     ProductSalesReportComponent,
     ReportAppointmentStatusComponent,

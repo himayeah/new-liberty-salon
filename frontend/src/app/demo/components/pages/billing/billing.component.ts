@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { BillingService } from 'src/app/services/billing/billing.service';
 import { BillingFormComponent } from './billing-form/billing-form.component';
+import { InvoiceDetailsComponent } from './invoice-details/invoice-details.component';
 
 @Component({
   selector: 'app-billing',
@@ -100,11 +101,10 @@ export class BillingComponent implements OnInit {
 
 
   viewInvoiceDetails(data: any): void {
-    const dialogRef = this.dialog.open(BillingFormComponent, {
-      width: '1000px',
+    const dialogRef = this.dialog.open(InvoiceDetailsComponent, {
+      width: '800px',
       data: { 
-        mode: 'view', 
-        billing: data 
+        billingId: data.id 
       }
     });
 

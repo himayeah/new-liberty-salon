@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
+    java.util.Optional<ProductEntity> findByProductName(String productName);
+
     // Product sales Report
     @Query(value = "SELECT p.product_name, SUM(g.received_quantity) AS total " +
             "FROM grn g " +
