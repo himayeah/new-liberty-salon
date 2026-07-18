@@ -32,8 +32,7 @@ public class BillingController {
     }
 
     @PostMapping
-    public ResponseEntity<BillingDto> addBilling(
-            @RequestBody BillingDto billingDto) {
+    public ResponseEntity<BillingDto> addBilling(@RequestBody BillingDto billingDto) {
         try {
             BillingDto billingDtoResponse = billingService.addBilling(billingDto);
             return ResponseEntity.ok(billingDtoResponse);

@@ -71,7 +71,7 @@ export class ClientFormComponent implements OnInit {
     this.clientForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
       lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.email]],
       phoneNumber: ['', Validators.required],
       //exampleValidator(can contain letters, numbers (0-9), and the character limit should be between 3-10): 
       // ['', Validators.pattern('^[a-zA-Z0-9]{3,10}$')],

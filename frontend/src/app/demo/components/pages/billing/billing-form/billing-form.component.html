@@ -15,10 +15,16 @@
         </div>
 
         <div class="form-grid">
+
             <!-- Client Name -->
             <mat-form-field appearance="outline">
                 <mat-label>Client Name</mat-label>
-                <input matInput formControlName="clientName" placeholder="Enter client name" />
+                <!--Form Control name is set in the ts file-->
+                <mat-select formControlName="clientId">
+                    <mat-option *ngFor="let client of clients" [value]="client.id">
+                        {{ client.firstName }} {{ client.lastName }}
+                    </mat-option>
+                </mat-select>
                 <mat-error *ngIf="submitted && billingForm.get('clientName')?.hasError('required')">
                     Client Name is required
                 </mat-error>

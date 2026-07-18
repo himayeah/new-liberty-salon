@@ -1,5 +1,6 @@
 package com.bit.backend.services.impl;
 
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +34,9 @@ public class BillingServiceImpl implements BillingService {
     private final InvoiceRepository invoiceRepository;
 
     public BillingServiceImpl(BillingRepository billingRepository, BillingMapper billingMapper,
-                              InventoryRepository inventoryRepository, TaxRepository taxRepository,
-                              ProductRepository productRepository, ServiceRepository serviceRepository,
-                              InvoiceRepository invoiceRepository) {
+            InventoryRepository inventoryRepository, TaxRepository taxRepository,
+            ProductRepository productRepository, ServiceRepository serviceRepository,
+            InvoiceRepository invoiceRepository) {
         this.billingMapper = billingMapper;
         this.billingRepository = billingRepository;
         this.inventoryRepository = inventoryRepository;
@@ -46,35 +47,54 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
-    public BillingDto addBilling(BillingDto dto) {
+
+    // Add billing- HND
+    public BillingDto addBilling(BillingDto billingdto) {
         try {
-            BillingEntity entity = billingMapper.toBillingEntity(dto);
-            if (entity.getPurchases() != null) {
-                for (BillingPurchaseEntity p : entity.getPurchases()) {
-                    p.setBilling(entity);
-                    if ("PRODUCT PURCHASE".equals(p.getCategory())) {
-                        java.util.Optional<InventoryEntity> invOpt = java.util.Optional.empty();
-                        if (p.getProductId() != null) {
-                            invOpt = inventoryRepository.findByProductId(p.getProductId());
-                        } else if (p.getName() != null) {
-                            invOpt = inventoryRepository.findByProductProductName(p.getName());
+            BillingEntity billingEntity = billingMapper.toBillingEntity(billingdto);
+
+            if (billingEntity.getPurchases() != null) {
+                // loops through each purchase item in the billing
+                for (BillingPurchaseEntity billingPurchaseEntity : billingEntity.getPurchases()) {
+                    billingPurchaseEntity.setBilling(billingEntity);
+
+                    // deduct product purchases from Inventory
+                    if ("PRODUCT PURCHASE".equals(billingPurchaseEntity.getCategory())) {
+
+                        // Creates an empty variable first. Later it will store the found inventory
+                        // record
+                        Optional<InventoryEntity> inventoryOptional = Optional.empty();
+
+                        if (billingPurchaseEntity.getProductId() != null) {
+                            // returns the entire product record for the selected productId
+                            inventoryOptional = inventoryRepository
+                                    .findByProductId(billingPurchaseEntity.getProductId());
+                        } else if (billingPurchaseEntity.getName() != null) {
+                            // checks by the product name also
+                            inventoryOptional = inventoryRepository
+                                    .findByProductProductName(billingPurchaseEntity.getName());
                         }
-                        
-                        if (invOpt.isPresent()) {
-                            InventoryEntity inv = invOpt.get();
-                            int qty = p.getQuantity() != null ? p.getQuantity() : 0;
-                            inv.setCurrentStock(inv.getCurrentStock() - qty);
-                            inventoryRepository.save(inv);
+
+                        if (inventoryOptional.isPresent()) {
+
+                            // optional is a wrapper. so here we get the actual entity record
+                            InventoryEntity inventory = inventoryOptional.get();
+
+                            // do the stock update
+                            inventory
+                                    .setCurrentStock(inventory.getCurrentStock() - billingPurchaseEntity.getQuantity());
+
+                            inventoryRepository.save(inventory);
                         }
                     }
                 }
             }
-            BillingEntity savedItem = billingRepository.save(entity);
+            BillingEntity savedBilling = billingRepository.save(billingEntity);
 
             // Generate Invoice and Invoice Items
-            generateInvoice(savedItem);
+            generateInvoice(savedBilling);
 
-            return billingMapper.toBillingDto(savedItem);
+            return billingMapper.toBillingDto(savedBilling);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.BAD_REQUEST);
         }
@@ -85,14 +105,17 @@ public class BillingServiceImpl implements BillingService {
         try {
             java.util.List<com.bit.backend.entities.TaxEntity> taxes = taxRepository.findAll();
             for (com.bit.backend.entities.TaxEntity t : taxes) {
-                if (t.getIsActive() != null && ("true".equalsIgnoreCase(t.getIsActive()) || "1".equals(t.getIsActive()) || "active".equalsIgnoreCase(t.getIsActive()))) {
+                if (t.getIsActive() != null && ("true".equalsIgnoreCase(t.getIsActive()) || "1".equals(t.getIsActive())
+                        || "active".equalsIgnoreCase(t.getIsActive()))) {
                     try {
                         taxRate = Double.parseDouble(t.getTaxRate());
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                     break;
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         InvoiceEntity invoice = new InvoiceEntity();
         invoice.setBilling(billing);
@@ -115,19 +138,21 @@ public class BillingServiceImpl implements BillingService {
                 item.setInvoice(invoice);
                 item.setLineItemType(p.getCategory());
                 item.setServiceProductName(p.getName());
-                
+
                 if ("PRODUCT PURCHASE".equals(p.getCategory())) {
                     if (p.getProductId() != null) {
                         item.setServiceProductId(p.getProductId());
                     } else {
-                        java.util.Optional<com.bit.backend.entities.ProductEntity> prodOpt = productRepository.findByProductName(p.getName());
+                        java.util.Optional<com.bit.backend.entities.ProductEntity> prodOpt = productRepository
+                                .findByProductName(p.getName());
                         prodOpt.ifPresent(productEntity -> item.setServiceProductId(productEntity.getId()));
                     }
                 } else if ("SERVICE".equals(p.getCategory())) {
                     if (p.getServiceId() != null) {
                         item.setServiceProductId(p.getServiceId());
                     } else {
-                        java.util.Optional<com.bit.backend.entities.ServiceEntity> servOpt = serviceRepository.findByServiceName(p.getName());
+                        java.util.Optional<com.bit.backend.entities.ServiceEntity> servOpt = serviceRepository
+                                .findByServiceName(p.getName());
                         servOpt.ifPresent(serviceEntity -> item.setServiceProductId(serviceEntity.getId()));
                     }
                 }
