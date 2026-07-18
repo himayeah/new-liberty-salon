@@ -154,21 +154,21 @@ const navigationModel = [
                 label: 'Supplier',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-shopping-cart',
+                icon: 'pi pi-truck',
                 routerLink: ['/pages/supplier']
             },
             {
                 label: 'Purchase Order',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-shopping-cart',
+                icon: 'pi pi-shopping-bag',
                 routerLink: ['/pages/purchase-order']
             },
             {
                 label: 'Tax',
                 isVisible: false,
                 auth: authenticationEnum.Home_Dashboard,
-                icon: 'pi pi-shopping-cart',
+                icon: 'pi pi-percentage',
                 routerLink: ['pages/tax']
             }
         ],

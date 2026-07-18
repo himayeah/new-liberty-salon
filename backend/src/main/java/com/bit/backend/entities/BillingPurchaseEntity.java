@@ -28,6 +28,20 @@ public class BillingPurchaseEntity {
     @Column(name = "name")
     private String name;
 
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Column(name = "productId")
+    private Long productId;
+
+    @Column(name = "serviceId")
+    private Long serviceId;
+
     @Column(name = "quantity")
     private Integer quantity;
 

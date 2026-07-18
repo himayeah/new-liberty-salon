@@ -52,8 +52,14 @@ public class BillingServiceImpl implements BillingService {
             if (entity.getPurchases() != null) {
                 for (BillingPurchaseEntity p : entity.getPurchases()) {
                     p.setBilling(entity);
-                    if ("PRODUCT PURCHASE".equals(p.getCategory()) && p.getName() != null) {
-                        java.util.Optional<InventoryEntity> invOpt = inventoryRepository.findByProductProductName(p.getName());
+                    if ("PRODUCT PURCHASE".equals(p.getCategory())) {
+                        java.util.Optional<InventoryEntity> invOpt = java.util.Optional.empty();
+                        if (p.getProductId() != null) {
+                            invOpt = inventoryRepository.findByProductId(p.getProductId());
+                        } else if (p.getName() != null) {
+                            invOpt = inventoryRepository.findByProductProductName(p.getName());
+                        }
+                        
                         if (invOpt.isPresent()) {
                             InventoryEntity inv = invOpt.get();
                             int qty = p.getQuantity() != null ? p.getQuantity() : 0;
@@ -111,11 +117,19 @@ public class BillingServiceImpl implements BillingService {
                 item.setServiceProductName(p.getName());
                 
                 if ("PRODUCT PURCHASE".equals(p.getCategory())) {
-                    java.util.Optional<com.bit.backend.entities.ProductEntity> prodOpt = productRepository.findByProductName(p.getName());
-                    prodOpt.ifPresent(productEntity -> item.setServiceProductId(productEntity.getId()));
+                    if (p.getProductId() != null) {
+                        item.setServiceProductId(p.getProductId());
+                    } else {
+                        java.util.Optional<com.bit.backend.entities.ProductEntity> prodOpt = productRepository.findByProductName(p.getName());
+                        prodOpt.ifPresent(productEntity -> item.setServiceProductId(productEntity.getId()));
+                    }
                 } else if ("SERVICE".equals(p.getCategory())) {
-                    java.util.Optional<com.bit.backend.entities.ServiceEntity> servOpt = serviceRepository.findByServiceName(p.getName());
-                    servOpt.ifPresent(serviceEntity -> item.setServiceProductId(serviceEntity.getId()));
+                    if (p.getServiceId() != null) {
+                        item.setServiceProductId(p.getServiceId());
+                    } else {
+                        java.util.Optional<com.bit.backend.entities.ServiceEntity> servOpt = serviceRepository.findByServiceName(p.getName());
+                        servOpt.ifPresent(serviceEntity -> item.setServiceProductId(serviceEntity.getId()));
+                    }
                 }
 
                 item.setQuantity(qty);
