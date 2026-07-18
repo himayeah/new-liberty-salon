@@ -94,15 +94,17 @@
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> Actions </th>
                         <td mat-cell *matCellDef="let element">
-                            <!--<button *ngIf="!isReceptionist" mat-icon-button color="primary" (click)="editService(element)" matTooltip="Edit">-->
-                            <button mat-icon-button color="primary" (click)="editService(element)" matTooltip="Edit">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                            <!--If Not Receptionist, show the element. If Receptionist, Hide-->
-                            <!-- <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteService(element)" matTooltip="Delete"> -->
-                            <button mat-icon-button color="warn" (click)="deleteService(element)" matTooltip="Delete">
-                                <mat-icon>delete</mat-icon>
-                            </button>
+                            <div style="display: flex; gap: 8px; align-items: center; white-space: nowrap;">
+                                <!--<button *ngIf="!isReceptionist" mat-icon-button color="primary" (click)="editService(element)" matTooltip="Edit">-->
+                                <button mat-icon-button color="primary" (click)="editService(element)" matTooltip="Edit">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <!--If Not Receptionist, show the element. If Receptionist, Hide-->
+                                <!-- <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteService(element)" matTooltip="Delete"> -->
+                                <button mat-icon-button color="warn" (click)="deleteService(element)" matTooltip="Delete">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
                         </td>
                     </ng-container>
 
