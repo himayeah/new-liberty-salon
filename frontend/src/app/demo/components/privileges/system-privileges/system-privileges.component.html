@@ -72,6 +72,7 @@
         </table>
         <mat-paginator
             #sourcePaginator="matPaginator"
+            [pageSize]="10"
             [pageSizeOptions]="[5, 10, 25, 100]"
             aria-label="Select page of users"
         ></mat-paginator>
@@ -165,6 +166,7 @@
         </table>
         <mat-paginator
             #targetPaginator="matPaginator"
+            [pageSize]="10"
             [pageSizeOptions]="[5, 10, 25, 100]"
             aria-label="Select page of users"
         ></mat-paginator>

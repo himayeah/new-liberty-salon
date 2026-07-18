@@ -18,6 +18,7 @@ import { BillingService } from 'src/app/services/billing/billing.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { TaxServiceService } from 'src/app/services/tax/tax-service.service';
 import { MatRadioModule } from '@angular/material/radio';
+import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 
 @Component({
@@ -42,6 +43,7 @@ import { AppointmentSchedulingServiceService } from 'src/app/services/appointmen
   templateUrl: './billing-form.component.html',
   styleUrl: './billing-form.component.scss'
 })
+
 export class BillingFormComponent implements OnInit {
   billingForm: FormGroup;
   mode: 'add' | 'edit' | 'view' = 'add';
@@ -66,6 +68,7 @@ export class BillingFormComponent implements OnInit {
   allProducts: any[] = [];
   filteredOptions: { [key: number]: any[] } = {};
   activeTaxRate: number = 0;
+  clients: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +77,7 @@ export class BillingFormComponent implements OnInit {
     private serviceService: ServiceService,
     private productService: ProductServiceService,
     private taxService: TaxServiceService,
+    private clientService: ClientRegServiceService,
     private appointmentService: AppointmentSchedulingServiceService,
     public dialogRef: MatDialogRef<BillingFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -122,6 +126,7 @@ export class BillingFormComponent implements OnInit {
     this.populateSelectData();
     this.fetchActiveTax();
     this.setupCalculationSubscriptions();
+    this.loadClients();
   }
 
   fetchActiveTax(): void {
@@ -235,6 +240,11 @@ export class BillingFormComponent implements OnInit {
     });
   }
 
+  // load clients for the client name selection dropdown
+  loadClients(): void {
+    this.clientService.getData().subscribe(res => this.clients = (res as any[]) || []);
+  }
+
   onOptionSelected(event: any, index: number) {
     const selectedItem = event.option.value;
     const group = this.purchases.at(index) as FormGroup;
@@ -319,10 +329,10 @@ export class BillingFormComponent implements OnInit {
       formValue.purchases = formValue.purchases.map((p: any) => {
         const itemObj = p.name;
         const nameStr = typeof itemObj === 'string' ? itemObj : this.getItemLabel(itemObj);
-        
+
         let productId = p.productId;
         let serviceId = p.serviceId;
-        
+
         if (typeof itemObj !== 'string' && itemObj) {
           if (p.category === 'PRODUCT PURCHASE') {
             productId = itemObj.id;
@@ -332,7 +342,7 @@ export class BillingFormComponent implements OnInit {
             productId = null;
           }
         }
-        
+
         return {
           ...p,
           name: nameStr,
@@ -352,6 +362,10 @@ export class BillingFormComponent implements OnInit {
         next: (response) => {
           console.log("This is Billing Data:", response);
           this.messageService.showSuccess('Billing added successfully!');
+          const hasProductPurchase = formValue.purchases && formValue.purchases.some((p: any) => p.category === 'PRODUCT PURCHASE');
+          if (hasProductPurchase) {
+            this.messageService.showSuccess('Invenctory Updated');
+          }
           this.dialogRef.close(response);
         },
         error: (error) => {
@@ -363,6 +377,10 @@ export class BillingFormComponent implements OnInit {
       this.billingService.editData(this.data.billing.id, formValue).subscribe({
         next: (response) => {
           this.messageService.showSuccess('Billing updated successfully!');
+          const hasProductPurchase = formValue.purchases && formValue.purchases.some((p: any) => p.category === 'PRODUCT PURCHASE');
+          if (hasProductPurchase) {
+            this.messageService.showSuccess('Invenctory Updated');
+          }
           this.dialogRef.close(response);
         },
         error: (error) => {

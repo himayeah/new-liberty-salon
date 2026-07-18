@@ -86,10 +86,12 @@
               <button mat-icon-button color="accent" (click)="viewData(element)" matTooltip="View Profile">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button *ngIf="!isReceptionist" mat-icon-button color="primary" (click)="editData(element)" matTooltip="Edit">
+              <button *ngIf="!isReceptionist" mat-icon-button color="primary" (click)="editData(element)"
+                matTooltip="Edit">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteData(element)" matTooltip="Delete">
+              <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteData(element)"
+                matTooltip="Delete">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
@@ -112,7 +114,8 @@
           </tr>
         </table>
       </div>
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of employees">
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+        aria-label="Select page of employees">
       </mat-paginator>
     </div>
   </mat-card>
