@@ -13,6 +13,8 @@ public class BillingPurchaseDto {
     private Long id;
     private String category;
     private String name;
+    private Long productId;
+    private Long serviceId;
     private Integer quantity;
     private Double price;
 }

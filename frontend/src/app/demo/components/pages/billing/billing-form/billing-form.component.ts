@@ -191,6 +191,8 @@ export class BillingFormComponent implements OnInit {
       id: [data?.id || null],
       category: [data?.category || 'SERVICE', Validators.required],
       name: [data?.name || '', Validators.required],
+      productId: [data?.productId || null],
+      serviceId: [data?.serviceId || null],
       quantity: [data?.quantity || 1, [Validators.required, Validators.min(1)]],
       price: [data?.price || 0, [Validators.required, Validators.min(0)]]
     });
@@ -201,6 +203,10 @@ export class BillingFormComponent implements OnInit {
     // Listen for category changes to reset name and update options
     purchaseGroup.get('category')?.valueChanges.subscribe(() => {
       purchaseGroup.get('name')?.setValue('');
+      purchaseGroup.patchValue({
+        productId: null,
+        serviceId: null
+      });
       this.updateFilteredOptions(index, purchaseGroup);
     });
 
@@ -239,9 +245,13 @@ export class BillingFormComponent implements OnInit {
       (selectedItem.price !== undefined ? selectedItem.price :
         (selectedItem.servicePrice !== undefined ? selectedItem.servicePrice : 0));
 
+    const category = group.get('category')?.value;
+
     group.patchValue({
       name: selectedItem, // Save the whole object; getItemLabel and submission logic handle it
-      price: price
+      price: price,
+      productId: category === 'PRODUCT PURCHASE' ? selectedItem.id : null,
+      serviceId: category === 'SERVICE' ? selectedItem.id : null
     });
   }
 
@@ -272,6 +282,7 @@ export class BillingFormComponent implements OnInit {
       this.addPurchase({
         category: 'SERVICE',
         name: serviceName,
+        serviceId: serviceId,
         quantity: 1,
         price: price
       });
@@ -303,12 +314,32 @@ export class BillingFormComponent implements OnInit {
       });
     }
 
-    // Convert 'name' from object/string to string for backend
+    // Convert 'name' from object/string to string for backend and ensure productId/serviceId are populated
     if (formValue.purchases && Array.isArray(formValue.purchases)) {
-      formValue.purchases = formValue.purchases.map((p: any) => ({
-        ...p,
-        name: typeof p.name === 'string' ? p.name : this.getItemLabel(p.name)
-      }));
+      formValue.purchases = formValue.purchases.map((p: any) => {
+        const itemObj = p.name;
+        const nameStr = typeof itemObj === 'string' ? itemObj : this.getItemLabel(itemObj);
+        
+        let productId = p.productId;
+        let serviceId = p.serviceId;
+        
+        if (typeof itemObj !== 'string' && itemObj) {
+          if (p.category === 'PRODUCT PURCHASE') {
+            productId = itemObj.id;
+            serviceId = null;
+          } else if (p.category === 'SERVICE') {
+            serviceId = itemObj.id;
+            productId = null;
+          }
+        }
+        
+        return {
+          ...p,
+          name: nameStr,
+          productId: productId,
+          serviceId: serviceId
+        };
+      });
     }
 
     // Convert date to timestamp for backend
@@ -319,6 +350,7 @@ export class BillingFormComponent implements OnInit {
     if (this.mode === 'add') {
       this.billingService.serviceCall(formValue).subscribe({
         next: (response) => {
+          console.log("This is Billing Data:", response);
           this.messageService.showSuccess('Billing added successfully!');
           this.dialogRef.close(response);
         },
