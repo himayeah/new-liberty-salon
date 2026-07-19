@@ -2,7 +2,7 @@
 
 <mat-dialog-content>
   <form [formGroup]="employeeForm" class="form-container">
-    
+
     <div class="form-row">
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Employee Name</mat-label>
@@ -13,6 +13,14 @@
         <mat-label>Email Address</mat-label>
         <input matInput formControlName="email" placeholder="Email Address" type="email">
       </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-50">
+        <mat-label>NIC</mat-label>
+        <input matInput formControlName="nic" placeholder="NIC Number" type="text">
+        <mat-error *ngIf="employeeForm.get('nic')?.hasError('pattern')">
+          Enter a Valid NIC Number
+        </mat-error>
+      </mat-form-field>
     </div>
 
     <div class="form-row">
@@ -22,7 +30,7 @@
         <mat-datepicker-toggle matSuffix [for]="joinPicker"></mat-datepicker-toggle>
         <mat-datepicker #joinPicker></mat-datepicker>
       </mat-form-field>
-      
+
       <mat-form-field appearance="outline" class="flex-50">
         <mat-label>Designation</mat-label>
         <mat-select formControlName="designation">

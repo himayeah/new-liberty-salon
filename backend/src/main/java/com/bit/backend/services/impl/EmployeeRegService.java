@@ -120,7 +120,7 @@ public class EmployeeRegService implements EmployeeRegServiceI {
             EmployeeRegEntity newEmployeeRegEntity = employeeRegMapper.toEmployeeRegEntity(employeeRegDto);
             newEmployeeRegEntity.setId(id);
 
-            // Preserve credentials and tokens from existing entity if they are not provided
+            // Preserve credentials, tokens, and profile image from existing entity if they are not provided
             // in DTO
             if (newEmployeeRegEntity.getPassword() == null || newEmployeeRegEntity.getPassword().isEmpty()) {
                 newEmployeeRegEntity.setPassword(existing.getPassword());
@@ -130,6 +130,9 @@ public class EmployeeRegService implements EmployeeRegServiceI {
             }
             if (newEmployeeRegEntity.getResetToken() == null || newEmployeeRegEntity.getResetToken().isEmpty()) {
                 newEmployeeRegEntity.setResetToken(existing.getResetToken());
+            }
+            if (newEmployeeRegEntity.getProfileImage() == null || newEmployeeRegEntity.getProfileImage().isEmpty()) {
+                newEmployeeRegEntity.setProfileImage(existing.getProfileImage());
             }
 
             EmployeeRegEntity employeeRegEntity = employeeRegRepository.save(newEmployeeRegEntity);

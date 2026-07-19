@@ -13,7 +13,7 @@
           <mat-icon class="material-icons">add</mat-icon> Add New Appointment
         </button>
 
-       <!--Get No Show Appointments
+        <!--Get No Show Appointments
         <button mat-raised-button color="primary" (click)="getNoShowAppointments()">
           <mat-icon class="material-icons">add</mat-icon> Get No Show Appointments
         </button>-->
@@ -59,18 +59,20 @@
 
           <ng-container matColumnDef="appointmentDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-            <td mat-cell *matCellDef="let element">{{ element.appointmentDate | date:'mediumDate' }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.appointmentDate | date:'yyyy-mm-dd' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="appointmentStartTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Start </th>
-            <td mat-cell *matCellDef="let element">{{ element.appointmentStartTime ? (element.appointmentStartTime | time12) : (element.appointmentDate ?
+            <td mat-cell *matCellDef="let element">{{ element.appointmentStartTime ? (element.appointmentStartTime |
+              time12) : (element.appointmentDate ?
               (element.appointmentDate | date:'shortTime') : '') }}</td>
           </ng-container>
 
           <ng-container matColumnDef="appointmentEndTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> End </th>
-            <td mat-cell *matCellDef="let element">{{ element.appointmentEndTime ? (element.appointmentEndTime | time12) : '' }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.appointmentEndTime ? (element.appointmentEndTime | time12)
+              : '' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="appointmentStatus">
@@ -111,10 +113,8 @@
                   <mat-icon class="material-icons">edit</mat-icon>
                 </button>
 
-                <button *ngIf="element.appointmentStatus === 'READY FOR BILLING'" 
-                        mat-icon-button color="accent"
-                        (click)="proceedToBilling(element)" 
-                        matTooltip="Proceed to Billing">
+                <button *ngIf="element.appointmentStatus === 'READY FOR BILLING'" mat-icon-button color="accent"
+                  (click)="proceedToBilling(element)" matTooltip="Proceed to Billing">
                   <mat-icon class="material-icons">payments</mat-icon>
                 </button>
 

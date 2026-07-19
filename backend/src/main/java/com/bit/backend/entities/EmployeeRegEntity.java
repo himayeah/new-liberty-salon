@@ -19,6 +19,9 @@ public class EmployeeRegEntity {
     @Column(name = "employee_name")
     private String employeeName;
 
+    @Column(name = "nic")
+    private String nic;
+
     @Column(name = "date_joined")
     private String dateJoined;
 
