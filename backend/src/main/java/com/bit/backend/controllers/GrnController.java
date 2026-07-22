@@ -29,9 +29,9 @@ public class GrnController {
     // }
 
     @GetMapping("/by-purchase-order/{id}")
-    public ResponseEntity<GrnDto> getPurchaseOrderId(@PathVariable Long id) {
+    public ResponseEntity<List<GrnDto>> getPurchaseOrderId(@PathVariable Long id) {
         try {
-            GrnDto grnDtoist = grnService.getGrnByPurchaseOrderId(id);
+            List<GrnDto> grnDtoist = grnService.getGrnByPurchaseOrderId(id);
             return ResponseEntity.ok(grnDtoist);
         } catch (Exception e) {
             e.printStackTrace();

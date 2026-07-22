@@ -41,18 +41,12 @@ public class GrnServiceImpl implements GrnService {
     }
 
     @Override
-    public GrnDto getGrnByPurchaseOrderId(long id) {
+    public List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId) {
         try {
-            Optional<GrnEntity> optionalGrnEntity = grnRepository.findById(id);
-            System.out.println("Optional Grn Entity: " + optionalGrnEntity);
-            if (!optionalGrnEntity.isPresent()) {
-                throw new AppException("Grn Does Not Exist", HttpStatus.NOT_FOUND);
-            }
-            return mapper.toDto(optionalGrnEntity.get());
-        } catch (AppException e) {
-            throw e;
+            List<GrnEntity> grnEntities = grnRepository.findByPurchaseOrder_Id(purchaseOrderId);
+            return mapper.toDtoList(grnEntities);
         } catch (Exception e) {
-            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new AppException("Request failed with error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
