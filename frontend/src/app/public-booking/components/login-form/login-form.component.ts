@@ -27,19 +27,10 @@ export class LoginFormComponent {
     });
   }
 
-  // If an existing client, calls the searchClient method of the publicBookingService to search for the client.
-  // If the client is not found, calls the registerClient method of the publicBookingService to register the client.
-
   onSubmit() {
-    //checks the vaidity of the loginForm, firstName and email entered correct.
-    // Extracts the loginForm values and store them in variabes firstName and email.
-    // Calls the searchClient method of the publicBookingService to search for the client.
-    // If the client is found, it emits the userAuthenticated event with the client data.
-    // If the client is not found, it sets the isRegistering flag to true to show the registration form.
     if (this.loginForm.valid) {
       const { firstName, email } = this.loginForm.value;
 
-      //Since API calls are asynchronous, subscribe() waits for the response from backend
       this.publicBookingService.searchClient(firstName, email).subscribe({
         next: (client: any) => {
           this.messageService.add({ severity: 'success', summary: 'Welcome Back', detail: `Hello ${client.firstName}!` });

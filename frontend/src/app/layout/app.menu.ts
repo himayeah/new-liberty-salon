@@ -88,9 +88,9 @@ const navigationModel = [
         ],
     },
 
-    {
+    /*{
         label: 'Privileges',
-        isVisible: true,
+        isVisible: false,
         auth: authenticationEnum.Privileges,
         items: [
             {
@@ -108,7 +108,7 @@ const navigationModel = [
                 auth: authenticationEnum.Privilege_Groups,
             },
         ],
-    },
+    },*/
 
     {
         label: 'Master Data',

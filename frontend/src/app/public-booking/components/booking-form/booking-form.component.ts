@@ -55,9 +55,14 @@ export class BookingFormComponent implements OnInit {
         return;
       }
 
+      const selectedService = this.services.find(s => s.id === this.bookingForm.value.serviceId);
+      const duration = selectedService?.duration || 60;
+      const endTime = this.calculateEndTime(startTime, duration);
+
       const bookingData = {
         ...this.bookingForm.value,
         appointmentStartTime: startTime,
+        appointmentEndTime: endTime,
         clientName: this.client.firstName + ' ' + (this.client.lastName || ''),
         appointmentDate: this.formatDate(this.bookingForm.value.appointmentDate)
       };
@@ -72,6 +77,13 @@ export class BookingFormComponent implements OnInit {
         }
       });
     }
+  }
+
+  private calculateEndTime(startTime: string, durationMinutes: number): string {
+    const [hours, minutes] = startTime.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes + durationMinutes, 0, 0);
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   }
 
   formatDate(date: Date): string {

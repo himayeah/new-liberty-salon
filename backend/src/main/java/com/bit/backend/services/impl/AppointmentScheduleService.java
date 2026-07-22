@@ -301,6 +301,18 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     }
 
     private void normalizeAndValidateAppointmentTimes(AppointmentScheduleEntity entity) {
+        if ((entity.getAppointmentEndTime() == null || entity.getAppointmentEndTime().isBlank()) && entity.getAppointmentStartTime() != null) {
+            LocalTime start = parseTime(entity.getAppointmentStartTime());
+            if (start != null) {
+                int durationMinutes = 60;
+                if (entity.getService() != null && entity.getService().getDuration() != null && entity.getService().getDuration() > 0) {
+                    durationMinutes = entity.getService().getDuration();
+                }
+                LocalTime end = start.plusMinutes(durationMinutes);
+                entity.setAppointmentEndTime(end.format(DateTimeFormatter.ofPattern("HH:mm")));
+            }
+        }
+
         String startTime = normalizeTime(entity.getAppointmentStartTime());
         String endTime = normalizeTime(entity.getAppointmentEndTime());
 

@@ -136,8 +136,6 @@
                 *ngIf="appointmentScheduleForm.get('bookingSource')?.value === 'ONLINE'">
                 <mat-label>Notes</mat-label>
                 <textarea matInput formControlName="notes" rows="2"></textarea>
-                <mat-error *ngIf="appointmentScheduleForm.get('notes')?.hasError('required')">The Note is
-                    Required when the Booking Source is ONLINE</mat-error>
             </mat-form-field>
 
             <!-- Cancellation Reason -->
