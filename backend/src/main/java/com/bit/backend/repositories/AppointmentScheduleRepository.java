@@ -30,14 +30,15 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "ORDER BY COUNT(*) DESC LIMIT 1", nativeQuery = true)
         String getMostUsedService();
 
-        // Appointment Status Report- Cancelled appointments in a given date range
+        // Appointment Status Report- Cancelled appointments in the last 30 days
         @Query(value = "SELECT COUNT(*) " +
                         "FROM appointment_schedule " +
-                        "WHERE appointment_status = 'CANCELLED' AND appointment_date BETWEEN '2026-01-01' AND '2026-03-31' ", nativeQuery = true)
+                        "WHERE appointment_status = 'CANCELLED' " +
+                        "AND STR_TO_DATE(appointment_date, '%Y-%m-%d') BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
         long countCancelledAppointments();
 
         // Client Name | Service Name | Cancelled Date | Cancelled Reason of Cancelled
-        // Appointments within last 3 Months
+        // Appointments within the last 30 days
         @Query(value = "SELECT " +
                         "CONCAT(c.first_name, ' ', c.last_name) AS client_name," +
                         "s.service_name AS service_name, " +
@@ -47,7 +48,7 @@ public interface AppointmentScheduleRepository extends JpaRepository<Appointment
                         "JOIN client_registration c ON c.id = a.client_id " +
                         "JOIN service s ON s.id = a.service_id " +
                         "WHERE a.appointment_status = 'CANCELLED' " +
-                        "AND a.cancelled_date >= CURRENT_DATE - INTERVAL 3 MONTH ", nativeQuery = true)
+                        "AND STR_TO_DATE(a.cancelled_date, '%Y-%m-%d') BETWEEN CURRENT_DATE - INTERVAL 30 DAY AND CURRENT_DATE", nativeQuery = true)
         List<Object[]> getCancelledAppointmentDetails();
 
         // Dashboard chart (getAppointmentCountsByMonth)

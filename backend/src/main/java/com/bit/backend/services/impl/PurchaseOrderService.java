@@ -1,19 +1,24 @@
 package com.bit.backend.services.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.bit.backend.dtos.PurchaseOrderDto;
+import com.bit.backend.entities.GrnEntity;
+import com.bit.backend.entities.PurchaseOrderDetailEntity;
 import com.bit.backend.entities.PurchaseOrderEntity;
 import com.bit.backend.entities.SupplierEntity;
+import com.bit.backend.exceptions.AppException;
 import com.bit.backend.mappers.PurchaseOrderMapper;
+import com.bit.backend.repositories.GrnRepository;
+import com.bit.backend.repositories.PurchaseOrderDetailRepository;
 import com.bit.backend.repositories.PurchaseOrderRepository;
 import com.bit.backend.repositories.SupplierRepository;
 import com.bit.backend.services.PurchaseOrderServiceI;
-import com.bit.backend.exceptions.AppException;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -22,13 +27,19 @@ public class PurchaseOrderService implements PurchaseOrderServiceI {
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final PurchaseOrderMapper purchaseOrderMapper;
     private final SupplierRepository supplierRepository;
+    private final PurchaseOrderDetailRepository purchaseOrderDetailRepository;
+    private final GrnRepository grnRepository;
 
     public PurchaseOrderService(PurchaseOrderRepository purchaseOrderRepository,
             PurchaseOrderMapper purchaseOrderMapper,
-            SupplierRepository supplierRepository) {
+            SupplierRepository supplierRepository,
+            PurchaseOrderDetailRepository purchaseOrderDetailRepository,
+            GrnRepository grnRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseOrderMapper = purchaseOrderMapper;
         this.supplierRepository = supplierRepository;
+        this.purchaseOrderDetailRepository = purchaseOrderDetailRepository;
+        this.grnRepository = grnRepository;
     }
 
     @Override
@@ -82,6 +93,17 @@ public class PurchaseOrderService implements PurchaseOrderServiceI {
     public PurchaseOrderDto deletePurchaseOrder(Long id) {
         PurchaseOrderEntity existing = purchaseOrderRepository.findById(id)
                 .orElseThrow(() -> new AppException("Purchase Order not found", HttpStatus.NOT_FOUND));
+
+        List<PurchaseOrderDetailEntity> details = purchaseOrderDetailRepository.findByPurchaseOrder_Id(id);
+        if (!details.isEmpty()) {
+            purchaseOrderDetailRepository.deleteAll(details);
+        }
+
+        List<GrnEntity> grns = grnRepository.findByPurchaseOrder_Id(id);
+        if (!grns.isEmpty()) {
+            grnRepository.deleteAll(grns);
+        }
+
         purchaseOrderRepository.delete(existing);
         return purchaseOrderMapper.toDto(existing);
     }
