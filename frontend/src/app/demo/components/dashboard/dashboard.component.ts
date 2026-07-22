@@ -8,6 +8,9 @@ import { AppointmentSchedulingServiceService } from 'src/app/services/appointmen
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { BillingService } from 'src/app/services/billing/billing.service';
 import { ToastrService } from 'ngx-toastr';
+import { EmployeeAuthService } from '../../../employee-workspace/services/employee-auth.service';
+import { Role } from '../../../models/role.enum';
+import { InventoryServiceService } from 'src/app/services/inventory/inventory-service.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -40,8 +43,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private appointmentService: AppointmentSchedulingServiceService,
         private clientRegService: ClientRegServiceService,
         private billingService: BillingService,
-        //Toaster service used to display premium looking notifications
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private employeeAuthService: EmployeeAuthService,
+        private inventoryService: InventoryServiceService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -69,12 +73,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadTop5Employees();
         this.loadTotalRevenue();
         this.startNotificationPolling();
+        this.checkInventoryReorderAlerts();
     }
     // Runs startNotificationPolling() method at every 60,000 ms intervals ( equals to 1 minute)
     startNotificationPolling() {
         this.checkUpcomingNotifications();
+        this.checkInventoryReorderAlerts();
         this.notificationInterval = setInterval(() => {
             this.checkUpcomingNotifications();
+            this.checkInventoryReorderAlerts();
         }, 60000); // Check every minute
     }
 
@@ -101,6 +108,50 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 console.error('Failed to load upcoming notifications', error);
             },
         });
+    }
+
+    // Checks for products in inventory that have reached re-order limits
+    checkInventoryReorderAlerts() {
+        const role = this.employeeAuthService.getRole();
+        if (role === Role.OWNER || role === Role.MANAGER) {
+            const username = window.localStorage.getItem('user_name') || this.employeeAuthService.getEmployeeData()?.email || 'guest';
+            this.inventoryService.getReorderAlerts().subscribe({
+                next: (alerts: any[]) => {
+                    const dismissed = JSON.parse(localStorage.getItem('dismissedReorderAlerts_' + username) || '[]');
+
+                    alerts.forEach((alert) => {
+                        // Check if this alert has already been dismissed for the current stock level
+                        const alreadyDismissed = dismissed.some((d: any) => d.id === alert.id && d.currentStock === alert.currentStock);
+                        if (alreadyDismissed) {
+                            return;
+                        }
+
+                        const productName = alert.product?.productName || 'Product';
+                        const toast = this.toastr.warning(
+                            `${productName} currently at the re-order limit`,
+                            'Inventory Alert',
+                            {
+                                timeOut: 0,
+                                extendedTimeOut: 0,
+                                closeButton: true,
+                                positionClass: 'toast-top-right'
+                            }
+                        );
+
+                        // Save dismissal preference once closed by the user
+                        toast.onHidden.subscribe(() => {
+                            const currentDismissed = JSON.parse(localStorage.getItem('dismissedReorderAlerts_' + username) || '[]');
+                            const filtered = currentDismissed.filter((d: any) => d.id !== alert.id);
+                            filtered.push({ id: alert.id, currentStock: alert.currentStock });
+                            localStorage.setItem('dismissedReorderAlerts_' + username, JSON.stringify(filtered));
+                        });
+                    });
+                },
+                error: (error) => {
+                    console.error('Failed to load inventory alerts', error);
+                }
+            });
+        }
     }
 
     //Dashboard card (Get Appointments in Last 30 Days)

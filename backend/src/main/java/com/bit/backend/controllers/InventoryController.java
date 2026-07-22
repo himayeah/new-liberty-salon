@@ -52,4 +52,14 @@ public class InventoryController {
             throw new AppException("Request failed with error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // GET /inventory/reorder-alerts returning inventory items that have reached reorder level limit
+    @GetMapping("/reorder-alerts")
+    public ResponseEntity<List<InventoryDto>> getReorderAlerts() {
+        try {
+            return ResponseEntity.ok(inventoryService.getReorderAlerts());
+        } catch (Exception e) {
+            throw new AppException("Failed to load inventory alerts: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

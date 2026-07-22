@@ -27,6 +27,9 @@ public class ClientRegDto {
     private String lastVisitedDate;
     private double lifetimeValue;
     private String photo;
+    private String password;
+    private String confirmPassword;
+    private String resetToken;
 
     // Fields for Reports
     private Integer registrationYear;
