@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -48,6 +49,18 @@ public class ClientRegEntity {
 
     @Column(name = "lifetime_value")
     private double lifetimeValue;
+
+    // Hashed BCrypt password for public booking module client authentication
+    @Column(name = "password")
+    private String password;
+
+    // Reset password token dispatched to client's email
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    // Expiration timestamp for the reset token
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
 
     @Lob
     @Column(name = "photo", columnDefinition = "LONGTEXT")

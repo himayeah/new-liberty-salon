@@ -76,7 +76,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
 
         this.appointmentScheduleForm = this.fb.group({
             clientId: [null, [Validators.required]],
-            employeeId: [null, [Validators.required]],
+            employeeId: [null, [Validators.required, this.stylistAvailabilityValidator.bind(this)]],
             serviceId: [null],
             appointmentDate: [null, [Validators.required]],
             appointmentStartTime: [null, [Validators.required, this.timeFormatValidator.bind(this)]],
@@ -127,25 +127,22 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         const startTimeCtrl = this.appointmentScheduleForm.get('appointmentStartTime');
         const endTimeCtrl = this.appointmentScheduleForm.get('appointmentEndTime');
 
-        const checkAvailabilityAndReset = () => {
+        const triggerAvailabilityCheck = () => {
             const employeeIdCtrl = this.appointmentScheduleForm.get('employeeId');
-            const currentEmployeeId = employeeIdCtrl?.value;
-            if (currentEmployeeId) {
-                const selectedEmployee = this.employees.find(emp => emp.id === currentEmployeeId);
-                if (selectedEmployee && (this.isEmployeeUnavailable(selectedEmployee) || this.isEmployeeBooked(selectedEmployee))) {
-                    employeeIdCtrl.setValue(null);
-                }
+            if (employeeIdCtrl?.value) {
+                employeeIdCtrl.markAsTouched();
+                employeeIdCtrl.updateValueAndValidity();
             }
         };
 
         if (dateCtrl) {
-            this.subs.push(dateCtrl.valueChanges.subscribe(() => checkAvailabilityAndReset()));
+            this.subs.push(dateCtrl.valueChanges.subscribe(() => triggerAvailabilityCheck()));
         }
         if (startTimeCtrl) {
-            this.subs.push(startTimeCtrl.valueChanges.subscribe(() => checkAvailabilityAndReset()));
+            this.subs.push(startTimeCtrl.valueChanges.subscribe(() => triggerAvailabilityCheck()));
         }
         if (endTimeCtrl) {
-            this.subs.push(endTimeCtrl.valueChanges.subscribe(() => checkAvailabilityAndReset()));
+            this.subs.push(endTimeCtrl.valueChanges.subscribe(() => triggerAvailabilityCheck()));
         }
 
         // Disable cancellationReason Validators if the appointmentStatus != 'CANCELLED'
@@ -581,5 +578,37 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             }
         }
         return false;
+    }
+
+    private stylistAvailabilityValidator(control: AbstractControl): ValidationErrors | null {
+        if (!this.appointmentScheduleForm) {
+            return null;
+        }
+        const employeeId = control.value;
+        if (!employeeId) {
+            return null;
+        }
+
+        const selectedEmployee = this.employees.find(emp => emp.id === employeeId);
+        if (!selectedEmployee) {
+            return null;
+        }
+
+        // 1. Check if employee is on leave
+        if (this.isEmployeeOnLeave(selectedEmployee)) {
+            return { stylistOnLeave: true };
+        }
+
+        // 2. Check if employee is unavailable (weekly off days)
+        if (this.isEmployeeUnavailable(selectedEmployee)) {
+            return { stylistUnavailable: true };
+        }
+
+        // 3. Check if employee is already booked
+        if (this.isEmployeeBooked(selectedEmployee)) {
+            return { stylistBooked: true };
+        }
+
+        return null;
     }
 }

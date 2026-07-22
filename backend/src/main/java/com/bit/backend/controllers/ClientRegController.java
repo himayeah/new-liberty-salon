@@ -182,4 +182,80 @@ public class ClientRegController {
         }
     }
 
+    // Checks the authentication flow status of a given email ("REGISTER", "SET_PASSWORD", "LOGIN")
+    @GetMapping("/check-email")
+    public ResponseEntity<String> checkEmailStatus(@RequestParam String email) {
+        try {
+            String status = clientRegServiceI.checkEmailStatus(email);
+            return ResponseEntity.ok(status);
+        } catch (Exception e) {
+            throw new AppException("Check email failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Registers a brand new client with a password
+    @PostMapping("/register")
+    public ResponseEntity<ClientRegDto> registerClient(@RequestBody ClientRegDto clientRegDto) {
+        try {
+            ClientRegDto savedDto = clientRegServiceI.registerClient(clientRegDto);
+            return ResponseEntity.ok(savedDto);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Registration failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Sets password for an existing client who doesn't have one set yet
+    @PostMapping("/set-password")
+    public ResponseEntity<ClientRegDto> setClientPassword(@RequestBody ClientRegDto clientRegDto) {
+        try {
+            ClientRegDto savedDto = clientRegServiceI.setClientPassword(clientRegDto.getEmail(), clientRegDto.getPassword());
+            return ResponseEntity.ok(savedDto);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Set password failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Logins a client using Email + Password
+    @PostMapping("/login")
+    public ResponseEntity<ClientRegDto> loginClient(@RequestBody ClientRegDto loginDto) {
+        try {
+            ClientRegDto client = clientRegServiceI.loginClient(loginDto.getEmail(), loginDto.getPassword());
+            return ResponseEntity.ok(client);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Requests a password reset link to be sent via email
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@RequestParam String email) {
+        try {
+            clientRegServiceI.forgotPassword(email);
+            return ResponseEntity.ok().build();
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Forgot password failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Resets password using a valid reset token
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody ClientRegDto resetDto) {
+        try {
+            clientRegServiceI.resetPassword(resetDto.getResetToken(), resetDto.getPassword());
+            return ResponseEntity.ok().build();
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Reset password failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

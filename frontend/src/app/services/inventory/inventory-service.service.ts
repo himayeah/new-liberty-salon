@@ -37,4 +37,10 @@ export class InventoryServiceService {
         const requestUrl = `${environment.baseUrl}/inventory/${id}`;
         return this.http.delete(requestUrl, { headers: this.getHeaders() });
     }
+
+    // Fetches products currently at or below their re-order limits
+    getReorderAlerts() {
+        const requestUrl = `${environment.baseUrl}/inventory/reorder-alerts`;
+        return this.http.get(requestUrl, { headers: this.getHeaders() });
+    }
 }

@@ -12,6 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.bit.backend.config.EmailSender;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +24,14 @@ public class ClientRegService implements ClientRegServiceI {
 
     private final ClientRegRepository clientRegRepository;
     private final ClientRegMapper clientRegMapper;
+    private final PasswordEncoder passwordEncoder; // Injected for password hashing
+    private final EmailSender emailSender; // Injected to dispatch reset email
 
-    public ClientRegService(ClientRegRepository clientRegRepository, ClientRegMapper clientRegMapper) {
+    public ClientRegService(ClientRegRepository clientRegRepository, ClientRegMapper clientRegMapper, PasswordEncoder passwordEncoder, EmailSender emailSender) {
         this.clientRegRepository = clientRegRepository;
         this.clientRegMapper = clientRegMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.emailSender = emailSender;
     }
 
     @Override
@@ -200,6 +208,164 @@ public class ClientRegService implements ClientRegServiceI {
             return clientLifeTimeValueDtoList;
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Validates password strength according to the custom rules:
+    // More than 8 characters long, contain characters (letters), a number, and a special character
+    private void validatePasswordStrength(String password) {
+        if (password == null || password.length() < 9) {
+            throw new AppException("Password must be more than 8 characters long", HttpStatus.BAD_REQUEST);
+        }
+        boolean hasLetter = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+        for (char c : password.toCharArray()) {
+            if (Character.isLetter(c)) {
+                hasLetter = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else if (!Character.isLetterOrDigit(c)) {
+                hasSpecial = true;
+            }
+        }
+        if (!hasLetter || !hasDigit || !hasSpecial) {
+            throw new AppException("Password must contain letters, numbers, and at least one special character", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Checks client email status: REGISTER (new client), SET_PASSWORD (existing but no password), or LOGIN (password exists)
+    @Override
+    public String checkEmailStatus(String email) {
+        try {
+            Optional<ClientRegEntity> optionalClient = clientRegRepository.findByEmail(email);
+            if (!optionalClient.isPresent()) {
+                return "REGISTER";
+            }
+            ClientRegEntity client = optionalClient.get();
+            if (client.getPassword() == null || client.getPassword().isBlank()) {
+                return "SET_PASSWORD";
+            }
+            return "LOGIN";
+        } catch (Exception e) {
+            throw new AppException("Failed to check email status: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Registers a brand new client with hashed password
+    @Override
+    public ClientRegDto registerClient(ClientRegDto clientRegDto) {
+        try {
+            Optional<ClientRegEntity> existingClient = clientRegRepository.findByEmail(clientRegDto.getEmail());
+            if (existingClient.isPresent()) {
+                throw new AppException("Email is already registered", HttpStatus.BAD_REQUEST);
+            }
+
+            validatePasswordStrength(clientRegDto.getPassword());
+
+            ClientRegEntity clientRegEntity = clientRegMapper.toClientRegEntity(clientRegDto);
+            clientRegEntity.setPassword(passwordEncoder.encode(clientRegDto.getPassword()));
+
+            ClientRegEntity savedItem = clientRegRepository.save(clientRegEntity);
+            return clientRegMapper.toClientRegDto(savedItem);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Registration failed: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Sets password for an existing client who has no password stored yet
+    @Override
+    public ClientRegDto setClientPassword(String email, String password) {
+        try {
+            ClientRegEntity client = clientRegRepository.findByEmail(email)
+                    .orElseThrow(() -> new AppException("Client not found", HttpStatus.NOT_FOUND));
+
+            validatePasswordStrength(password);
+
+            client.setPassword(passwordEncoder.encode(password));
+            ClientRegEntity savedItem = clientRegRepository.save(client);
+            return clientRegMapper.toClientRegDto(savedItem);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Failed to set password: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Authenticates client login via email + password credentials
+    @Override
+    public ClientRegDto loginClient(String email, String password) {
+        try {
+            ClientRegEntity client = clientRegRepository.findByEmail(email)
+                    .orElseThrow(() -> new AppException("Invalid email or password", HttpStatus.UNAUTHORIZED));
+
+            if (client.getPassword() == null || !passwordEncoder.matches(password, client.getPassword())) {
+                throw new AppException("Invalid email or password", HttpStatus.UNAUTHORIZED);
+            }
+
+            return clientRegMapper.toClientRegDto(client);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Dispatches a password reset link to the client's email address
+    @Override
+    public void forgotPassword(String email) {
+        try {
+            ClientRegEntity client = clientRegRepository.findByEmail(email)
+                    .orElseThrow(() -> new AppException("Client not found with this email", HttpStatus.NOT_FOUND));
+
+            String token = UUID.randomUUID().toString();
+            client.setResetToken(token);
+            client.setResetTokenExpiry(LocalDateTime.now().plusHours(2)); // Token valid for 2 hours
+            clientRegRepository.save(client);
+
+            // Construct link pointing to the frontend router link
+            String resetLink = "http://localhost:4200/public-booking?token=" + token;
+            String body = String.format(
+                    "Hello %s,%n%n" +
+                    "We received a request to reset your password. Please click the link below to create a new password:%n" +
+                    "%s%n%n" +
+                    "If you did not request this, you can ignore this email. The link will expire in 2 hours.%n%n" +
+                    "Best Regards,%n" +
+                    "New Liberty Salon Team",
+                    client.getFirstName(), resetLink);
+
+            emailSender.sendSimpleEmail(email, "Password Reset Link - New Liberty Salon", body);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Failed to process forgot password: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Validates a reset token and sets the client's password
+    @Override
+    public void resetPassword(String token, String password) {
+        try {
+            ClientRegEntity client = clientRegRepository.findByResetToken(token)
+                    .orElseThrow(() -> new AppException("Invalid or expired password reset token", HttpStatus.BAD_REQUEST));
+
+            if (client.getResetTokenExpiry() == null || client.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+                throw new AppException("Password reset token has expired", HttpStatus.BAD_REQUEST);
+            }
+
+            validatePasswordStrength(password);
+
+            // Update password & clear token fields
+            client.setPassword(passwordEncoder.encode(password));
+            client.setResetToken(null);
+            client.setResetTokenExpiry(null);
+            clientRegRepository.save(client);
+        } catch (AppException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AppException("Failed to reset password: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

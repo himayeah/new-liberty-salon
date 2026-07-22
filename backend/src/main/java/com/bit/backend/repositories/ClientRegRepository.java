@@ -87,4 +87,10 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
                         "GROUP BY client.id", nativeQuery = true)
         List<ClientLifeTimeValueDto> getClientLifetimeValue();
 
+        // Find client by email address for password authentication checks
+        Optional<ClientRegEntity> findByEmail(String email);
+
+        // Find client by password reset token
+        Optional<ClientRegEntity> findByResetToken(String resetToken);
+
 }

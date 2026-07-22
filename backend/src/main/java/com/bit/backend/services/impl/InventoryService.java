@@ -51,4 +51,14 @@ public class InventoryService implements InventoryServiceI {
         inventoryRepository.deleteById(id);
         return inventoryMapper.toDto(entity);
     }
+
+    // Fetches inventory alerts for products below or at reorder levels
+    @Override
+    public List<InventoryDto> getReorderAlerts() {
+        try {
+            return inventoryMapper.toDtoList(inventoryRepository.findProductsAtOrBelowReorderLevel());
+        } catch (Exception e) {
+            throw new AppException("Failed to retrieve reorder alerts: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

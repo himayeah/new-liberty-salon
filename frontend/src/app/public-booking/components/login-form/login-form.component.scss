@@ -155,6 +155,112 @@
     }
 }
 
+.password-requirements {
+    background-color: #fcf6f5;
+    border: 1px solid #f6d8d5;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    
+    .requirements-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #AD3326;
+        margin-bottom: 0.5rem;
+    }
+    
+    .requirements-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+        li {
+            font-size: 0.8rem;
+            color: #555555;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            
+            &.valid {
+                color: #2e7d32;
+            }
+            
+            &.invalid {
+                color: #c62828;
+            }
+        }
+    }
+}
+
+.auth-helper-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -0.5rem;
+    
+    .helper-link {
+        color: #6c757d;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        
+        &:hover {
+            color: #AD3326;
+            text-decoration: underline;
+        }
+    }
+}
+
+.success-message-card {
+    text-align: center;
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    
+    i {
+        font-size: 3rem;
+        color: #2e7d32;
+        margin-bottom: 1rem;
+    }
+    
+    h3 {
+        font-size: 1.25rem;
+        color: #1b5e20;
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+    
+    p {
+        font-size: 0.95rem;
+        color: #33691e;
+        line-height: 1.5;
+        margin: 0;
+    }
+}
+
+.form-navigation-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    
+    &:hover {
+        color: #AD3326;
+    }
+    
+    i {
+        font-size: 1.1rem;
+    }
+}
+
 @keyframes slideUp {
     from {
         opacity: 0;
