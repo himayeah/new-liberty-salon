@@ -364,7 +364,7 @@ export class BillingFormComponent implements OnInit {
           this.messageService.showSuccess('Billing added successfully!');
           const hasProductPurchase = formValue.purchases && formValue.purchases.some((p: any) => p.category === 'PRODUCT PURCHASE');
           if (hasProductPurchase) {
-            this.messageService.showSuccess('Invenctory Updated');
+            this.messageService.showSuccess('Inventory Updated');
           }
           this.dialogRef.close(response);
         },
@@ -379,7 +379,7 @@ export class BillingFormComponent implements OnInit {
           this.messageService.showSuccess('Billing updated successfully!');
           const hasProductPurchase = formValue.purchases && formValue.purchases.some((p: any) => p.category === 'PRODUCT PURCHASE');
           if (hasProductPurchase) {
-            this.messageService.showSuccess('Invenctory Updated');
+            this.messageService.showSuccess('Inventory Updated');
           }
           this.dialogRef.close(response);
         },

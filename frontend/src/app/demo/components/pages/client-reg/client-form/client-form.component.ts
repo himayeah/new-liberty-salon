@@ -72,7 +72,7 @@ export class ClientFormComponent implements OnInit {
       firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
       lastName: ['', Validators.required],
       email: ['', [Validators.email]],
-      phoneNumber: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^0[0-9]{9}$')]],
       //exampleValidator(can contain letters, numbers (0-9), and the character limit should be between 3-10): 
       // ['', Validators.pattern('^[a-zA-Z0-9]{3,10}$')],
       //exampleValidator(can contain letters, numbers (0-9), and the characters & and #: 

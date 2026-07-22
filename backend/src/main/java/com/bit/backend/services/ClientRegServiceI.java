@@ -21,7 +21,7 @@ public interface ClientRegServiceI {
     // Dashboard card (New Clients within last 30 days)
     long countClientRegistrationsLast30Days();
 
-    // For Public Booking Login
+    // For Public Booking Login (Legacy: First Name + Email)
     ClientRegDto findByFirstNameAndEmail(String firstName, String email);
 
     List<ClientRegTotalVisitsDto> calculateClientVisits();

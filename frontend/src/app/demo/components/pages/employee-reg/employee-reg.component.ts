@@ -25,6 +25,7 @@ export class EmployeeRegComponent implements OnInit {
     displayedColumns: string[] = [
         'employeeName',
         'email',
+        'nic',
         'dateJoined',
         'designation',
         'specializations',

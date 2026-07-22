@@ -179,25 +179,9 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             }));
         }
 
-        // Set initial validation for notes
-        if (bookingSourceCtrl?.value === 'ONLINE') {
-            notesCtrl?.setValidators([Validators.required, Validators.minLength(5), Validators.maxLength(500)]);
-        } else {
-            notesCtrl?.clearValidators();
-        }
+        // Notes are optional
+        notesCtrl?.clearValidators();
         notesCtrl?.updateValueAndValidity();
-
-        // Listen to bookingSource changes
-        if (bookingSourceCtrl) {
-            this.subs.push(bookingSourceCtrl.valueChanges.subscribe(source => {
-                if (source === 'ONLINE') {
-                    notesCtrl?.setValidators([Validators.required, Validators.minLength(5), Validators.maxLength(500)]);
-                } else {
-                    notesCtrl?.clearValidators();
-                }
-                notesCtrl?.updateValueAndValidity();
-            }));
-        }
     }
 
     private patchForm(data: any): void {
@@ -216,11 +200,13 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    // You don't add the login here, Just pass the received data from html to frontend service
-    // The component received status string and forwards it to the Angular data service along with the Appointment's DB ID
     onStatusChange(status: string): void {
-        //Angular injects the appointment object into your component: so 'this.data' contains the currently used Appointment Object's data
-        this.appointmentService.sendStatusUpdates(this.data.id, status).subscribe({
+        const appointmentId = this.data?.appointment?.id || this.data?.id;
+        if (!appointmentId) {
+            return;
+        }
+        // Angular injects the appointment object into your component: so 'this.data' contains the currently used Appointment Object's data
+        this.appointmentService.sendStatusUpdates(appointmentId, status).subscribe({
             next: () => {
                 this.messageService.showSuccess('Data sent Successfully!');
             },
@@ -317,7 +303,8 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
                 error: (error) => this.handleError(error)
             });
         } else {
-            this.appointmentService.editData(this.data.appointment.id, formValue).subscribe({
+            const appointmentId = this.data?.appointment?.id || this.data?.id;
+            this.appointmentService.editData(appointmentId, formValue).subscribe({
                 next: (response) => {
                     this.messageService.showSuccess('Updated Successfully!');
                     this.dialogRef.close(response);

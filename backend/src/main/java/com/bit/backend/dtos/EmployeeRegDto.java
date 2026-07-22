@@ -13,6 +13,7 @@ public class EmployeeRegDto {
 
     private Long id;
     private String employeeName;
+    private String nic;
     private String dateJoined;
     private String designation;
     private String specializations;

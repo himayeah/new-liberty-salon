@@ -4,7 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { ClientFormComponent } from './client-form/client-form.component';
@@ -18,7 +17,6 @@ import { ClientFormComponent } from './client-form/client-form.component';
 export class ClientRegComponent implements OnInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
-
     dataSource = new MatTableDataSource<any>([]);
     // Object displayedColumns of type - String array
     // Point 2: The component that contains the list of the columns you want to render
@@ -56,6 +54,15 @@ export class ClientRegComponent implements OnInit {
         sessionStorage.clear();
         this.populateData();
         // this.clientLastVisitedDate();
+
+        // filterPredicate() a built in function of Material Table that is used to filter the data
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+            const searchText = filter.trim().toLowerCase();
+            return (
+                (data.phoneNumber || '').toLowerCase().includes(searchText) ||
+                (data.email || '').toLowerCase().includes(searchText)
+            );
+        };
     }
 
     populateData(): void {
@@ -70,7 +77,7 @@ export class ClientRegComponent implements OnInit {
                     new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime()
                 );
 
-                this.dataSource = new MatTableDataSource(sortedAppointments);
+                this.dataSource.data = sortedAppointments;
                 this.dataSource.sort = this.sort;
 
 
@@ -106,7 +113,7 @@ export class ClientRegComponent implements OnInit {
                 //     client.dateOfBirth && client.dateOfBirth >= "2000-01-01"
                 // );
 
-                this.dataSource = new MatTableDataSource(response || []);
+                this.dataSource.data = response || [];
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
 
@@ -262,9 +269,13 @@ export class ClientRegComponent implements OnInit {
         }
     }
 
+    // Filters the table data based on the user's keystrokes in the search input
     applyFilter(event: Event): void {
+        // Gets the input value, removes leading/trailing whitespace, and converts it to lowercase for case-insensitive filtering
         const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        // Applies the filter string to the table's datasource
         this.dataSource.filter = filterValue;
+        // Resets the paginator to the first page so the user sees the start of the matching results
         if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
     }
 

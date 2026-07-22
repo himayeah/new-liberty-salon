@@ -96,7 +96,8 @@ public class ServiceService implements ServiceServiceI {
             serviceRepository.deleteById(id);
             return serviceMapper.toServiceDto(optionalServiceEntity.get());
         } catch (DataIntegrityViolationException e) {
-            throw new AppException("Cannot delete this service because it is referenced in appointments.", HttpStatus.CONFLICT);
+            throw new AppException("Cannot delete this service because it is referenced in appointments.",
+                    HttpStatus.CONFLICT);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

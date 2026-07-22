@@ -52,29 +52,6 @@ public class ClientRegService implements ClientRegServiceI {
         }
     }
 
-    // @Override
-    // public ClientRegDto updateClientReg(long id, ClientRegDto clientRegDto) {
-    // try {
-    // Optional<ClientRegEntity> optionalClientRegEntity =
-    // clientRegRepository.findById(id);
-    // if (!optionalClientRegEntity.isPresent()) {
-    // throw new AppException("Client Reg Does Not Exist", HttpStatus.NOT_FOUND);
-    // }
-    // ClientRegEntity newClientRegEntity =
-    // clientRegMapper.toClientRegEntity(clientRegDto);
-    // newClientRegEntity.setId(id);
-    // ClientRegEntity clientRegEntity =
-    // clientRegRepository.save(newClientRegEntity);
-    // ClientRegDto clientRegDtoRes =
-    // clientRegMapper.toClientRegDto(clientRegEntity);
-    // System.out.println("update Successfully: " + clientRegDtoRes.getFirstName());
-    // return clientRegDtoRes;
-    // } catch (Exception e) {
-    // throw new AppException("Request failed with error:" + e,
-    // HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
     @Override
     public ClientRegDto updateClientReg(long id, ClientRegDto clientRegDto) {
         try {
@@ -82,8 +59,24 @@ public class ClientRegService implements ClientRegServiceI {
             if (!optionalClientRegEntity.isPresent()) {
                 throw new AppException("Client Reg Does Not Exist", HttpStatus.NOT_FOUND);
             }
+            ClientRegEntity existing = optionalClientRegEntity.get();
             ClientRegEntity newClientRegEntity = clientRegMapper.toClientRegEntity(clientRegDto);
             newClientRegEntity.setId(id);
+
+            // Preserve existing fields that are not present in the update form
+            if (newClientRegEntity.getPhoto() == null || newClientRegEntity.getPhoto().isEmpty()) {
+                newClientRegEntity.setPhoto(existing.getPhoto());
+            }
+            if (newClientRegEntity.getTotalVisits() <= 0) {
+                newClientRegEntity.setTotalVisits(existing.getTotalVisits());
+            }
+            if (newClientRegEntity.getLastVisitedDate() == null || newClientRegEntity.getLastVisitedDate().isEmpty()) {
+                newClientRegEntity.setLastVisitedDate(existing.getLastVisitedDate());
+            }
+            if (newClientRegEntity.getRegistrationDate() == null
+                    || newClientRegEntity.getRegistrationDate().isEmpty()) {
+                newClientRegEntity.setRegistrationDate(existing.getRegistrationDate());
+            }
 
             List<ClientLifeTimeValueDto> clientLifeTimeValueDtoList = clientRegRepository.getClientLifetimeValue();
             for (ClientLifeTimeValueDto clientLifeTimeValueDto : clientLifeTimeValueDtoList) {

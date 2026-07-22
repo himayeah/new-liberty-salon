@@ -39,8 +39,10 @@ export class EmployeeFormComponent implements OnInit {
 
   initForm(): void {
     this.employeeForm = this.fb.group({
+      // camel case naming convention
       employeeName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      nic: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(12), Validators.pattern('^(\d{9}[Vv]|\d{12})$')]],
       dateJoined: ['', Validators.required],
       designation: ['', Validators.required],
       specializations: [''],
@@ -77,7 +79,7 @@ export class EmployeeFormComponent implements OnInit {
         });
       }
     } else {
-        this.messageService.showError('Please fill in all required fields');
+      this.messageService.showError('Please fill in all required fields');
     }
   }
 
