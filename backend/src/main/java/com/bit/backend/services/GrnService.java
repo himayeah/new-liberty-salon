@@ -14,5 +14,5 @@ public interface GrnService {
 
     void deleteGrn(Long id);
 
-    GrnDto getGrnByPurchaseOrderId(long purchaseOrderId);
+    List<GrnDto> getGrnByPurchaseOrderId(Long purchaseOrderId);
 }
