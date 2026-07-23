@@ -65,6 +65,11 @@ export class AppointmentScheduleComponent implements OnInit {
             // you can save the returned data in a variable : 'response'
             next: (response: any[]) => {
 
+                // SORT 
+                // const sortedAppointments = (response || []).sort((a, b) => {
+                //     return new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime();
+                // });
+
                 console.log("All Data :", response);
 
                 // push to a new Array
@@ -169,6 +174,16 @@ export class AppointmentScheduleComponent implements OnInit {
                 this.messageService.showError('Error fetching data: ' + error.message);
             }
         });
+    }
+
+    // CLEAR search
+    clearSearch(): void {
+        // dataSource contains table data
+        // filter contains the search value
+        // '' sets current search value to '' which displays all the table data again
+        this.dataSource.filter = '';
+        // sets the pagination to first page
+        if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
     }
 
     deleteData(data: any): void {

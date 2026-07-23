@@ -21,12 +21,12 @@ import { ClientProfileComponent } from './client-profile/client-profile.componen
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
-import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
 import { BillingComponent } from './billing/billing.component';
 import { CustomerRegComponent } from './customer-reg/customer-reg.component';
 import { EmployeeCommissionsComponent } from './employee-commissions/employee-commissions.component';
+import { ReportProductSalesComponent } from './report/report-product-sales/report-product-sales.component';
 
 export const PagesRoutes: Routes = [
     //export array holds routing definitions, unless you add the routing inside Imports array, this won't have any meaning
@@ -63,9 +63,9 @@ export const PagesRoutes: Routes = [
         { path: 'purchase-order-profile/:id', component: PurchaseOrderDetailComponent },
         { path: 'billing', component: BillingComponent },
         { path: 'report-client-reg', component: ReportClientRegComponent },
-        { path: 'report-product-sales', component: ProductSalesReportComponent },
         { path: 'report-appointment-status', component: ReportAppointmentStatusComponent },
         { path: 'report-procurement', component: ReportProcurementComponent },
+        { path: 'report-product-sales', component: ReportProductSalesComponent },
         { path: 'customer-reg', component: CustomerRegComponent },
         { path: 'employee-commissions', component: EmployeeCommissionsComponent },
         { path: '**', redirectTo: '/notfound' },

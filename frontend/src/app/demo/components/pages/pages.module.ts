@@ -58,7 +58,7 @@ import { BillingComponent } from './billing/billing.component';
 import { BillingFormComponent } from './billing/billing-form/billing-form.component';
 import { InvoiceDetailsComponent } from './billing/invoice-details/invoice-details.component';
 import { ReportClientRegComponent } from './report/report-client-reg/report-client-reg.component';
-import { ProductSalesReportComponent } from './report/product-sales-report/product-sales-report.component';
+import { ReportProductSalesComponent } from './report/report-product-sales/report-product-sales.component';
 import { ReportAppointmentStatusComponent } from './report/report-appointment-status/report-appointment-status.component';
 import { ReportProcurementComponent } from './report/report-procurement/report-procurement.component';
 import { CustomerRegComponent } from './customer-reg/customer-reg.component';
@@ -99,7 +99,7 @@ import { EmployeeCommissionsComponent } from './employee-commissions/employee-co
     BillingComponent,
     InvoiceDetailsComponent,
     ReportClientRegComponent,
-    ProductSalesReportComponent,
+    ReportProductSalesComponent,
     ReportAppointmentStatusComponent,
     ReportProcurementComponent,
     CustomerRegComponent,

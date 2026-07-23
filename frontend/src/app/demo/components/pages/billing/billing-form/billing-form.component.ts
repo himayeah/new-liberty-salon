@@ -271,6 +271,53 @@ export class BillingFormComponent implements OnInit {
     return item.name || item.serviceName || item.productName || '';
   }
 
+  private resolvePurchaseId(purchase: any): any {
+    if (!purchase) {
+      return purchase;
+    }
+
+    const category = purchase.category;
+    let nameStr = typeof purchase.name === 'string' ? purchase.name : this.getItemLabel(purchase.name);
+    let productId = purchase.productId;
+    let serviceId = purchase.serviceId;
+
+    if (purchase.name && typeof purchase.name !== 'string') {
+      const itemId = purchase.name.id;
+      if (category === 'PRODUCT PURCHASE') {
+        productId = itemId;
+        serviceId = null;
+      } else if (category === 'SERVICE') {
+        serviceId = itemId;
+        productId = null;
+      }
+    }
+
+    if (!productId && category === 'PRODUCT PURCHASE' && nameStr) {
+      const match = this.allProducts.find((item: any) =>
+        this.getItemLabel(item).toLowerCase() === nameStr.toLowerCase()
+      );
+      if (match) {
+        productId = match.id;
+      }
+    }
+
+    if (!serviceId && category === 'SERVICE' && nameStr) {
+      const match = this.allServices.find((item: any) =>
+        this.getItemLabel(item).toLowerCase() === nameStr.toLowerCase()
+      );
+      if (match) {
+        serviceId = match.id;
+      }
+    }
+
+    return {
+      ...purchase,
+      name: nameStr,
+      productId,
+      serviceId
+    };
+  }
+
   removePurchase(index: number) {
     this.purchases.removeAt(index);
     // Re-index filteredOptions
@@ -326,30 +373,7 @@ export class BillingFormComponent implements OnInit {
 
     // Convert 'name' from object/string to string for backend and ensure productId/serviceId are populated
     if (formValue.purchases && Array.isArray(formValue.purchases)) {
-      formValue.purchases = formValue.purchases.map((p: any) => {
-        const itemObj = p.name;
-        const nameStr = typeof itemObj === 'string' ? itemObj : this.getItemLabel(itemObj);
-
-        let productId = p.productId;
-        let serviceId = p.serviceId;
-
-        if (typeof itemObj !== 'string' && itemObj) {
-          if (p.category === 'PRODUCT PURCHASE') {
-            productId = itemObj.id;
-            serviceId = null;
-          } else if (p.category === 'SERVICE') {
-            serviceId = itemObj.id;
-            productId = null;
-          }
-        }
-
-        return {
-          ...p,
-          name: nameStr,
-          productId: productId,
-          serviceId: serviceId
-        };
-      });
+      formValue.purchases = formValue.purchases.map((p: any) => this.resolvePurchaseId(p));
     }
 
     // Convert date to timestamp for backend
