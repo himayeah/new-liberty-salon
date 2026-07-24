@@ -11,6 +11,6 @@ public interface ReportClientRegService {
 
     List<ClientRegDto> getRegistrationsByGender();
 
-     List<ClientRegDto> getRegistrationsByAgeGroup(String startDate, String endDate);
+    List<ClientRegDto> getRegistrationsByAgeGroup(String startDate, String endDate);
 
 }

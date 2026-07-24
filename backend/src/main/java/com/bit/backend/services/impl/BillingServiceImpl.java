@@ -1,6 +1,7 @@
 package com.bit.backend.services.impl;
 
 import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,6 +102,26 @@ public class BillingServiceImpl implements BillingService {
         }
     }
 
+    private java.util.Optional<com.bit.backend.entities.ProductEntity> findProductByName(String productName) {
+        if (productName == null || productName.isBlank()) {
+            return java.util.Optional.empty();
+        }
+        String normalized = productName.trim();
+        java.util.Optional<com.bit.backend.entities.ProductEntity> prodOpt =
+                productRepository.findByProductNameIgnoreCase(normalized);
+        return prodOpt.isPresent() ? prodOpt : productRepository.findByProductName(normalized);
+    }
+
+    private java.util.Optional<com.bit.backend.entities.ServiceEntity> findServiceByName(String serviceName) {
+        if (serviceName == null || serviceName.isBlank()) {
+            return java.util.Optional.empty();
+        }
+        String normalized = serviceName.trim();
+        java.util.Optional<com.bit.backend.entities.ServiceEntity> servOpt =
+                serviceRepository.findByServiceNameIgnoreCase(normalized);
+        return servOpt.isPresent() ? servOpt : serviceRepository.findByServiceName(normalized);
+    }
+
     private void resolveBillingPurchaseIds(BillingPurchaseEntity billingPurchaseEntity) {
         if (billingPurchaseEntity == null) {
             return;
@@ -112,14 +133,14 @@ public class BillingServiceImpl implements BillingService {
             if (billingPurchaseEntity.getProductId() == null && "PRODUCT PURCHASE".equalsIgnoreCase(category)
                     && billingPurchaseEntity.getName() != null) {
                 java.util.Optional<com.bit.backend.entities.ProductEntity> prodOpt =
-                        productRepository.findByProductName(billingPurchaseEntity.getName());
+                        findProductByName(billingPurchaseEntity.getName());
                 prodOpt.ifPresent(productEntity -> billingPurchaseEntity.setProductId(productEntity.getId()));
             }
 
             if (billingPurchaseEntity.getServiceId() == null && "SERVICE".equalsIgnoreCase(category)
                     && billingPurchaseEntity.getName() != null) {
                 java.util.Optional<com.bit.backend.entities.ServiceEntity> servOpt =
-                        serviceRepository.findByServiceName(billingPurchaseEntity.getName());
+                        findServiceByName(billingPurchaseEntity.getName());
                 servOpt.ifPresent(serviceEntity -> billingPurchaseEntity.setServiceId(serviceEntity.getId()));
             }
         }
@@ -264,4 +285,8 @@ public class BillingServiceImpl implements BillingService {
             throw new AppException("Request failed with error: " + e, HttpStatus.BAD_REQUEST);
         }
     }
+
+    
+
+
 }

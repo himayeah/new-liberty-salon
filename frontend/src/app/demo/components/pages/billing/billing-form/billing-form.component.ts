@@ -258,8 +258,8 @@ export class BillingFormComponent implements OnInit {
     const category = group.get('category')?.value;
 
     group.patchValue({
-      name: selectedItem, // Save the whole object; getItemLabel and submission logic handle it
-      price: price,
+      name: this.getItemLabel(selectedItem),
+      price,
       productId: category === 'PRODUCT PURCHASE' ? selectedItem.id : null,
       serviceId: category === 'SERVICE' ? selectedItem.id : null
     });
@@ -281,7 +281,7 @@ export class BillingFormComponent implements OnInit {
     let productId = purchase.productId;
     let serviceId = purchase.serviceId;
 
-    if (purchase.name && typeof purchase.name !== 'string') {
+    if (purchase.name && typeof purchase.name !== 'string' && purchase.name.id != null) {
       const itemId = purchase.name.id;
       if (category === 'PRODUCT PURCHASE') {
         productId = itemId;
@@ -292,22 +292,14 @@ export class BillingFormComponent implements OnInit {
       }
     }
 
-    if (!productId && category === 'PRODUCT PURCHASE' && nameStr) {
-      const match = this.allProducts.find((item: any) =>
-        this.getItemLabel(item).toLowerCase() === nameStr.toLowerCase()
-      );
-      if (match) {
-        productId = match.id;
-      }
+    const normalizedName = nameStr ? nameStr.toString().trim().toLowerCase() : '';
+
+    if (!productId && category === 'PRODUCT PURCHASE' && normalizedName) {
+      productId = this.findProductIdByLabel(normalizedName);
     }
 
-    if (!serviceId && category === 'SERVICE' && nameStr) {
-      const match = this.allServices.find((item: any) =>
-        this.getItemLabel(item).toLowerCase() === nameStr.toLowerCase()
-      );
-      if (match) {
-        serviceId = match.id;
-      }
+    if (!serviceId && category === 'SERVICE' && normalizedName) {
+      serviceId = this.findServiceIdByLabel(normalizedName);
     }
 
     return {
@@ -316,6 +308,42 @@ export class BillingFormComponent implements OnInit {
       productId,
       serviceId
     };
+  }
+
+  private findProductIdByLabel(name: string): any {
+    if (!name) {
+      return null;
+    }
+
+    const exactMatch = this.allProducts.find((item: any) =>
+      this.getItemLabel(item).toLowerCase() === name
+    );
+    if (exactMatch) {
+      return exactMatch.id;
+    }
+
+    const partialMatch = this.allProducts.find((item: any) =>
+      this.getItemLabel(item).toLowerCase().includes(name)
+    );
+    return partialMatch ? partialMatch.id : null;
+  }
+
+  private findServiceIdByLabel(name: string): any {
+    if (!name) {
+      return null;
+    }
+
+    const exactMatch = this.allServices.find((item: any) =>
+      this.getItemLabel(item).toLowerCase() === name
+    );
+    if (exactMatch) {
+      return exactMatch.id;
+    }
+
+    const partialMatch = this.allServices.find((item: any) =>
+      this.getItemLabel(item).toLowerCase().includes(name)
+    );
+    return partialMatch ? partialMatch.id : null;
   }
 
   removePurchase(index: number) {
