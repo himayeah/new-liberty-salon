@@ -20,7 +20,7 @@ export class ServiceComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['serviceName', 'serviceCategory', 'duration', 'price', 'commission', 'colorCode', 'description', 'isActive', 'actions'];
+  displayedColumns: string[] = ['serviceName', 'serviceCategory', 'duration', 'price', 'description', 'isActive', 'actions'];
 
   //state control
   selectedRow: any = null;

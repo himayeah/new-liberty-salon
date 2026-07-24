@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceCategoryDto {
-    private long id;
+    private Long id;
     private String categoryName;
     private Number displayOrder;
     private String description;
