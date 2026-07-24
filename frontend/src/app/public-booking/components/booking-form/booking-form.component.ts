@@ -1,14 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { PublicBookingService } from '../../services/public-booking.service';
 import { MessageService } from 'primeng/api';
+import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
+import { EmployeeLeaveServiceService } from 'src/app/services/employee-leave/employee-leave-service.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-booking-form',
   templateUrl: './booking-form.component.html',
   styleUrls: ['./booking-form.component.scss']
 })
-export class BookingFormComponent implements OnInit {
+export class BookingFormComponent implements OnInit, OnDestroy {
   @Input() client: any;
   bookingForm: FormGroup;
   stylists: any[] = [];
@@ -17,19 +20,25 @@ export class BookingFormComponent implements OnInit {
   minDate: Date = new Date();
   readonly salonOpeningTime = '10:00';
   readonly salonClosingTime = '18:00';
+  appointments: any[] = [];
+  employeeLeaveData: any[] = [];
+  timeSlots: { value: string, label: string, disabled: boolean }[] = [];
+  private subs: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
     private publicBookingService: PublicBookingService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private appointmentService: AppointmentSchedulingServiceService,
+    private employeeLeaveService: EmployeeLeaveServiceService
   ) {
     this.minDate.setHours(0, 0, 0, 0);
     this.bookingForm = this.fb.group({
       clientId: ['', Validators.required],
-      employeeId: [null],
+      employeeId: [null, [this.stylistAvailabilityValidator.bind(this)]],
       serviceId: ['', Validators.required],
       appointmentDate: ['', Validators.required],
-      appointmentStartTime: ['', [Validators.required, this.timeFormatValidator.bind(this)]],
+      appointmentStartTime: ['', [Validators.required]],
       appointmentStatus: ['PENDING'],
       bookingSource: ['ONLINE']
     }, { validators: this.validateSalonHours.bind(this) });
@@ -40,11 +49,64 @@ export class BookingFormComponent implements OnInit {
       this.bookingForm.patchValue({ clientId: this.client.id });
     }
     this.loadData();
+    this.generateTimeSlots();
+
+    const triggerAvailabilityCheck = () => {
+      const employeeIdCtrl = this.bookingForm.get('employeeId');
+      if (employeeIdCtrl?.value) {
+        employeeIdCtrl.markAsTouched();
+        employeeIdCtrl.updateValueAndValidity();
+      }
+    };
+
+    const dateCtrl = this.bookingForm.get('appointmentDate');
+    const startTimeCtrl = this.bookingForm.get('appointmentStartTime');
+
+    if (dateCtrl) {
+      this.subs.push(dateCtrl.valueChanges.subscribe(() => triggerAvailabilityCheck()));
+    }
+    if (startTimeCtrl) {
+      this.subs.push(startTimeCtrl.valueChanges.subscribe(() => triggerAvailabilityCheck()));
+    }
+
+    this.subs.push(this.bookingForm.valueChanges.subscribe(() => {
+      this.updateTimeSlotsAvailability();
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   loadData() {
-    this.publicBookingService.getStylists().subscribe((data: any) => this.stylists = data);
-    this.publicBookingService.getServices().subscribe((data: any) => this.services = data);
+    this.publicBookingService.getStylists().subscribe((data: any) => {
+      this.stylists = data;
+      this.updateTimeSlotsAvailability();
+    });
+    this.publicBookingService.getServices().subscribe((data: any) => {
+      this.services = data;
+      this.updateTimeSlotsAvailability();
+    });
+    this.loadAppointments();
+    this.loadEmployeeLeaveData();
+  }
+
+  loadAppointments(): void {
+    this.appointmentService.getData().subscribe(res => {
+      this.appointments = (res as any[]) || [];
+      this.updateTimeSlotsAvailability();
+    });
+  }
+
+  loadEmployeeLeaveData(): void {
+    this.employeeLeaveService.getData().subscribe({
+      next: (response: any[]) => {
+        this.employeeLeaveData = response || [];
+        this.updateTimeSlotsAvailability();
+      },
+      error: (err) =>
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Employee Leave data retrieval failed: ' + err.message })
+    });
   }
 
   onSubmit() {
@@ -152,6 +214,205 @@ export class BookingFormComponent implements OnInit {
     const openingMinutes = this.toMinutes(this.salonOpeningTime);
     const closingMinutes = this.toMinutes(this.salonClosingTime);
     return startMinutes !== null && startMinutes >= openingMinutes! && startMinutes <= closingMinutes! ? null : { salonHours: true };
+  }
+
+  private getServiceDuration(serviceId: any): number {
+    const s = this.services.find(x => x.id === serviceId);
+    return s?.duration || 30;
+  }
+
+  generateTimeSlots(): void {
+    const slots = [];
+    const start = 10 * 60; // 10:00 AM in minutes
+    const end = 18 * 60; // 06:00 PM in minutes
+    for (let min = start; min < end; min += 30) {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      const hour12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+      const suffix = h >= 12 ? 'PM' : 'AM';
+      const timeStr = `${String(hour12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${suffix}`;
+      slots.push({
+        value: timeStr,
+        label: timeStr,
+        disabled: false
+      });
+    }
+    this.timeSlots = slots;
+  }
+
+  updateTimeSlotsAvailability(): void {
+    const clientId = this.bookingForm?.get('clientId')?.value;
+    const employeeId = this.bookingForm?.get('employeeId')?.value;
+    const serviceId = this.bookingForm?.get('serviceId')?.value;
+    const dateVal = this.bookingForm?.get('appointmentDate')?.value;
+
+    const duration = this.getServiceDuration(serviceId);
+    const closingMinutes = this.toMinutes(this.salonClosingTime) || 1080;
+
+    let dateStr = '';
+    if (dateVal) {
+      const d = new Date(dateVal);
+      dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    const selectedEmployee = employeeId ? this.stylists.find(e => e.id === employeeId) : null;
+
+    this.timeSlots.forEach(slot => {
+      const startMin = this.toMinutes(this.parseTimeInput(slot.value)) || 0;
+      const endMin = startMin + duration;
+
+      // 1. Check if slot exceeds closing time
+      if (endMin > closingMinutes) {
+        slot.disabled = true;
+        return;
+      }
+
+      // 2. Check client overlaps if date and client are selected
+      if (clientId && dateStr) {
+        const clientOverlap = this.appointments.some(apt => {
+          if (apt.appointmentStatus === 'CANCELLED') {
+            return false;
+          }
+          if (apt.clientId !== clientId || apt.appointmentDate !== dateStr) {
+            return false;
+          }
+          const bookedStart = this.toMinutes(this.parseTimeInput(apt.appointmentStartTime)) || 0;
+          const bookedEnd = this.toMinutes(this.parseTimeInput(apt.appointmentEndTime)) || 0;
+          return startMin < bookedEnd && endMin > bookedStart;
+        });
+
+        if (clientOverlap) {
+          slot.disabled = true;
+          return;
+        }
+      }
+
+      // 3. Check employee overlaps / leaves / off-days if date and employee are selected
+      if (selectedEmployee && dateStr) {
+        if (this.isEmployeeOnLeave(selectedEmployee) || this.isEmployeeUnavailable(selectedEmployee)) {
+          slot.disabled = true;
+          return;
+        }
+
+        const employeeOverlap = this.appointments.some(apt => {
+          if (apt.appointmentStatus === 'CANCELLED') {
+            return false;
+          }
+          if (apt.employeeId !== employeeId || apt.appointmentDate !== dateStr) {
+            return false;
+          }
+          const bookedStart = this.toMinutes(this.parseTimeInput(apt.appointmentStartTime)) || 0;
+          const bookedEnd = this.toMinutes(this.parseTimeInput(apt.appointmentEndTime)) || 0;
+          return startMin < bookedEnd && endMin > bookedStart;
+        });
+
+        if (employeeOverlap) {
+          slot.disabled = true;
+          return;
+        }
+      }
+
+      slot.disabled = false;
+    });
+  }
+
+  isEmployeeUnavailable(employee: any): boolean {
+    const selectedDate = this.bookingForm.get('appointmentDate')?.value;
+    if (!selectedDate || !employee.weeklyOffDays) {
+      return false;
+    }
+
+    const dateObj = new Date(selectedDate);
+    const currentDayName = dateObj.toLocaleString('default', {
+      weekday: 'long'
+    });
+
+    return employee.weeklyOffDays.includes(currentDayName);
+  }
+
+  isEmployeeBooked(employee: any): boolean {
+    const selectedDate = this.bookingForm.get('appointmentDate')?.value;
+    const selectedStart = this.toMinutes(this.parseTimeInput(this.bookingForm.get('appointmentStartTime')?.value));
+    const selectedService = this.services.find(s => s.id === this.bookingForm.get('serviceId')?.value);
+    const duration = selectedService?.duration || 30;
+
+    if (!selectedDate || selectedStart == null) {
+      return false;
+    }
+
+    const selectedEnd = selectedStart + duration;
+
+    const d = new Date(selectedDate);
+    const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    for (const appointment of this.appointments) {
+      if (appointment.appointmentStatus === 'CANCELLED') {
+        continue;
+      }
+
+      if (appointment.employeeId !== employee.id || appointment.appointmentDate !== date) {
+        continue;
+      }
+
+      const bookedStart = this.toMinutes(this.parseTimeInput(appointment.appointmentStartTime)) || 0;
+      const bookedEnd = this.toMinutes(this.parseTimeInput(appointment.appointmentEndTime)) || 0;
+
+      if (selectedStart < bookedEnd && selectedEnd > bookedStart) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  isEmployeeOnLeave(employee: any): boolean {
+    const selectedDate = this.bookingForm.get('appointmentDate')?.value;
+    if (!selectedDate || !employee) {
+      return false;
+    }
+    const selectedDateObject = new Date(selectedDate);
+    const selectedDateFormatted = selectedDateObject.toISOString().split('T')[0];
+    const employeeName = employee.employeeName;
+
+    for (const leave of this.employeeLeaveData) {
+      if (leave.employeeName !== employeeName) {
+        continue;
+      }
+
+      if (selectedDateFormatted >= leave.startDate && selectedDateFormatted <= leave.endDate) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private stylistAvailabilityValidator(control: AbstractControl): ValidationErrors | null {
+    if (!this.bookingForm) {
+      return null;
+    }
+    const employeeId = control.value;
+    if (!employeeId) {
+      return null;
+    }
+
+    const selectedEmployee = this.stylists.find(emp => emp.id === employeeId);
+    if (!selectedEmployee) {
+      return null;
+    }
+
+    if (this.isEmployeeOnLeave(selectedEmployee)) {
+      return { stylistOnLeave: true };
+    }
+
+    if (this.isEmployeeUnavailable(selectedEmployee)) {
+      return { stylistUnavailable: true };
+    }
+
+    if (this.isEmployeeBooked(selectedEmployee)) {
+      return { stylistBooked: true };
+    }
+
+    return null;
   }
 
   private toMinutes(value: string | null | undefined): number | null {

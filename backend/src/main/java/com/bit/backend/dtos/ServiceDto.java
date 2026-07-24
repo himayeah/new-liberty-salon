@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ServiceDto {
-    private long id;
+    private Long id;
     private String serviceName;
     private Integer duration;
     private BigDecimal price;
