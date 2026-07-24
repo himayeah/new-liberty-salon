@@ -39,4 +39,8 @@ public class AppointmentScheduleDto {
     // Report DTOs
     private Long totalCount;
 
+    // NEWLYADDED
+    private String topEmployeeName;
+    private Long topTotalAppointments;
+
 }

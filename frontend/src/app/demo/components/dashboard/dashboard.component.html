@@ -71,6 +71,22 @@
     </div>
 </div>
 
+<!-- NEWLYADDED: Top Employee -->
+<div class="dashboard-card dashboard-card--appointments">
+    <div class="dashboard-card__header">
+        <div>
+            <span class="dashboard-card__label">Top Employee</span>
+            <div class="dashboard-card__value" style="font-size: 1.25rem;">{{ topEmployeeData?.topEmployeeName ||
+                'N/A'}}</div>
+        </div>
+        <div class="dashboard-card__icon dashboard-card__icon--appointments">
+            <i class="pi pi-calendar"></i>
+        </div>
+    </div>
+    <span class="dashboard-card__subtitle">{{ topEmployeeData?.topTotalAppointments || 0 }} Appointments (Last 30
+        days)</span>
+</div>
+
 <!--Appointment Overview and Top 3 Services charts-->
 <div class="content-grid">
     <div class="chart-section">

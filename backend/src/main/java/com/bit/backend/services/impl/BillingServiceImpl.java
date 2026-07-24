@@ -166,8 +166,9 @@ public class BillingServiceImpl implements BillingService {
         InvoiceEntity invoice = new InvoiceEntity();
         invoice.setBilling(billing);
         invoice.setClientName(billing.getClientName());
-        invoice.setInvoiceDate(billing.getBillingDate());
-        invoice.setDueDate(billing.getBillingDate());
+        String formattedDate = formatBillingDateToYmd(billing.getBillingDate());
+        invoice.setInvoiceDate(formattedDate);
+        invoice.setDueDate(formattedDate);
         invoice.setPaymentStatus(billing.getPaymentStatus() != null ? billing.getPaymentStatus() : "Completed");
 
         double totalAmount = 0.0;
@@ -286,7 +287,21 @@ public class BillingServiceImpl implements BillingService {
         }
     }
 
-    
-
+    private String formatBillingDateToYmd(String billingDate) {
+        if (billingDate == null || billingDate.isBlank()) {
+            return null;
+        }
+        if (billingDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return billingDate;
+        }
+        try {
+            long epochMillis = Long.parseLong(billingDate);
+            java.time.Instant instant = java.time.Instant.ofEpochMilli(epochMillis);
+            java.time.LocalDate localDate = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            return localDate.toString();
+        } catch (NumberFormatException e) {
+            return billingDate;
+        }
+    }
 
 }

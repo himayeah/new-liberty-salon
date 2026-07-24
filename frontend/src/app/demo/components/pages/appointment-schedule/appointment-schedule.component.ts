@@ -93,7 +93,6 @@ export class AppointmentScheduleComponent implements OnInit {
                 });
                 console.log("Appointment Array:", newAppointmentArray);
 
-
                 // (response || []).forEach(appointment => {
                 //     if (appointment.appointmentStatus === 'COMPLETED') {
                 //         console.log("my Completed Appointments:", appointment);

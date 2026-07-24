@@ -18,7 +18,11 @@ public class BillingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "client_name")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private ClientRegEntity client;
+
+    @Column(name = "client_name", insertable = false, updatable = false)
     private String clientName;
 
     @Column(name = "billing_category")

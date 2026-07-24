@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
 import com.bit.backend.dtos.ClientLifeTimeValueDto;
+import com.bit.backend.dtos.ReportProductSalesDto;
 import com.bit.backend.dtos.UserDto;
 import com.bit.backend.entities.AppointmentScheduleEntity;
 import com.bit.backend.entities.ClientRegEntity;
@@ -301,11 +303,13 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     }
 
     private void normalizeAndValidateAppointmentTimes(AppointmentScheduleEntity entity) {
-        if ((entity.getAppointmentEndTime() == null || entity.getAppointmentEndTime().isBlank()) && entity.getAppointmentStartTime() != null) {
+        if ((entity.getAppointmentEndTime() == null || entity.getAppointmentEndTime().isBlank())
+                && entity.getAppointmentStartTime() != null) {
             LocalTime start = parseTime(entity.getAppointmentStartTime());
             if (start != null) {
                 int durationMinutes = 60;
-                if (entity.getService() != null && entity.getService().getDuration() != null && entity.getService().getDuration() > 0) {
+                if (entity.getService() != null && entity.getService().getDuration() != null
+                        && entity.getService().getDuration() > 0) {
                     durationMinutes = entity.getService().getDuration();
                 }
                 LocalTime end = start.plusMinutes(durationMinutes);
@@ -473,6 +477,28 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
 
     private boolean isCheckInStatus(String status) {
         return "CHECK_IN".equalsIgnoreCase(status) || "CHECKED_IN".equalsIgnoreCase(status);
+    }
+
+    // Dashboard card (Top employee Name) NEWLYADDED
+    @Override
+    public List<AppointmentScheduleDto> getTopEmployeeName() {
+        try {
+            List<Object[]> rows = appointmentScheduleRepository.getTopEmployeeName();
+            System.out.println("Top Employee Name Newly Added:" + rows);
+            List<AppointmentScheduleDto> list = new ArrayList<>();
+            for (Object[] row : rows) {
+                AppointmentScheduleDto appointmentScheduleDto = new AppointmentScheduleDto();
+                appointmentScheduleDto.setTopEmployeeName((String) row[0]);
+                appointmentScheduleDto.setTopTotalAppointments(((Number) row[1]).longValue());
+                list.add(appointmentScheduleDto);
+                System.out.println("Produuct Sales DTO after Data:" + appointmentScheduleDto);
+            }
+
+            return list;
+
+        } catch (Exception e) {
+            throw new AppException("Request failed with error" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

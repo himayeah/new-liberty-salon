@@ -25,9 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     lineChartOptions: any;
     pieChartData: any;
     pieChartOptions: any;
-
     subscription!: Subscription;
-
     appointmentCountLast30Days: number = 0;
 
     newClientCountLast30Days: number = 0;
@@ -36,6 +34,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     top5Employees: any[] = [];
     totalRevenue: number = 0;
     notificationInterval: any;
+    //NEWLYADDED
+    topEmployeeData: any = null;
 
     constructor(
         private productService: ProductService,
@@ -74,6 +74,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.loadTotalRevenue();
         this.startNotificationPolling();
         this.checkInventoryReorderAlerts();
+        this.getTopEmployeeData();
     }
     // Runs startNotificationPolling() method at every 60,000 ms intervals ( equals to 1 minute)
     startNotificationPolling() {
@@ -360,4 +361,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
             clearInterval(this.notificationInterval);
         }
     }
+
+    // //NEWLYADDED
+    // getTopEmployeeData() {
+    //     this.appointmentService.getTopEmployeeData().subscribe({
+    //         next: (data) => {
+    //             console.log('Top Employee Data', data);
+    //             this.topEmployeeData = data;
+    //         },
+    //         error: (err) => {
+    //             console.error('Failed to load table data', err);
+    //         }
+    //     });
+    // }
+
+    // Dashboard card (Get Most Used Service)
+    getTopEmployeeData() {
+        this.appointmentService.getTopEmployeeData().subscribe({
+            next: (employeeData) => {
+                console.log("This is Top EMployee Data NEWLY ADDED:", employeeData);
+                // backend return array data[0] so taking the first element
+                this.topEmployeeData = employeeData[0];
+            },
+            error: (error) => {
+                console.error('Failed to load Top Employee Data', error);
+            },
+        });
+    }
+
+
 }

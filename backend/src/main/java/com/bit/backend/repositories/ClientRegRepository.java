@@ -93,4 +93,6 @@ public interface ClientRegRepository extends JpaRepository<ClientRegEntity, Long
         // Find client by password reset token
         Optional<ClientRegEntity> findByResetToken(String resetToken);
 
+        List<ClientRegEntity> findByFirstNameAndLastName(String firstName, String lastName);
+
 }
