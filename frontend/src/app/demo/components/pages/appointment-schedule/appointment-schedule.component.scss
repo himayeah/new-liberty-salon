@@ -52,6 +52,27 @@
     }
 }
 
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+
+    @media (max-width: 1024px) {
+        justify-content: flex-start;
+        width: 100%;
+    }
+}
+
+.duration-field {
+    width: 180px;
+}
+
+.custom-range-field {
+    width: 250px;
+}
+
 .table-container {
     overflow-x: auto;
     margin-bottom: 16px;

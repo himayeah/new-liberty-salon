@@ -42,6 +42,14 @@ export class ClientRegComponent implements OnInit {
     lastEditedRow: any = null;
     totalValue: number = 0;
 
+    //Date Filter
+    selectedDuration: string = 'allTime';
+    customStartDate: Date | null = null;
+    customEndDate: Date | null = null;
+    allClients: any[] = [];
+    filteredClients: any[] = [];
+    maxDate: Date = new Date();
+
     constructor(
         private clientRegService: ClientRegServiceService,
         private messageService: MessageServiceService,
@@ -54,15 +62,7 @@ export class ClientRegComponent implements OnInit {
         sessionStorage.clear();
         this.populateData();
         // this.clientLastVisitedDate();
-
-        // filterPredicate() a built in function of Material Table that is used to filter the data
-        this.dataSource.filterPredicate = (data: any, filter: string) => {
-            const searchText = filter.trim().toLowerCase();
-            return (
-                (data.phoneNumber || '').toLowerCase().includes(searchText) ||
-                (data.email || '').toLowerCase().includes(searchText)
-            );
-        };
+        this.applyFilterPredicate();
     }
 
     populateData(): void {
@@ -70,15 +70,12 @@ export class ClientRegComponent implements OnInit {
 
             next: (response: any[]) => {
 
+                this.allClients = response || [];
+                this.filteredClients = response || [];
+
                 console.log("CLIENTS:", response);
 
-                // SORT
-                const sortedAppointments = (response || []).sort((a, b) =>
-                    new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime()
-                );
-
-                this.dataSource.data = sortedAppointments;
-                this.dataSource.sort = this.sort;
+                // this.onDurationChange();
 
 
                 // const sortedClients = (response || []).sort((a, b) =>
@@ -112,10 +109,6 @@ export class ClientRegComponent implements OnInit {
                 // const filteredDob = (response || []).filter(client =>
                 //     client.dateOfBirth && client.dateOfBirth >= "2000-01-01"
                 // );
-
-                this.dataSource.data = response || [];
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
 
             },
             // error is a callback function of observable
@@ -298,4 +291,20 @@ export class ClientRegComponent implements OnInit {
             this.lastEditedRow = null;
         }, 3000);
     }
+
+    // Date Filter
+
+    private applyFilterPredicate() {
+        this.dataSource.filterPredicate = (data: any, filter: string) => {
+            const searchText = filter.trim().toLowerCase();
+            return (
+                (data.phoneNumber || '').toLowerCase().includes(searchText) ||
+                (data.email || '').toLowerCase().includes(searchText)
+            );
+        };
+    }
+
+
+
+
 }

@@ -13,30 +13,38 @@
           <mat-icon class="material-icons">add</mat-icon> Add New Appointment
         </button>
 
-        <!--Get No Show Appointments
-        <button mat-raised-button color="primary" (click)="getNoShowAppointments()">
-          <mat-icon class="material-icons">add</mat-icon> Get No Show Appointments
-        </button>-->
+        <div class="filter-group">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search Appointments" #input />
+            <mat-icon matSuffix class="material-icons">search</mat-icon>
+          </mat-form-field>
 
-        <!--Get Max ID-->
-        <!-- <button mat-raised-button color="primary" (click)="getMaxId()">
-          <mat-icon class="material-icons">add</mat-icon> Get Max ID
-        </button> -->
+          <!-- <mat-form-field appearance="outline" class="duration-field">
+            <mat-label>Select Duration</mat-label>
+            <mat-select [(value)]="selectedDuration" (selectionChange)="onDurationChange()">
+              <mat-option value="allTime">All Time</mat-option>
+              <mat-option value="last1Month">Last 1 Month</mat-option>
+              <mat-option value="last3Months">Last 3 Months</mat-option>
+              <mat-option value="custom">Custom Date Range</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <!--Get ID After 10-->
-        <!-- <button mat-raised-button color="primary" (click)="getIDAfter10()">
-          <mat-icon class="material-icons">add</mat-icon> Get ID After 10
-        </button> -->
+          <mat-form-field *ngIf="selectedDuration === 'custom'" appearance="outline" class="custom-range-field">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="picker" [max]="maxDate">
+              <input matStartDate placeholder="Start date" [(ngModel)]="customStartDate"
+                (dateChange)="onDateRangeChange()">
+              <input matEndDate placeholder="End date" [(ngModel)]="customEndDate" (dateChange)="onDateRangeChange()">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field> -->
 
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Search Appointments" #input />
-          <mat-icon matSuffix class="material-icons">search</mat-icon>
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="clearSearch()">
-          <mat-icon class="material-icons">close</mat-icon> Clear Search
-        </button>
-
+          <button mat-raised-button color="primary" (click)="clearSearch()">
+            <mat-icon class="material-icons">close</mat-icon> Clear Search
+          </button>
+        </div>
       </div>
 
       <div class="table-container">
@@ -44,13 +52,15 @@
           <!--Columns -->
           <ng-container matColumnDef="clientName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Client </th>
-            <td mat-cell *matCellDef="let element">{{ element.clientName || (element.client ? (element.client.firstName
+            <td mat-cell *matCellDef="let element">{{ element.clientName || (element.client ?
+              (element.client.firstName
               + ' ' + element.client.lastName) : '') }}</td>
           </ng-container>
 
           <ng-container matColumnDef="employeeName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Employee </th>
-            <td mat-cell *matCellDef="let element">{{ element.employeeName || element.stylistName || (element.employee ?
+            <td mat-cell *matCellDef="let element">{{ element.employeeName || element.stylistName || (element.employee
+              ?
               (element.employee.firstName + ' ' + element.employee.lastName) : (element.stylist ?
               (element.stylist.firstName + ' ' + element.stylist.lastName) : '')) }}</td>
           </ng-container>
@@ -75,7 +85,8 @@
 
           <ng-container matColumnDef="appointmentEndTime">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> End </th>
-            <td mat-cell *matCellDef="let element">{{ element.appointmentEndTime ? (element.appointmentEndTime | time12)
+            <td mat-cell *matCellDef="let element">{{ element.appointmentEndTime ? (element.appointmentEndTime |
+              time12)
               : '' }}</td>
           </ng-container>
 
