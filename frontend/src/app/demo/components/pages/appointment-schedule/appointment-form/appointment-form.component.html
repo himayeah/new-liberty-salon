@@ -74,15 +74,15 @@
             <!-- Start Time -->
             <mat-form-field appearance="outline">
                 <mat-label>Start Time</mat-label>
-                <input matInput formControlName="appointmentStartTime" placeholder="e.g. 10:00 AM" />
+                <mat-select formControlName="appointmentStartTime">
+                    <mat-option *ngFor="let slot of timeSlots" [value]="slot.value" [disabled]="slot.disabled">
+                        {{ slot.label }}
+                    </mat-option>
+                </mat-select>
                 <mat-hint>Salon hours: 10:00 AM - 06:00 PM</mat-hint>
                 <mat-error
                     *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('required')">
                     Start Time is required
-                </mat-error>
-                <mat-error
-                    *ngIf="submitted && appointmentScheduleForm.get('appointmentStartTime')?.hasError('invalidTime')">
-                    Enter time as e.g. 10:00 AM
                 </mat-error>
             </mat-form-field>
 

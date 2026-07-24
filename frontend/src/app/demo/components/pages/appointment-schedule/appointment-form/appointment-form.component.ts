@@ -38,6 +38,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     fullyBooked: boolean = false;
     appointments: any[] = [];
     employeeLeaveData: any[] = [];
+    timeSlots: { value: string, label: string, disabled: boolean }[] = [];
 
     // UI Appointment Status Dropdown options defined
     appointmentStatuses = [
@@ -179,6 +180,11 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         // Notes are optional
         notesCtrl?.clearValidators();
         notesCtrl?.updateValueAndValidity();
+
+        this.generateTimeSlots();
+        this.subs.push(this.appointmentScheduleForm.valueChanges.subscribe(() => {
+            this.updateTimeSlotsAvailability();
+        }));
     }
 
     private patchForm(data: any): void {
@@ -213,7 +219,10 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
 
 
     loadClients(): void {
-        this.clientService.getData().subscribe(res => this.clients = (res as any[]) || []);
+        this.clientService.getData().subscribe(res => {
+            this.clients = (res as any[]) || [];
+            this.updateTimeSlotsAvailability();
+        });
     }
 
     // preffered stylist auto fill according to the selected client
@@ -236,11 +245,17 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     }
 
     loadEmployees(): void {
-        this.employeeService.getData().subscribe(res => this.employees = (res as any[]) || []);
+        this.employeeService.getData().subscribe(res => {
+            this.employees = (res as any[]) || [];
+            this.updateTimeSlotsAvailability();
+        });
     }
 
     loadServices(): void {
-        this.serviceService.getData().subscribe(res => this.services = (res as any[]) || []);
+        this.serviceService.getData().subscribe(res => {
+            this.services = (res as any[]) || [];
+            this.updateTimeSlotsAvailability();
+        });
     }
 
     onSubmit(): void {
@@ -469,6 +484,102 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
         return s?.duration || 30;
     }
 
+    generateTimeSlots(): void {
+        const slots = [];
+        const start = 10 * 60; // 10:00 AM in minutes
+        const end = 18 * 60; // 06:00 PM in minutes
+        for (let min = start; min < end; min += 30) {
+            const h = Math.floor(min / 60);
+            const m = min % 60;
+            const hour12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+            const suffix = h >= 12 ? 'PM' : 'AM';
+            const timeStr = `${String(hour12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${suffix}`;
+            slots.push({
+                value: timeStr,
+                label: timeStr,
+                disabled: false
+            });
+        }
+        this.timeSlots = slots;
+    }
+
+    updateTimeSlotsAvailability(): void {
+        const clientId = this.appointmentScheduleForm?.get('clientId')?.value;
+        const employeeId = this.appointmentScheduleForm?.get('employeeId')?.value;
+        const serviceId = this.appointmentScheduleForm?.get('serviceId')?.value;
+        const dateVal = this.appointmentScheduleForm?.get('appointmentDate')?.value;
+
+        const duration = this.getServiceDuration(serviceId);
+        const closingMinutes = this.toMinutes(this.salonClosingTime) || 1080;
+
+        let dateStr = '';
+        if (dateVal) {
+            const d = new Date(dateVal);
+            dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        const currentAptId = this.data?.appointment?.id || this.data?.id;
+        const selectedEmployee = employeeId ? this.employees.find(e => e.id === employeeId) : null;
+
+        this.timeSlots.forEach(slot => {
+            const startMin = this.toMinutes(this.parseTimeInput(slot.value)) || 0;
+            const endMin = startMin + duration;
+
+            // 1. Check if slot exceeds closing time
+            if (endMin > closingMinutes) {
+                slot.disabled = true;
+                return;
+            }
+
+            // 2. Check client overlaps if date and client are selected
+            if (clientId && dateStr) {
+                const clientOverlap = this.appointments.some(apt => {
+                    if (apt.appointmentStatus === 'CANCELLED' || apt.id === currentAptId) {
+                        return false;
+                    }
+                    if (apt.clientId !== clientId || apt.appointmentDate !== dateStr) {
+                        return false;
+                    }
+                    const bookedStart = this.toMinutes(this.parseTimeInput(apt.appointmentStartTime)) || 0;
+                    const bookedEnd = this.toMinutes(this.parseTimeInput(apt.appointmentEndTime)) || 0;
+                    return startMin < bookedEnd && endMin > bookedStart;
+                });
+
+                if (clientOverlap) {
+                    slot.disabled = true;
+                    return;
+                }
+            }
+
+            // 3. Check employee overlaps / leaves / off-days if date and employee are selected
+            if (selectedEmployee && dateStr) {
+                if (this.isEmployeeOnLeave(selectedEmployee) || this.isEmployeeUnavailable(selectedEmployee)) {
+                    slot.disabled = true;
+                    return;
+                }
+
+                const employeeOverlap = this.appointments.some(apt => {
+                    if (apt.appointmentStatus === 'CANCELLED' || apt.id === currentAptId) {
+                        return false;
+                    }
+                    if (apt.employeeId !== employeeId || apt.appointmentDate !== dateStr) {
+                        return false;
+                    }
+                    const bookedStart = this.toMinutes(this.parseTimeInput(apt.appointmentStartTime)) || 0;
+                    const bookedEnd = this.toMinutes(this.parseTimeInput(apt.appointmentEndTime)) || 0;
+                    return startMin < bookedEnd && endMin > bookedStart;
+                });
+
+                if (employeeOverlap) {
+                    slot.disabled = true;
+                    return;
+                }
+            }
+
+            slot.disabled = false;
+        });
+    }
+
     ngOnDestroy(): void {
         this.subs.forEach(s => s.unsubscribe());
     }
@@ -478,9 +589,10 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     }
 
     loadAppointments(): void {
-        this.appointmentService.getData().subscribe(
-            res => this.appointments = (res as any[]) || []
-        );
+        this.appointmentService.getData().subscribe(res => {
+            this.appointments = (res as any[]) || [];
+            this.updateTimeSlotsAvailability();
+        });
     }
 
     // checks if the employee is unavailable (weekly off days), if yes he will be displayed disabled
@@ -553,6 +665,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
             next: (response: any[]) => {
                 this.employeeLeaveData = response || [];
                 console.log("Employee Leave Data:", this.employeeLeaveData);
+                this.updateTimeSlotsAvailability();
             },
             error: (err) =>
                 this.messageService.showError('Employee Leave data retrieval failed: ' + err.message)
