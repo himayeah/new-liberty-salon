@@ -42,6 +42,14 @@ export class EmployeeRegComponent implements OnInit {
     lastEditedRow: any = null;
     isReceptionist = false;
 
+    //FILTER DATA
+    selectedDuration: string = 'allTime';
+    maxDate: Date = new Date();
+    filteredEmployeeReg: any[] = [];
+    allEmployeeReg: any[] = [];
+    customStartDate: Date | null = null;
+    customEndDate: Date | null = null;
+
     constructor(
         private employeeRegService: EmployeeRegServicesService,
         private messageService: MessageServiceService,
@@ -62,6 +70,11 @@ export class EmployeeRegComponent implements OnInit {
     populateData(): void {
         this.employeeRegService.getData().subscribe({
             next: (response: any[]) => {
+
+                //filter date
+                this.allEmployeeReg = response || [];
+                this.filteredEmployeeReg = response || [];
+
                 this.dataSource = new MatTableDataSource(response || []);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -142,4 +155,66 @@ export class EmployeeRegComponent implements OnInit {
             this.lastEditedRow = null;
         }, 3000);
     }
+
+    // DATE FILTER
+    // onDurationChange() {
+    //     const today = new Date();
+
+    //     if (this.selectedDuration === 'allTime') {
+    //         this.filteredEmployeeReg = this.allEmployeeReg;
+    //     } else if (this.selectedDuration === 'last1Month') {
+    //         const oneMonthAgo = new Date(today);
+    //         oneMonthAgo.setMonth(today.getMonth() - 1);
+    //         oneMonthAgo.setHours(0, 0, 0, 0);
+
+    //         this.filteredEmployeeReg = this.allEmployeeReg.filter(employeeReg => {
+    //             if (!employeeReg.dateJoined) return false;
+    //             const appDate = new Date(employeeReg.dateJoined);
+    //             appDate.setHours(0, 0, 0, 0);
+    //             return appDate >= oneMonthAgo;
+    //         });
+    //     } else if (this.selectedDuration === 'last3Months') {
+    //         const threeMonthsAgo = new Date(today);
+    //         threeMonthsAgo.setMonth(today.getMonth() - 3);
+    //         threeMonthsAgo.setHours(0, 0, 0, 0);
+
+    //         this.filteredEmployeeReg = this.allEmployeeReg.filter(employeeReg => {
+    //             if (!employeeReg.dateJoined) return false;
+    //             const appDate = new Date(employeeReg.dateJoined);
+    //             appDate.setHours(0, 0, 0, 0);
+    //             return appDate >= threeMonthsAgo;
+    //         });
+    //     } else if (this.selectedDuration === 'custom') {
+    //         this.onDateRangeChange();
+    //         return;
+    //     }
+
+    //     this.dataSource = new MatTableDataSource(this.filteredEmployeeReg);
+    //     this.dataSource.paginator = this.paginator;
+    //     this.dataSource.sort = this.sort;
+    // }
+
+    // onDateRangeChange() {
+    //     if (!this.customStartDate || !this.customEndDate) {
+    //         return;
+    //     }
+
+    //     const start = new Date(this.customStartDate);
+    //     start.setHours(0, 0, 0, 0);
+    //     const end = new Date(this.customEndDate);
+    //     end.setHours(23, 59, 59, 999);
+
+    //     this.filteredEmployeeReg = this.allEmployeeReg.filter(employeeReg => {
+    //         if (!employeeReg.dateJoined) return false;
+    //         const appDate = new Date(employeeReg.dateJoined);
+    //         appDate.setHours(0, 0, 0, 0);
+    //         return appDate >= start && appDate <= end;
+    //     });
+
+    //     this.dataSource = new MatTableDataSource(this.filteredEmployeeReg);
+    //     this.dataSource.paginator = this.paginator;
+    //     this.dataSource.sort = this.sort;
+    // }
+
+
 }

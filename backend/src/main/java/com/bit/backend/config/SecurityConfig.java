@@ -67,7 +67,9 @@ public class SecurityConfig {
                         "/report/procurement",
                         "/report/procurement/**",
                         "/report-product-sales",
-                        "/report-product-sales/**"
+                        "/report-product-sales/**",
+                        "/invoice",
+                        "/invoice/**"
 
                 ).permitAll()
                         .anyRequest().authenticated());
