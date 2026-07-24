@@ -30,6 +30,7 @@ public class ClientRegDto {
     private String password;
     private String confirmPassword;
     private String resetToken;
+    private String registrationDate;
 
     // Fields for Reports
     private Integer registrationYear;
