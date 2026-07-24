@@ -116,7 +116,6 @@ export class AppMenuComponent implements OnInit {
             '/pages/employee-leave',
             '/pages/billing',
             '/pages/report-client-reg',
-            '/pages/report-product-sales',
             '/pages/report-appointment-status',
             '/pages/report-procurement',
             '/pages/inventory',

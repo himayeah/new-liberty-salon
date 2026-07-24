@@ -20,8 +20,8 @@
             <mat-form-field appearance="outline">
                 <mat-label>Client Name</mat-label>
                 <!--Form Control name is set in the ts file-->
-                <mat-select formControlName="clientId">
-                    <mat-option *ngFor="let client of clients" [value]="client.id">
+                <mat-select formControlName="clientName">
+                    <mat-option *ngFor="let client of clients" [value]="client.firstName + ' ' + client.lastName">
                         {{ client.firstName }} {{ client.lastName }}
                     </mat-option>
                 </mat-select>

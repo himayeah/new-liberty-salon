@@ -42,6 +42,20 @@ public class PurchaseOrderService implements PurchaseOrderServiceI {
         this.grnRepository = grnRepository;
     }
 
+    private String generateNextOrderNumber() {
+        String lastOrderNum = purchaseOrderRepository.getLastOrderNumber();
+        if (lastOrderNum == null || !lastOrderNum.startsWith("PO-")) {
+            return "PO-1001";
+        }
+        try {
+            String numStr = lastOrderNum.substring(3);
+            int nextNum = Integer.parseInt(numStr) + 1;
+            return "PO-" + nextNum;
+        } catch (NumberFormatException e) {
+            return "PO-" + System.currentTimeMillis();
+        }
+    }
+
     @Override
     public PurchaseOrderDto addPurchaseOrder(PurchaseOrderDto purchaseOrderDto) {
         if (purchaseOrderDto.getSupplierId() == null) {
@@ -49,7 +63,7 @@ public class PurchaseOrderService implements PurchaseOrderServiceI {
         }
 
         PurchaseOrderEntity entity = purchaseOrderMapper.toEntity(purchaseOrderDto);
-        entity.setOrderNumber("PO-" + System.currentTimeMillis());
+        entity.setOrderNumber(generateNextOrderNumber());
 
         SupplierEntity supplier = supplierRepository.findById(purchaseOrderDto.getSupplierId())
                 .orElseThrow(() -> new AppException("Supplier not found", HttpStatus.NOT_FOUND));
@@ -72,7 +86,9 @@ public class PurchaseOrderService implements PurchaseOrderServiceI {
         PurchaseOrderEntity existing = purchaseOrderRepository.findById(id)
                 .orElseThrow(() -> new AppException("Purchase Order not found", HttpStatus.NOT_FOUND));
 
-        existing.setOrderNumber(dto.getOrderNumber());
+        if (dto.getOrderNumber() != null && !dto.getOrderNumber().isBlank()) {
+            existing.setOrderNumber(dto.getOrderNumber());
+        }
         existing.setOrderDate(dto.getOrderDate());
         existing.setStatus(dto.getStatus());
         existing.setExpectedDeliveryDate(dto.getExpectedDeliveryDate());

@@ -258,8 +258,8 @@ export class BillingFormComponent implements OnInit {
     const category = group.get('category')?.value;
 
     group.patchValue({
-      name: selectedItem, // Save the whole object; getItemLabel and submission logic handle it
-      price: price,
+      name: this.getItemLabel(selectedItem),
+      price,
       productId: category === 'PRODUCT PURCHASE' ? selectedItem.id : null,
       serviceId: category === 'SERVICE' ? selectedItem.id : null
     });
@@ -269,6 +269,81 @@ export class BillingFormComponent implements OnInit {
     if (!item) return '';
     if (typeof item === 'string') return item;
     return item.name || item.serviceName || item.productName || '';
+  }
+
+  private resolvePurchaseId(purchase: any): any {
+    if (!purchase) {
+      return purchase;
+    }
+
+    const category = purchase.category;
+    let nameStr = typeof purchase.name === 'string' ? purchase.name : this.getItemLabel(purchase.name);
+    let productId = purchase.productId;
+    let serviceId = purchase.serviceId;
+
+    if (purchase.name && typeof purchase.name !== 'string' && purchase.name.id != null) {
+      const itemId = purchase.name.id;
+      if (category === 'PRODUCT PURCHASE') {
+        productId = itemId;
+        serviceId = null;
+      } else if (category === 'SERVICE') {
+        serviceId = itemId;
+        productId = null;
+      }
+    }
+
+    const normalizedName = nameStr ? nameStr.toString().trim().toLowerCase() : '';
+
+    if (!productId && category === 'PRODUCT PURCHASE' && normalizedName) {
+      productId = this.findProductIdByLabel(normalizedName);
+    }
+
+    if (!serviceId && category === 'SERVICE' && normalizedName) {
+      serviceId = this.findServiceIdByLabel(normalizedName);
+    }
+
+    return {
+      ...purchase,
+      name: nameStr,
+      productId,
+      serviceId
+    };
+  }
+
+  private findProductIdByLabel(name: string): any {
+    if (!name) {
+      return null;
+    }
+
+    const exactMatch = this.allProducts.find((item: any) =>
+      this.getItemLabel(item).toLowerCase() === name
+    );
+    if (exactMatch) {
+      return exactMatch.id;
+    }
+
+    const partialMatch = this.allProducts.find((item: any) =>
+      this.getItemLabel(item).toLowerCase().includes(name)
+    );
+    return partialMatch ? partialMatch.id : null;
+  }
+
+  private findServiceIdByLabel(name: string): any {
+    if (!name) {
+      return null;
+    }
+
+    const exactMatch = this.allServices.find((item: any) =>
+      this.getItemLabel(item).toLowerCase() === name
+    );
+    if (exactMatch) {
+      return exactMatch.id;
+    }
+
+    const partialMatch = this.allServices.find((item: any) =>
+      this.getItemLabel(item).toLowerCase().includes(name)
+    );
+    return partialMatch ? partialMatch.id : null;
   }
 
   removePurchase(index: number) {
@@ -326,30 +401,7 @@ export class BillingFormComponent implements OnInit {
 
     // Convert 'name' from object/string to string for backend and ensure productId/serviceId are populated
     if (formValue.purchases && Array.isArray(formValue.purchases)) {
-      formValue.purchases = formValue.purchases.map((p: any) => {
-        const itemObj = p.name;
-        const nameStr = typeof itemObj === 'string' ? itemObj : this.getItemLabel(itemObj);
-
-        let productId = p.productId;
-        let serviceId = p.serviceId;
-
-        if (typeof itemObj !== 'string' && itemObj) {
-          if (p.category === 'PRODUCT PURCHASE') {
-            productId = itemObj.id;
-            serviceId = null;
-          } else if (p.category === 'SERVICE') {
-            serviceId = itemObj.id;
-            productId = null;
-          }
-        }
-
-        return {
-          ...p,
-          name: nameStr,
-          productId: productId,
-          serviceId: serviceId
-        };
-      });
+      formValue.purchases = formValue.purchases.map((p: any) => this.resolvePurchaseId(p));
     }
 
     // Convert date to timestamp for backend

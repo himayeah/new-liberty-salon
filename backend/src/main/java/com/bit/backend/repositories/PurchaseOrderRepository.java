@@ -29,8 +29,11 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrderEnti
             "FROM purchase_order po " +
             "JOIN supplier s ON s.id = po.supplier_id " +
             "WHERE po.status = 'RECEIVED' " +
-            "AND po.order_date >= CURRENT_DATE() - INTERVAL 3 MONTH " +
+            "AND STR_TO_DATE(po.order_date, '%Y-%m-%d') >= CURRENT_DATE() - INTERVAL 6 MONTH " +
             "GROUP BY s.supplier_name", nativeQuery = true)
     List<Object[]> getProductSalesBySupplier();
+
+    @Query(value = "SELECT order_number FROM purchase_order WHERE order_number REGEXP '^PO-[0-9][0-9][0-9][0-9]$' ORDER BY CAST(SUBSTRING(order_number, 4) AS UNSIGNED) DESC LIMIT 1", nativeQuery = true)
+    String getLastOrderNumber();
 
 }

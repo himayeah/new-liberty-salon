@@ -45,7 +45,7 @@ export class PurchaseOrderFormComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
         this.purchaseOrderForm = this.fb.group({
-            orderNumber: ['', Validators.required],
+            orderNumber: [{ value: data?.mode === 'add' ? 'Auto-generated' : '', disabled: true }],
             supplierId: ['', Validators.required],
             orderDate: ['', Validators.required],
             expectedDeliveryDate: ['', Validators.required],
@@ -86,9 +86,9 @@ export class PurchaseOrderFormComponent implements OnInit {
 
         this.isButtonDisabled = true;
         const formValue = {
-            ...this.purchaseOrderForm.value,
-            orderDate: this.formatDate(this.purchaseOrderForm.value.orderDate),
-            expectedDeliveryDate: this.formatDate(this.purchaseOrderForm.value.expectedDeliveryDate)
+            ...this.purchaseOrderForm.getRawValue(),
+            orderDate: this.formatDate(this.purchaseOrderForm.getRawValue().orderDate),
+            expectedDeliveryDate: this.formatDate(this.purchaseOrderForm.getRawValue().expectedDeliveryDate)
         };
 
         if (this.data.mode === 'add') {

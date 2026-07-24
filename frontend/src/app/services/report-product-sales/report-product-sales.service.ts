@@ -9,10 +9,11 @@ import { Observable } from 'rxjs';
 })
 export class ReportProductSalesService {
 
-  constructor(private http: HttpClient, private httpService: HttpService) { }
+ constructor(private http: HttpClient, private httpService: HttpService) { }
 
-  getData(): Observable<any[]> {
-    const requestUrl = `${environment.baseUrl}/report-product-sales-controller/report-product-sales`;
+  // Product Sales Revenue(table)
+  getProductSalesRevenue(): Observable<any[]> {
+    const requestUrl = `${environment.baseUrl}/report-product-sales/revenue`;
     let headers = new HttpHeaders();
     const token = this.httpService.getAuthToken();
     if (token) {
