@@ -75,7 +75,7 @@ export class ClientRegComponent implements OnInit {
 
                 console.log("CLIENTS:", response);
 
-                // this.onDurationChange();
+                this.onDurationChange();
 
 
                 // const sortedClients = (response || []).sort((a, b) =>
@@ -176,10 +176,7 @@ export class ClientRegComponent implements OnInit {
 
     // The modal that openes for 'Add New' Button
     openAddClientModal(): void {
-        // The open method of MatDialog service will return an instance of MatDialogRef:
-        // ClientFormComponent and an object containing styles are passes as parameters
-        // 06/08 : diaog is my local varaible pointing to the MatDialogRef Instance
-        // An instance is just a real usable copy of something that is created from a blueprint (class)
+        // The open method of MatDialog service will return an instance of MatDialogRef
         const dialogRef = this.dialog.open(ClientFormComponent, {
             width: '600px',
             data: { mode: 'add' }
@@ -293,6 +290,77 @@ export class ClientRegComponent implements OnInit {
     }
 
     // Date Filter
+    onDurationChange() {
+        const today = new Date();
+
+        if (this.selectedDuration === 'allTime') {
+            this.filteredClients = this.allClients;
+        } else if (this.selectedDuration === 'last1Month') {
+            const oneMonthAgo = new Date(today);
+            oneMonthAgo.setMonth(today.getMonth() - 1);
+            oneMonthAgo.setHours(0, 0, 0, 0);
+
+            this.filteredClients = this.allClients.filter(client => {
+                if (!client.registrationDate) return false;
+                const clientRegDate = new Date(client.registrationDate);
+                clientRegDate.setHours(0, 0, 0, 0);
+                return clientRegDate >= oneMonthAgo;
+            });
+        } else if (this.selectedDuration === 'last3Months') {
+            const threeMonthsAgo = new Date(today);
+            threeMonthsAgo.setMonth(today.getMonth() - 3);
+            threeMonthsAgo.setHours(0, 0, 0, 0);
+
+            this.filteredClients = this.allClients.filter(client => {
+                if (!client.registrationDate) return false;
+                const clientRegDate = new Date(client.registrationDate);
+                clientRegDate.setHours(0, 0, 0, 0);
+                return clientRegDate >= threeMonthsAgo;
+            });
+        } else if (this.selectedDuration === 'last6Months') {
+            const sixMonthsAgo = new Date(today);
+            sixMonthsAgo.setMonth(today.getMonth() - 6);
+            sixMonthsAgo.setHours(0, 0, 0, 0);
+
+            this.filteredClients = this.allClients.filter(client => {
+                if (!client.registrationDate) return false;
+                const clientRegDate = new Date(client.registrationDate);
+                clientRegDate.setHours(0, 0, 0, 0);
+                return clientRegDate >= sixMonthsAgo;
+            });
+        } else if (this.selectedDuration === 'custom') {
+            this.onDateRangeChange();
+            return;
+        }
+
+        this.dataSource = new MatTableDataSource(this.filteredClients);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.applyFilterPredicate();
+    }
+
+    onDateRangeChange() {
+        if (!this.customStartDate || !this.customEndDate) {
+            return;
+        }
+
+        const start = new Date(this.customStartDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(this.customEndDate);
+        end.setHours(23, 59, 59, 999);
+
+        this.filteredClients = this.allClients.filter(client => {
+            if (!client.registrationDate) return false;
+            const clientRegDate = new Date(client.registrationDate);
+            clientRegDate.setHours(0, 0, 0, 0);
+            return clientRegDate >= start && clientRegDate <= end;
+        });
+
+        this.dataSource = new MatTableDataSource(this.filteredClients);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.applyFilterPredicate();
+    }
 
     private applyFilterPredicate() {
         this.dataSource.filterPredicate = (data: any, filter: string) => {
@@ -303,8 +371,6 @@ export class ClientRegComponent implements OnInit {
             );
         };
     }
-
-
 
 
 }
