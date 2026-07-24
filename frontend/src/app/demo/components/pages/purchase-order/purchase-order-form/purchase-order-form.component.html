@@ -3,7 +3,7 @@
     <form [formGroup]="purchaseOrderForm">
         <div class="form-grid">
             <!-- Order Number -->
-            <div class="form-field">
+            <div class="form-field" *ngIf="data.mode === 'edit'">
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Order Number</mat-label>
                     <input matInput formControlName="orderNumber" placeholder="PO-XXXX" />
