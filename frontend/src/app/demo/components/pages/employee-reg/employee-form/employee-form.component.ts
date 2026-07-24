@@ -42,7 +42,7 @@ export class EmployeeFormComponent implements OnInit {
       // camel case naming convention
       employeeName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      nic: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(12), Validators.pattern('^(\d{9}[Vv]|\d{12})$')]],
+      nic: ['', [Validators.required, Validators.pattern(/^(\d{9}[Vv]|\d{12})$/)]],
       dateJoined: ['', Validators.required],
       designation: ['', Validators.required],
       specializations: [''],
