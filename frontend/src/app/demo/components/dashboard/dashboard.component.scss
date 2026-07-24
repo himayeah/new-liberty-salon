@@ -89,6 +89,25 @@
     }
 }
 
+.dashboard-card--top-employee {
+    background-color: #B1D6F4 !important;
+    border-color: #B1D6F4;
+
+    .dashboard-card__label,
+    .dashboard-card__value {
+        color: #1f2937;
+    }
+
+    .dashboard-card__subtitle {
+        color: #4b5563;
+    }
+
+    .dashboard-card__icon {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: #1e3a8a;
+    }
+}
+
 .dashboard-card--new-clients {
     background-color: #F7DFDF !important;
     border-color: #F7DFDF;

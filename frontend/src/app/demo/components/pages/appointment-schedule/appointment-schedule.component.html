@@ -20,27 +20,6 @@
             <mat-icon matSuffix class="material-icons">search</mat-icon>
           </mat-form-field>
 
-          <!-- <mat-form-field appearance="outline" class="duration-field">
-            <mat-label>Select Duration</mat-label>
-            <mat-select [(value)]="selectedDuration" (selectionChange)="onDurationChange()">
-              <mat-option value="allTime">All Time</mat-option>
-              <mat-option value="last1Month">Last 1 Month</mat-option>
-              <mat-option value="last3Months">Last 3 Months</mat-option>
-              <mat-option value="custom">Custom Date Range</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field *ngIf="selectedDuration === 'custom'" appearance="outline" class="custom-range-field">
-            <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input [rangePicker]="picker" [max]="maxDate">
-              <input matStartDate placeholder="Start date" [(ngModel)]="customStartDate"
-                (dateChange)="onDateRangeChange()">
-              <input matEndDate placeholder="End date" [(ngModel)]="customEndDate" (dateChange)="onDateRangeChange()">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          </mat-form-field> -->
-
           <button mat-raised-button color="primary" (click)="clearSearch()">
             <mat-icon class="material-icons">close</mat-icon> Clear Search
           </button>

@@ -8,6 +8,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ClientRegServiceService {
+  getClientLastVisitedDate() {
+    throw new Error('Method not implemented.');
+  }
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
   //sends whatever the client filled in the form to BE. has an observerbale (Angular is async). to listen for the response BE sends later

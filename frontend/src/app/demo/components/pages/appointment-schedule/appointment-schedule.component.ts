@@ -38,6 +38,7 @@ export class AppointmentScheduleComponent implements OnInit {
     lastAddedRow: any = null;
     lastEditedRow: any = null;
 
+    // FILTER DATA
     selectedDuration: string = 'allTime';
     appointmentStartDate: Date | null = null;
     appointmentEndDate: Date | null = null;

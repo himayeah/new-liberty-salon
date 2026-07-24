@@ -31,11 +31,14 @@
                 <mat-error *ngIf="submitted && appointmentScheduleForm.get('employeeId')?.hasError('required')">
                     Employee is required
                 </mat-error>
-                <mat-error *ngIf="appointmentScheduleForm.get('employeeId')?.hasError('stylistUnavailable') || appointmentScheduleForm.get('employeeId')?.hasError('stylistOnLeave')">
-                    Selected Stylist is not Available on this day
+                <mat-error *ngIf="appointmentScheduleForm.get('employeeId')?.hasError('stylistUnavailable')">
+                    The selected stylist does not work on this day
+                </mat-error>
+                <mat-error *ngIf="appointmentScheduleForm.get('employeeId')?.hasError('stylistOnLeave')">
+                    The selected stylist is on leave this day
                 </mat-error>
                 <mat-error *ngIf="appointmentScheduleForm.get('employeeId')?.hasError('stylistBooked')">
-                    Stylist is already Booked
+                    The selected Stylist is already booked on this Time slot
                 </mat-error>
             </mat-form-field>
 
