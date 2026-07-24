@@ -38,6 +38,15 @@ export class AppointmentScheduleComponent implements OnInit {
     lastAddedRow: any = null;
     lastEditedRow: any = null;
 
+    selectedDuration: string = 'allTime';
+    appointmentStartDate: Date | null = null;
+    appointmentEndDate: Date | null = null;
+    maxDate: Date = new Date();
+    allAppointments: any[] = [];
+    customStartDate: Date | null = null;
+    customEndDate: Date | null = null;
+    filteredAppointments: any[] = [];
+
     noShowAppointments: any[] = [];
     appointmentIDs: any[] = [];
     showData: any[] = [];
@@ -56,14 +65,11 @@ export class AppointmentScheduleComponent implements OnInit {
     populateData(): void {
 
         this.appointmentService.getData().subscribe({
-
-            //  const filteredCients = (response || []).filter(client =>
-            //     client.id && client.id >= 10
-            // );
-
             //next is a callback function of observable, It runs when the data is successfully returned
             // you can save the returned data in a variable : 'response'
             next: (response: any[]) => {
+                this.allAppointments = response || [];
+                this.filteredAppointments = response || [];
 
                 // SORT 
                 // const sortedAppointments = (response || []).sort((a, b) => {
@@ -162,9 +168,7 @@ export class AppointmentScheduleComponent implements OnInit {
                 // this.sort.active = 'clientId'; // sort by cloumn clientId
                 // this.sort.direction = 'desc'; // sort in desc order
 
-                this.dataSource = new MatTableDataSource(response || []);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
+                this.onDurationChange();
 
                 // Auto-update No Show status
                 this.checkAndMarkNoShows(response);
@@ -386,5 +390,66 @@ export class AppointmentScheduleComponent implements OnInit {
     // }
     // Ex:      // this.sort.active = 'clientId'; // sort by cloumn clientId
     // this.sort.direction = 'desc';
+
+    // Date Filter
+    onDurationChange() {
+        const today = new Date();
+
+        if (this.selectedDuration === 'allTime') {
+            this.filteredAppointments = this.allAppointments;
+        } else if (this.selectedDuration === 'last1Month') {
+            const oneMonthAgo = new Date(today);
+            oneMonthAgo.setMonth(today.getMonth() - 1);
+            oneMonthAgo.setHours(0, 0, 0, 0);
+
+            this.filteredAppointments = this.allAppointments.filter(appointment => {
+                if (!appointment.appointmentDate) return false;
+                const appDate = new Date(appointment.appointmentDate);
+                appDate.setHours(0, 0, 0, 0);
+                return appDate >= oneMonthAgo;
+            });
+        } else if (this.selectedDuration === 'last3Months') {
+            const threeMonthsAgo = new Date(today);
+            threeMonthsAgo.setMonth(today.getMonth() - 3);
+            threeMonthsAgo.setHours(0, 0, 0, 0);
+
+            this.filteredAppointments = this.allAppointments.filter(appointment => {
+                if (!appointment.appointmentDate) return false;
+                const appDate = new Date(appointment.appointmentDate);
+                appDate.setHours(0, 0, 0, 0);
+                return appDate >= threeMonthsAgo;
+            });
+        } else if (this.selectedDuration === 'custom') {
+            this.onDateRangeChange();
+            return;
+        }
+
+        this.dataSource = new MatTableDataSource(this.filteredAppointments);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
+    onDateRangeChange() {
+        if (!this.customStartDate || !this.customEndDate) {
+            return;
+        }
+
+        const start = new Date(this.customStartDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(this.customEndDate);
+        end.setHours(23, 59, 59, 999);
+
+        this.filteredAppointments = this.allAppointments.filter(appointment => {
+            if (!appointment.appointmentDate) return false;
+            const appDate = new Date(appointment.appointmentDate);
+            appDate.setHours(0, 0, 0, 0);
+            return appDate >= start && appDate <= end;
+        });
+
+        this.dataSource = new MatTableDataSource(this.filteredAppointments);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
 
 }
