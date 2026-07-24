@@ -22,7 +22,11 @@ public class InvoiceEntity {
     @Column(name = "invoice_number")
     private String invoiceNumber;
 
-    @Column(name = "client_name")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private ClientRegEntity client;
+
+    @Column(name = "client_name", insertable = false, updatable = false)
     private String clientName;
 
     @Column(name = "invoice_date")

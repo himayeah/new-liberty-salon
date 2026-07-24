@@ -3,6 +3,7 @@ package com.bit.backend.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bit.backend.dtos.AppointmentScheduleDto;
+import com.bit.backend.dtos.ReportProductSalesDto;
 import com.bit.backend.exceptions.AppException;
 import com.bit.backend.services.AppointmentScheduleServiceI;
 import com.bit.backend.services.ReportAppointmentStatusService;
@@ -156,6 +158,18 @@ public class AppointmentScheduleController {
         try {
             List<Object[]> result = appointmentScheduleServiceI.getAppointmentCountsByMonth();
             return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // NEWLYADDED
+    @GetMapping(value = "/appointment-schedule-form/top-employee-name", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AppointmentScheduleDto>> getTopEmployeeName() {
+        try {
+            List<AppointmentScheduleDto> appointmentScheduleDtoList = appointmentScheduleServiceI.getTopEmployeeName();
+            System.out.println("Data:" + appointmentScheduleDtoList);
+            return ResponseEntity.ok(appointmentScheduleDtoList);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

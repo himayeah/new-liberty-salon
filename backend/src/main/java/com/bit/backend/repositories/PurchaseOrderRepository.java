@@ -19,8 +19,7 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrderEnti
             "po.total_amount AS total_worth " +
             "FROM purchase_order po " +
             "JOIN supplier s ON s.id = po.supplier_id " +
-            "WHERE po.total_amount >= 100000 " +
-            "AND po.status = 'PENDING' ", nativeQuery = true)
+            "WHERE po.status = 'PENDING' ", nativeQuery = true)
     List<Object[]> getPendingPurchaseOrders();
 
     @Query(value = "SELECT " +

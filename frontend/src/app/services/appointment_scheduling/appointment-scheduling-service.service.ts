@@ -154,4 +154,17 @@ export class AppointmentSchedulingServiceService {
     return this.http.post(requestUrl, { appointmentStatus: status }, { headers });
   }
 
+  //NEWLYADDED
+  //Dashboard top employee Name card 
+  getTopEmployeeData() {
+    const requestUrl = `${environment.baseUrl}/appointment-schedule-form/top-employee-name`;
+
+    let headers = new HttpHeaders();
+    const token = this.httpService.getAuthToken();
+    if (token !== null) {
+      headers = headers.set('Authorization', 'Bearer ' + token);
+    }
+    return this.http.get(requestUrl, { headers });
+  }
+
 }

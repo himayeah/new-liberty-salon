@@ -22,7 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.bit.backend.repositories.ClientRegRepository;
+import org.springframework.core.annotation.Order;
+
 @Component
+@Order(2) // Run after ClientDataMigrationRunner
 public class InvoiceMigrationRunner implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(InvoiceMigrationRunner.class);
@@ -32,17 +36,20 @@ public class InvoiceMigrationRunner implements CommandLineRunner {
     private final TaxRepository taxRepository;
     private final ProductRepository productRepository;
     private final ServiceRepository serviceRepository;
+    private final ClientRegRepository clientRegRepository;
 
     public InvoiceMigrationRunner(BillingRepository billingRepository,
-            InvoiceRepository invoiceRepository,
-            TaxRepository taxRepository,
-            ProductRepository productRepository,
-            ServiceRepository serviceRepository) {
+                                  InvoiceRepository invoiceRepository,
+                                  TaxRepository taxRepository,
+                                  ProductRepository productRepository,
+                                  ServiceRepository serviceRepository,
+                                  ClientRegRepository clientRegRepository) {
         this.billingRepository = billingRepository;
         this.invoiceRepository = invoiceRepository;
         this.taxRepository = taxRepository;
         this.productRepository = productRepository;
         this.serviceRepository = serviceRepository;
+        this.clientRegRepository = clientRegRepository;
     }
 
     @Override
@@ -81,9 +88,10 @@ public class InvoiceMigrationRunner implements CommandLineRunner {
                 logger.info("Migrating invoice for Billing ID: {}", billing.getId());
                 InvoiceEntity invoice = new InvoiceEntity();
                 invoice.setBilling(billing);
-                invoice.setClientName(billing.getClientName());
-                invoice.setInvoiceDate(billing.getBillingDate());
-                invoice.setDueDate(billing.getBillingDate());
+                invoice.setClient(billing.getClient());
+                String formattedDate = formatBillingDateToYmd(billing.getBillingDate());
+                invoice.setInvoiceDate(formattedDate);
+                invoice.setDueDate(formattedDate);
                 invoice.setPaymentStatus(billing.getPaymentStatus() != null ? billing.getPaymentStatus() : "Completed");
 
                 double totalAmount = 0.0;
@@ -148,6 +156,23 @@ public class InvoiceMigrationRunner implements CommandLineRunner {
                     skippedCount);
         } catch (Exception e) {
             logger.error("Failed to run one-time invoice migration due to error: ", e);
+        }
+    }
+
+    private String formatBillingDateToYmd(String billingDate) {
+        if (billingDate == null || billingDate.isBlank()) {
+            return null;
+        }
+        if (billingDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return billingDate;
+        }
+        try {
+            long epochMillis = Long.parseLong(billingDate);
+            java.time.Instant instant = java.time.Instant.ofEpochMilli(epochMillis);
+            java.time.LocalDate localDate = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            return localDate.toString();
+        } catch (NumberFormatException e) {
+            return billingDate;
         }
     }
 }

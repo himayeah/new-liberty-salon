@@ -31,6 +31,9 @@ public interface AppointmentScheduleServiceI {
 
     List<Object[]> getTop5Employees();
 
+    // NEWLYADDED
+    List<AppointmentScheduleDto> getTopEmployeeName();
+
     List<AppointmentScheduleDto> getUpcomingNotifications();
 
     Long getMaxId();
