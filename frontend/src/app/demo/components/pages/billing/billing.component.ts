@@ -94,6 +94,7 @@ export class BillingComponent implements OnInit {
       if (result) {
         this.populateData();
         this.highlightRow('add', result);
+        this.viewInvoiceDetails(result);
       }
     });
   }
