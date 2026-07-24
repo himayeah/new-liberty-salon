@@ -14,10 +14,20 @@
         <mat-form-field appearance="outline" class="modern-field">
           <mat-label>Preferred Stylist</mat-label>
           <mat-select formControlName="employeeId">
-            <mat-option *ngFor="let emp of stylists" [value]="emp.id">
+            <mat-option *ngFor="let emp of stylists" [value]="emp.id"
+                [disabled]="isEmployeeUnavailable(emp) || isEmployeeBooked(emp) || isEmployeeOnLeave(emp)">
               {{ emp.employeeName }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="bookingForm.get('employeeId')?.hasError('stylistUnavailable')">
+            The selected stylist does not work on this day
+          </mat-error>
+          <mat-error *ngIf="bookingForm.get('employeeId')?.hasError('stylistOnLeave')">
+            The selected stylist is on leave this day
+          </mat-error>
+          <mat-error *ngIf="bookingForm.get('employeeId')?.hasError('stylistBooked')">
+            The selected stylist is already booked on this time slot
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -44,10 +54,13 @@
       <div class="form-section">
         <mat-form-field appearance="outline" class="modern-field">
           <mat-label>Time</mat-label>
-          <input matInput formControlName="appointmentStartTime" placeholder="e.g. 10:00 AM">
+          <mat-select formControlName="appointmentStartTime">
+            <mat-option *ngFor="let slot of timeSlots" [value]="slot.value" [disabled]="slot.disabled">
+              {{ slot.label }}
+            </mat-option>
+          </mat-select>
           <mat-hint>Salon hours: 10:00 AM - 06:00 PM</mat-hint>
           <mat-error *ngIf="bookingForm.get('appointmentStartTime')?.hasError('required')">Time is required</mat-error>
-          <mat-error *ngIf="bookingForm.get('appointmentStartTime')?.hasError('invalidTime')">Enter time as e.g. 10:00 AM</mat-error>
           <mat-error *ngIf="bookingForm.hasError('salonHours')">Please choose a time between 10:00 AM and 06:00 PM.</mat-error>
         </mat-form-field>
       </div>
