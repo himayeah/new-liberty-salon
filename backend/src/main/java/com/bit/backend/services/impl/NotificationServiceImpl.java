@@ -25,6 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             // equalsIgnoreCase: Ignore uppercase lowercase letters while comparison
             if ("ONLINE".equalsIgnoreCase(appointment.getBookingSource())
+                    || "ONLINE_REQUEST".equalsIgnoreCase(appointment.getBookingSource())
                     || "PUBLIC_WEB".equalsIgnoreCase(appointment.getBookingSource())) {
                 recipient = "libertysalontest@gmail.com";
                 bookingType = "Public Online Booking";
@@ -169,4 +170,44 @@ public class NotificationServiceImpl implements NotificationService {
                 appointment.getAppointmentStartTime(),
                 appointment.getNotes() != null ? appointment.getNotes() : "N/A");
     }
+
+    // EMAIL step 2
+    // Booking confirmation sent to client
+    @Override
+    public void sendAppointmentConfirmation(AppointmentScheduleDto appointment) {
+        try {
+
+            // Is email null? meaning doesn't exist at all. or is email empty? meaning
+            // the client might have provided an empty email
+            if (appointment.getClientEmail() == null || appointment.getClientEmail().isEmpty()) {
+                System.out.println("No email address found for client, skipping booking confirmation notification.");
+                return;
+            }
+
+            String subject = "Your Appointment is successfully Booked!";
+            String body = String.format(
+                    "Hello %s,%n%n" +
+                            "Your appointment with Liberty Salon is successfully booked.%n%n" +
+                            "Appointment Details:%n" +
+                            "-------------------%n" +
+                            "Client Name:       %s%n" +
+                            "Service:           %s%n" +
+                            "Date:              %s%n" +
+                            "Time:              %s%n%n" +
+                            "Best Regards,%n" +
+                            "New Liberty Salon Team",
+                    appointment.getClientName(),
+                    appointment.getServiceName(),
+                    appointment.getAppointmentDate(),
+                    appointment.getAppointmentStartTime());
+
+            // contains subject, body etc
+            emailSender.sendSimpleEmail(appointment.getClientEmail(), subject, body);
+            // System notification in console mentioning that the notification has been sent
+            System.out.println("Booking confirmation Email sent to client: " + appointment.getClientEmail());
+        } catch (Exception e) {
+            System.err.println("Failed to send booking confirmation: " + e.getMessage());
+        }
+    }
+
 }

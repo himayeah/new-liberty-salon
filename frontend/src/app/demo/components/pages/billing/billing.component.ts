@@ -48,6 +48,12 @@ export class BillingComponent implements OnInit {
   ngOnInit(): void {
     this.populateData();
     this.checkNavigationState();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['openAddModal'] === 'true') {
+        this.openAddModal();
+      }
+    });
   }
 
   //listening for the data passed from the appointment schedule page (Billing data related to a specific client)

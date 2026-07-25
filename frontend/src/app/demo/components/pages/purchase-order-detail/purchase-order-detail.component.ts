@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PurchaseOrderServiceService } from 'src/app/services/purchase-order/purchase-order-service.service';
 import { PurchaseOrderDetailServiceService } from 'src/app/services/purchase-order-detail/purchase-order-detail-service.service';
@@ -16,6 +16,7 @@ import { GrnFormComponent } from '../grn/grn-form/grn-form.component';
 export class PurchaseOrderDetailComponent implements OnInit {
   purchaseOrderId: any;
   purchaseOrder: any;
+  modalOpenedInitially = false;
 
   // PO Details
   poDataSource = new MatTableDataSource<any>([]);
@@ -27,6 +28,7 @@ export class PurchaseOrderDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private dialog: MatDialog,
     private purchaseOrderService: PurchaseOrderServiceService,
     private purchaseOrderDetailService: PurchaseOrderDetailServiceService,
@@ -45,7 +47,19 @@ export class PurchaseOrderDetailComponent implements OnInit {
 
   loadPurchaseOrder(): void {
     this.purchaseOrderService.getById(this.purchaseOrderId).subscribe({
-      next: (data) => this.purchaseOrder = data,
+      next: (data) => {
+        this.purchaseOrder = data;
+        const openAddItem = this.route.snapshot.queryParamMap.get('openAddItem');
+        if (openAddItem === 'true' && !this.modalOpenedInitially) {
+          this.modalOpenedInitially = true;
+          this.openPoDetailModal('add');
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { openAddItem: null },
+            queryParamsHandling: 'merge'
+          });
+        }
+      },
       error: () => this.messageService.showError('Error loading purchase order')
     });
   }

@@ -10,10 +10,37 @@
     </button>
   </div>
 
+  <!-- Stylist Metrics Cards -->
+  <div class="stylist-metrics-grid">
+    <!-- Card 1: Today's Appointments -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <span class="metric-label">Today's Appointments</span>
+        <div class="metric-value">{{ todayAppointmentsCount }}</div>
+        <span class="metric-subtitle">Scheduled for today</span>
+      </div>
+      <div class="metric-icon">
+        <i class="pi pi-calendar"></i>
+      </div>
+    </div>
+
+    <!-- Card 2: Completed Appointments -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <span class="metric-label">Completed Appointments</span>
+        <div class="metric-value">{{ completedAppointmentsCount }}</div>
+        <span class="metric-subtitle">Overall completed</span>
+      </div>
+      <div class="metric-icon">
+        <i class="pi pi-check-circle"></i>
+      </div>
+    </div>
+  </div>
+
   <!-- Filter Section -->
   <mat-card class="filter-card">
     <mat-card-content class="filter-container">
-      
+
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>Filter by Date</mat-label>
         <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" (dateChange)="applyFilters()">
@@ -41,7 +68,7 @@
 
   <!-- Appointments List -->
   <div class="appointments-list">
-    
+
     <div class="empty-state" *ngIf="filteredAppointments.length === 0">
       <mat-icon class="empty-icon">event_busy</mat-icon>
       <h3>No appointments found</h3>
@@ -51,7 +78,7 @@
     <!-- Appointment Card -->
     <mat-card class="appointment-card" *ngFor="let app of filteredAppointments">
       <div class="card-layout">
-        
+
         <!-- Status Indicator Strip -->
         <div class="status-strip" [ngClass]="{
           'strip-booked': app.appointmentStatus === 'BOOKED',
@@ -62,7 +89,7 @@
 
         <!-- Content -->
         <div class="card-content">
-          
+
           <div class="card-header-row">
             <h2 class="service-name">{{ app.serviceName }}</h2>
             <span class="status-badge" [ngClass]="{
@@ -91,10 +118,13 @@
         </div>
 
         <!-- Action Area -->
-        <div class="card-actions" *ngIf="app.appointmentStatus === 'BOOKED'">
+        <div class="card-actions" *ngIf="app.appointmentStatus === 'BOOKED' || app.appointmentStatus === 'IN PROGRESS'">
           <mat-divider [vertical]="true" class="desktop-divider"></mat-divider>
           <mat-divider class="mobile-divider"></mat-divider>
           <div class="action-btn-container">
+            <!-- <button mat-flat-button class="in-progress-btn" [disabled]="app.appointmentStatus === 'IN PROGRESS'" (click)="markAsInProgress(app)">
+              <mat-icon>check_circle</mat-icon> {{ app.appointmentStatus === 'IN PROGRESS' ? 'In-Progress' : 'Mark as In-Progress' }}
+            </button> -->
             <button mat-flat-button color="primary" class="complete-btn" (click)="markAsComplete(app)">
               <mat-icon>check_circle</mat-icon> Mark as Complete
             </button>

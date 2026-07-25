@@ -25,7 +25,7 @@ public class ServiceController {
 
         try {
             ServiceDto serviceDtoResponse = serviceServiceI.addService(serviceDto);
-            return ResponseEntity.created(URI.create("/service" + serviceDtoResponse.getServiceName()))
+            return ResponseEntity.created(URI.create("/service/" + serviceDtoResponse.getId()))
                     .body(serviceDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);

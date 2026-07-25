@@ -10,4 +10,8 @@ public interface NotificationService {
 
     void sendStylistCheckInNotification(AppointmentScheduleDto appointmentShScheduleDto);
 
+    // EMAIL step 1
+    // Booking confirmation sent to client
+    void sendAppointmentConfirmation(AppointmentScheduleDto appointmentShScheduleDto);
+
 }

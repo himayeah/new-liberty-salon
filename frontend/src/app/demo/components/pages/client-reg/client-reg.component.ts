@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
 import { ClientFormComponent } from './client-form/client-form.component';
@@ -54,15 +54,21 @@ export class ClientRegComponent implements OnInit {
         private clientRegService: ClientRegServiceService,
         private messageService: MessageServiceService,
         private dialog: MatDialog,
-        private router: Router
+        private router: Router,
+        private route: ActivatedRoute
     ) { }
 
 
     ngOnInit(): void {
-        sessionStorage.clear();
         this.populateData();
         // this.clientLastVisitedDate();
         this.applyFilterPredicate();
+
+        this.route.queryParams.subscribe(params => {
+            if (params['openAddModal'] === 'true') {
+                this.openAddClientModal();
+            }
+        });
     }
 
     populateData(): void {

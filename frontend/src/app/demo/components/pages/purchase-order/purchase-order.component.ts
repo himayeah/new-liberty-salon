@@ -78,8 +78,7 @@ export class PurchaseOrderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.populateData();
-        this.highlightRow('add', result);
+        this.router.navigate(['/pages/purchase-order-detail', result.id], { queryParams: { openAddItem: 'true' } });
       }
     });
   }

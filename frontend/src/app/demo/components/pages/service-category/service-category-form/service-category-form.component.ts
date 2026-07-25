@@ -22,7 +22,6 @@ export class ServiceCategoryFormComponent implements OnInit {
     ) {
         this.serviceCategoryForm = this.fb.group({
             categoryName: ['', Validators.required],
-            displayOrder: [0, Validators.min(0)],
             description: [''],
         });
 

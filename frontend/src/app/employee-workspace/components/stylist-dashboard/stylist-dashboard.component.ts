@@ -14,7 +14,10 @@ export class StylistDashboardComponent implements OnInit {
   stylist: any;
   appointments: any[] = [];
   filteredAppointments: any[] = [];
-  
+
+  todayAppointmentsCount: number = 0;
+  completedAppointmentsCount: number = 0;
+
   filterDate: Date | null = null;
   filterStatus: string = '';
 
@@ -35,8 +38,27 @@ export class StylistDashboardComponent implements OnInit {
   loadAppointments(): void {
     this.appointmentService.getData().subscribe({
       next: (res: any[]) => {
+        console.log("Stylist Dashboard Loaded Appointments:", res);
+        console.log("Logged In Stylist:", this.stylist);
         // Filter appointments only for this specific stylist by matching name
-        this.appointments = res.filter(app => app.employeeName === this.stylist.employeeName);
+        this.appointments = res.filter(app => {
+          const match = app.employeeId === this.stylist.id || app.employeeName === this.stylist.employeeName;
+          console.log("Match check:", app.employeeName, "vs", this.stylist.employeeName, "->", match);
+          return match;
+        });
+
+        const today = new Date();
+        const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000))
+          .toISOString().split('T')[0];
+
+        this.todayAppointmentsCount = this.appointments.filter(app => 
+          app.appointmentDate === todayStr && app.appointmentStatus !== 'CANCELLED'
+        ).length;
+
+        this.completedAppointmentsCount = this.appointments.filter(app => 
+          app.appointmentStatus === 'COMPLETED'
+        ).length;
+
         this.applyFilters();
       },
       error: (err) => {
@@ -53,20 +75,20 @@ export class StylistDashboardComponent implements OnInit {
       if (this.filterDate) {
         // Create a local date string YYYY-MM-DD to compare
         const localDateStr = new Date(this.filterDate.getTime() - (this.filterDate.getTimezoneOffset() * 60000))
-                                  .toISOString().split('T')[0];
-        
+          .toISOString().split('T')[0];
+
         matchesDate = app.appointmentDate === localDateStr;
       }
-      
+
       // Status filter
       let matchesStatus = true;
       if (this.filterStatus) {
         matchesStatus = app.appointmentStatus === this.filterStatus;
       }
-      
+
       return matchesDate && matchesStatus;
     });
-    
+
     // Sort by Date and Time
     this.filteredAppointments.sort((a, b) => {
       const dateA = new Date(`${a.appointmentDate}T${a.appointmentStartTime}`);
@@ -83,7 +105,8 @@ export class StylistDashboardComponent implements OnInit {
 
   markAsComplete(appointment: any): void {
     const updatedAppointment = { ...appointment, appointmentStatus: 'READY FOR BILLING' };
-    
+    console.log("Stylist marked as complete", appointment)
+
     this.appointmentService.editData(appointment.id, updatedAppointment).subscribe({
       next: () => {
         this.messageService.showSuccess(`Appointment for ${appointment.clientName} marked as Ready for Billing.`);
@@ -95,6 +118,20 @@ export class StylistDashboardComponent implements OnInit {
       }
     });
   }
+
+  // markAsInProgress(appointment: any): void {
+  //   const updatedAppointment = { ...appointment, appointmentStatus: 'IN PROGRESS' };
+  //   this.appointmentService.editData(appointment.id, updatedAppointment).subscribe({
+  //     next: () => {
+  //       this.messageService.showSuccess(`Appointment for ${appointment.clientName} marked as In Progress.`);
+  //       this.loadAppointments(); // Refresh the list
+  //     },
+  //     error: (err) => {
+  //       this.messageService.showError('Failed to update status');
+  //       console.error(err);
+  //     }
+  //   });
+  // }
 
   logout(): void {
     this.employeeAuthService.logout();

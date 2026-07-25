@@ -22,7 +22,7 @@ public class ServiceCategoryEntity {
     private String categoryName;
 
     @Column(name = "display_order")
-    private Number displayOrder;
+    private Integer displayOrder;
 
     @Column(name = "description")
     private String description;

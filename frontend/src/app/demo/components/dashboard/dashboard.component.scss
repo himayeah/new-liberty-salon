@@ -260,3 +260,56 @@
     font-size: 0.75rem;
     font-weight: 600;
 }
+
+/* Quick Action Card Styles */
+.quick-action-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+    }
+
+    .action-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .action-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .action-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .action-desc {
+        margin: 0.25rem 0 0 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+}
+
+.schedule-row {
+    &:hover {
+        background-color: #FDF4F4 !important;
+    }
+}

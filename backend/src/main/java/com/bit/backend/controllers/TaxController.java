@@ -31,7 +31,7 @@ public class TaxController {
     public ResponseEntity<TaxDto> addForm(@RequestBody TaxDto taxDto) throws AppException {
         try {
             TaxDto taxDtoResponse = taxServiceI.addTax(taxDto);
-            return ResponseEntity.created(URI.create("/tax/" + taxDtoResponse.getTaxName())).body(taxDtoResponse);
+            return ResponseEntity.created(URI.create("/api/tax/" + taxDtoResponse.getId())).body(taxDtoResponse);
 
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
