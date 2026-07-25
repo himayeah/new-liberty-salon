@@ -13,7 +13,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  
+
   .greeting {
     font-size: 2.2rem;
     font-weight: 700;
@@ -21,7 +21,7 @@
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.5px;
   }
-  
+
   .subtitle {
     font-size: 1.1rem;
     color: #64748b;
@@ -122,12 +122,15 @@
     &.strip-booked {
       background: linear-gradient(180deg, #6366f1, #4f46e5);
     }
+
     &.strip-ready {
       background: linear-gradient(180deg, #10b981, #059669);
     }
+
     &.strip-cancelled {
       background: linear-gradient(180deg, #ef4444, #dc2626);
     }
+
     &.strip-noshow {
       background: linear-gradient(180deg, #f59e0b, #d97706);
     }
@@ -197,12 +200,43 @@
     .action-btn-container {
       padding: 1.5rem 2rem;
       display: flex;
+      gap: 4px;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+
+      .in-progress-btn {
+        background: #ffd230;
+        color: #ffffff;
+        font-weight: 600;
+        width: 250px;
+        border-radius: 8px;
+        padding: 0.6rem 1.25rem;
+        transition: all 0.2s ease;
+
+        mat-icon {
+          margin-right: 0.25rem;
+        }
+
+
+        &:hover:not(:disabled) {
+          transform: scale(1.03);
+          box-shadow: 0 6px 18px -2px rgba(167, 167, 9, 0.4);
+        }
+
+        &:disabled {
+          background: #e2e8f0;
+          color: #94a3b8;
+          cursor: not-allowed;
+          box-shadow: none;
+          transform: none;
+        }
+      }
 
       .complete-btn {
         background: linear-gradient(135deg, #10b981, #059669);
         color: #ffffff;
+        width: 250px;
         font-weight: 600;
         border-radius: 8px;
         padding: 0.6rem 1.25rem;
@@ -213,11 +247,13 @@
           margin-right: 0.25rem;
         }
 
+
         &:hover {
           transform: scale(1.03);
           box-shadow: 0 6px 18px -2px rgba(16, 185, 129, 0.4);
         }
       }
+
     }
   }
 }
@@ -236,14 +272,17 @@
     background-color: #e0e7ff;
     color: #4f46e5;
   }
+
   &.badge-ready {
     background-color: #d1fae5;
     color: #065f46;
   }
+
   &.badge-cancelled {
     background-color: #fee2e2;
     color: #991b1b;
   }
+
   &.badge-noshow {
     background-color: #fef3c7;
     color: #92400e;
@@ -304,7 +343,7 @@
   .filter-card .filter-container {
     flex-direction: column;
     align-items: stretch;
-    
+
     .filter-field {
       width: 100%;
     }
@@ -344,8 +383,8 @@
 
       .action-btn-container {
         padding: 1rem 1.25rem;
-        
-        .complete-btn {
+
+        .in-progress-btn, .complete-btn {
           width: 100%;
           justify-content: center;
         }
@@ -353,4 +392,3 @@
     }
   }
 }
-

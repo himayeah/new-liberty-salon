@@ -80,15 +80,25 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             AppointmentScheduleEntity savedItem = appointmentScheduleRepository.save(entity);
             AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
 
-            // Ensure client phone number is populated for notifications
-            if (savedItem.getClient() != null
-                    && (responseDto.getClientPhone() == null || responseDto.getClientPhone().isEmpty())) {
-                responseDto.setClientPhone(savedItem.getClient().getPhoneNumber());
+            // Ensure client details are populated for notifications
+            if (savedItem.getClient() != null) {
+                if (responseDto.getClientPhone() == null || responseDto.getClientPhone().isEmpty()) {
+                    responseDto.setClientPhone(savedItem.getClient().getPhoneNumber());
+                }
+                if (responseDto.getClientEmail() == null || responseDto.getClientEmail().isEmpty()) {
+                    responseDto.setClientEmail(savedItem.getClient().getEmail());
+                }
             }
 
             // Calls the sendAppointmentNotification() in NotificationService to send the
             // Notification after client is added
             notificationService.sendAppointmentNotification(responseDto);
+
+            // EMAIL step 3/3
+            // Booking confirmation sent to client
+            if ("COMPLETED".equalsIgnoreCase(responseDto.getAppointmentStatus())) {
+                notificationService.sendAppointmentConfirmation(responseDto);
+            }
 
             return responseDto;
         } catch (Exception e) {
@@ -167,6 +177,11 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             if (isNewCheckIn && !wasCheckIn) {
                 AppointmentScheduleDto notificationDto = appointmentScheduleMapper
                         .toAppointmentScheduleDto(appointmentScheduleEntity);
+                if (appointmentScheduleEntity.getEmployee() != null
+                        && (notificationDto.getEmployeeEmail() == null
+                                || notificationDto.getEmployeeEmail().isEmpty())) {
+                    notificationDto.setEmployeeEmail(appointmentScheduleEntity.getEmployee().getEmail());
+                }
                 notificationService.sendStylistCheckInNotification(notificationDto);
             }
 
@@ -373,49 +388,6 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
         }
     }
 
-    // Status update (Client check in)
-    // Compares the old status against the new status
-    // Only if the status has changed, the notification sends to stylist
-
-    // @Override
-    // public AppointmentScheduleDto updateStatus(long id, AppointmentScheduleDto
-    // appointmentScheduleDto) {
-    // try {
-    // Optional<AppointmentScheduleEntity> optionalEntity =
-    // appointmentScheduleRepository.findById(id);
-    // if (!optionalEntity.isPresent()) {
-    // throw new AppException("Appointment Schedule Does Not Exist",
-    // HttpStatus.NOT_FOUND);
-    // }
-    // AppointmentScheduleEntity entity = optionalEntity.get();
-
-    // String oldStatus = entity.getAppointmentStatus();
-    // String newStatus = appointmentScheduleDto.getAppointmentStatus();
-    // entity.setAppointmentStatus(newStatus);
-
-    // AppointmentScheduleEntity savedItem =
-    // appointmentScheduleRepository.save(entity);
-    // AppointmentScheduleDto responseDto =
-    // appointmentScheduleMapper.toAppointmentScheduleDto(savedItem);
-
-    // if (isCheckInStatus(newStatus) && !isCheckInStatus(oldStatus)) {
-    // notificationService.sendStylistCheckInNotification(responseDto);
-    // }
-
-    // return responseDto;
-    // } catch (AppException e) {
-    // throw e;
-    // } catch (Exception e) {
-    // throw new AppException("Request failed with error:" + e,
-    // HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-    // }
-
-    // private boolean isCheckInStatus(String status) {
-    // return "CHECK_IN".equalsIgnoreCase(status) ||
-    // "CHECKED_IN".equalsIgnoreCase(status);
-    // }
-
     // We need to check whether the status sent from the frontend is CHECK_IN, if
     // yes trigger the notification to Stylist
     @Override
@@ -462,6 +434,10 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
             // Is the OLD status NOT CHECK_IN?
             // If both conditions are true, then send the notification to stylist
             if (isCheckInStatus(newStatus) && !isCheckInStatus(oldStatus)) {
+                if (savedItem.getEmployee() != null
+                        && (responseDto.getEmployeeEmail() == null || responseDto.getEmployeeEmail().isEmpty())) {
+                    responseDto.setEmployeeEmail(savedItem.getEmployee().getEmail());
+                }
                 notificationService.sendStylistCheckInNotification(responseDto);
             }
 

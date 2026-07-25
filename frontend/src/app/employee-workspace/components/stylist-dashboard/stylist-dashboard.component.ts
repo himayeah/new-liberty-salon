@@ -14,7 +14,7 @@ export class StylistDashboardComponent implements OnInit {
   stylist: any;
   appointments: any[] = [];
   filteredAppointments: any[] = [];
-  
+
   filterDate: Date | null = null;
   filterStatus: string = '';
 
@@ -53,20 +53,20 @@ export class StylistDashboardComponent implements OnInit {
       if (this.filterDate) {
         // Create a local date string YYYY-MM-DD to compare
         const localDateStr = new Date(this.filterDate.getTime() - (this.filterDate.getTimezoneOffset() * 60000))
-                                  .toISOString().split('T')[0];
-        
+          .toISOString().split('T')[0];
+
         matchesDate = app.appointmentDate === localDateStr;
       }
-      
+
       // Status filter
       let matchesStatus = true;
       if (this.filterStatus) {
         matchesStatus = app.appointmentStatus === this.filterStatus;
       }
-      
+
       return matchesDate && matchesStatus;
     });
-    
+
     // Sort by Date and Time
     this.filteredAppointments.sort((a, b) => {
       const dateA = new Date(`${a.appointmentDate}T${a.appointmentStartTime}`);
@@ -83,7 +83,8 @@ export class StylistDashboardComponent implements OnInit {
 
   markAsComplete(appointment: any): void {
     const updatedAppointment = { ...appointment, appointmentStatus: 'READY FOR BILLING' };
-    
+    console.log("Stylist marked as complete", appointment)
+
     this.appointmentService.editData(appointment.id, updatedAppointment).subscribe({
       next: () => {
         this.messageService.showSuccess(`Appointment for ${appointment.clientName} marked as Ready for Billing.`);
@@ -95,6 +96,20 @@ export class StylistDashboardComponent implements OnInit {
       }
     });
   }
+
+  // markAsInProgress(appointment: any): void {
+  //   const updatedAppointment = { ...appointment, appointmentStatus: 'IN PROGRESS' };
+  //   this.appointmentService.editData(appointment.id, updatedAppointment).subscribe({
+  //     next: () => {
+  //       this.messageService.showSuccess(`Appointment for ${appointment.clientName} marked as In Progress.`);
+  //       this.loadAppointments(); // Refresh the list
+  //     },
+  //     error: (err) => {
+  //       this.messageService.showError('Failed to update status');
+  //       console.error(err);
+  //     }
+  //   });
+  // }
 
   logout(): void {
     this.employeeAuthService.logout();
