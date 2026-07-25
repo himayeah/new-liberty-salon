@@ -35,8 +35,14 @@ export class StylistDashboardComponent implements OnInit {
   loadAppointments(): void {
     this.appointmentService.getData().subscribe({
       next: (res: any[]) => {
+        console.log("Stylist Dashboard Loaded Appointments:", res);
+        console.log("Logged In Stylist:", this.stylist);
         // Filter appointments only for this specific stylist by matching name
-        this.appointments = res.filter(app => app.employeeName === this.stylist.employeeName);
+        this.appointments = res.filter(app => {
+          const match = app.employeeName === this.stylist.employeeName;
+          console.log("Match check:", app.employeeName, "vs", this.stylist.employeeName, "->", match);
+          return match;
+        });
         this.applyFilters();
       },
       error: (err) => {
