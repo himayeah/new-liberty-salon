@@ -40,7 +40,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
       appointmentDate: ['', Validators.required],
       appointmentStartTime: ['', [Validators.required]],
       appointmentStatus: ['PENDING'],
-      bookingSource: ['ONLINE']
+      bookingSource: ['ONLINE_REQUEST']
     }, { validators: this.validateSalonHours.bind(this) });
   }
 
@@ -131,7 +131,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
       this.publicBookingService.bookAppointment(bookingData).subscribe({
         next: (response) => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Appointment booked successfully!' });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Booking Request sent' });
           this.bookingConfirmed = true;
         },
         error: (err) => {

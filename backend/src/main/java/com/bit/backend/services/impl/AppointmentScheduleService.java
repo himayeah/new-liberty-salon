@@ -61,9 +61,32 @@ public class AppointmentScheduleService implements AppointmentScheduleServiceI {
     @Override
     public AppointmentScheduleDto addAppointment(AppointmentScheduleDto appointmentScheduleDto) {
         try {
+            boolean isOnlineBookingRequest = "ONLINE_REQUEST".equalsIgnoreCase(appointmentScheduleDto.getBookingSource())
+                    || "PUBLIC_WEB".equalsIgnoreCase(appointmentScheduleDto.getBookingSource());
+
             AppointmentScheduleEntity entity = appointmentScheduleMapper
                     .toAppointmentScheduleEntity(appointmentScheduleDto);
             setRelations(entity, appointmentScheduleDto);
+
+            if (isOnlineBookingRequest) {
+                AppointmentScheduleDto responseDto = appointmentScheduleMapper.toAppointmentScheduleDto(entity);
+                if (entity.getClient() != null) {
+                    responseDto.setClientName(entity.getClient().getFirstName() + " " + 
+                            (entity.getClient().getLastName() != null ? entity.getClient().getLastName() : ""));
+                    responseDto.setClientPhone(entity.getClient().getPhoneNumber());
+                    responseDto.setClientEmail(entity.getClient().getEmail());
+                }
+                if (entity.getService() != null) {
+                    responseDto.setServiceName(entity.getService().getServiceName());
+                }
+                if (entity.getEmployee() != null) {
+                    responseDto.setEmployeeName(entity.getEmployee().getEmployeeName());
+                    responseDto.setEmployeeEmail(entity.getEmployee().getEmail());
+                }
+                responseDto.setId(-1L);
+                notificationService.sendAppointmentNotification(responseDto);
+                return responseDto;
+            }
 
             // Set audit fields
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

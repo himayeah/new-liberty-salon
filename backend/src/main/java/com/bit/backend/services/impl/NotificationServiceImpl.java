@@ -25,6 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             // equalsIgnoreCase: Ignore uppercase lowercase letters while comparison
             if ("ONLINE".equalsIgnoreCase(appointment.getBookingSource())
+                    || "ONLINE_REQUEST".equalsIgnoreCase(appointment.getBookingSource())
                     || "PUBLIC_WEB".equalsIgnoreCase(appointment.getBookingSource())) {
                 recipient = "libertysalontest@gmail.com";
                 bookingType = "Public Online Booking";

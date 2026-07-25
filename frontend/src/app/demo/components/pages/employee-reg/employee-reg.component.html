@@ -117,11 +117,14 @@
                 <button mat-icon-button color="accent" (click)="viewData(element)" matTooltip="View Profile">
                   <mat-icon>visibility</mat-icon>
                 </button>
-                <button *ngIf="!isReceptionist" mat-icon-button color="primary" (click)="editData(element)"
+                <button mat-icon-button color="primary" (click)="editData(element)" [disabled]="isReceptionist"
                   matTooltip="Edit">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteData(element)"
+                <!-- <button *ngIf="!isReceptionist" mat-icon-button color="warn" (click)="deleteData(element)"
+                  matTooltip="Delete">
+                  <mat-icon>delete</mat-icon> -->
+                <button mat-icon-button color="warn" (click)="deleteData(element)" [disabled]="isReceptionist"
                   matTooltip="Delete">
                   <mat-icon>delete</mat-icon>
                 </button>
