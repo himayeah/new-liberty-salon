@@ -25,12 +25,8 @@ public class SignFormController {
         try {
             SignFormDto signFormDtoResponse = signFormServiceI.addSignForm(signFormDto);
 
-            String firstName = (signFormDtoResponse.getFirstName() != null)
-                    ? signFormDtoResponse.getFirstName()
-                    : "unknown";
-
             return ResponseEntity
-                    .created(URI.create("/sign-form/" + firstName))
+                    .created(URI.create("/sign-form/" + signFormDtoResponse.getId()))
                     .body(signFormDtoResponse);
 
         } catch (Exception e) {

@@ -24,7 +24,7 @@ public class FormDemoController {
     public ResponseEntity <FormDemoDto> addForm(@RequestBody FormDemoDto formDemoDto) {
         {
             FormDemoDto formDemoDtoResponse = formDemoServiceI.addFormDemo(formDemoDto);
-            return ResponseEntity.created(URI.create("/sign-form" + formDemoDtoResponse.getFirstName())).body(formDemoDtoResponse);
+            return ResponseEntity.created(URI.create("/form-demo/" + formDemoDtoResponse.getId())).body(formDemoDtoResponse);
         }
     }
 

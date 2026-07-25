@@ -22,7 +22,7 @@ export class ServiceCategoryComponent implements OnInit {
 
   serviceCategoryForm: FormGroup;
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['displayOrder', 'categoryName', 'description', 'actions'];
+  displayedColumns: string[] = ['categoryName', 'description', 'actions'];
 
   isButtonDisabled = false;
   submitted = false;

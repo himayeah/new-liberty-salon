@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ServiceCategoryDto {
     private Long id;
     private String categoryName;
-    private Number displayOrder;
+    private Integer displayOrder;
     private String description;
 
     public String getServiceName() {

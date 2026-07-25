@@ -26,7 +26,7 @@ public class ServiceCategoryController {
             throws AppException {
         try {
             ServiceCategoryDto serviceCategoryResponse = serviceCategoryServiceI.addServiceCategory(serviceCategoryDto);
-            return ResponseEntity.created(URI.create("/service-category/" + serviceCategoryResponse.getServiceName()))
+            return ResponseEntity.created(URI.create("/service-category/" + serviceCategoryResponse.getId()))
                     .body(serviceCategoryResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);

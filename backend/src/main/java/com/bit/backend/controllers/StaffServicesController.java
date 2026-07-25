@@ -24,7 +24,7 @@ public class StaffServicesController {
     public ResponseEntity<StaffServicesDto> createStaffServices(@RequestBody StaffServicesDto staffServicesDto) throws AppException {
         try{
             StaffServicesDto staffServicesDtoResponse = staffServicesServiceI.createStaffServices(staffServicesDto);
-            return ResponseEntity.created(URI.create("/staff-services" + staffServicesDtoResponse.getServiceName())).body(staffServicesDtoResponse);
+            return ResponseEntity.created(URI.create("/staff-services/" + staffServicesDtoResponse.getId())).body(staffServicesDtoResponse);
         } catch (Exception e) {
             throw new AppException("Request failed with error:" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
