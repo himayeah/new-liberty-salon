@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
-import { Subscription, debounceTime } from 'rxjs';
+import { Subscription, debounceTime, forkJoin } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 import { ClientRegServiceService } from 'src/app/services/client-reg/client-reg-service.service';
@@ -11,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 import { EmployeeAuthService } from '../../../employee-workspace/services/employee-auth.service';
 import { Role } from '../../../models/role.enum';
 import { InventoryServiceService } from 'src/app/services/inventory/inventory-service.service';
+import { EmployeeAttendanceServiceService } from 'src/app/services/employee-attendance/employee-attendance-service.service';
+import { EmployeeRegServicesService } from 'src/app/services/employee-reg/employee-reg-services.service';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -37,6 +40,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //NEWLYADDED
     topEmployeeData: any = null;
 
+    isReceptionist: boolean = false;
+    todayAppointmentsCount: number = 0;
+    appointmentsReadyForBillingCount: number = 0;
+    completedAppointmentsTodayCount: number = 0;
+    newClientsTodayCount: number = 0;
+    activeTasksCount: number = 0;
+    todayScheduleList: any[] = [];
+
+    isManager: boolean = false;
+    managerTodayAppointmentsCount: number = 0;
+    managerCompletedAppointmentsCount: number = 0;
+    managerCancelledAppointmentsCount: number = 0;
+    employeesPresentTodayCount: number = 0;
+    employeeWorkloadList: any[] = [];
+
     constructor(
         private productService: ProductService,
         public layoutService: LayoutService,
@@ -45,7 +63,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private billingService: BillingService,
         private toastr: ToastrService,
         private employeeAuthService: EmployeeAuthService,
-        private inventoryService: InventoryServiceService
+        private inventoryService: InventoryServiceService,
+        private router: Router,
+        private employeeAttendanceService: EmployeeAttendanceServiceService,
+        private employeeRegService: EmployeeRegServicesService
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
@@ -56,6 +77,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.isReceptionist = this.employeeAuthService.getRole() === Role.RECEPTIONIST;
+        this.isManager = this.employeeAuthService.getRole() === Role.MANAGER;
+        if (this.isReceptionist) {
+            this.loadReceptionistMetrics();
+        } else if (this.isManager) {
+            this.loadManagerMetrics();
+        } else {
+            this.loadActiveTasks();
+        }
+
         this.initChart();
         this.productService
             .getProductsSmall()
@@ -75,6 +106,150 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.startNotificationPolling();
         this.checkInventoryReorderAlerts();
         this.getTopEmployeeData();
+    }
+
+    loadActiveTasks() {
+        const today = new Date();
+        const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000))
+            .toISOString().split('T')[0];
+
+        this.appointmentService.getData().subscribe({
+            next: (appointments: any[]) => {
+                const list = appointments || [];
+                // Active tasks: appointments scheduled for today that are not CANCELLED or COMPLETED
+                const activeStatuses = ['BOOKED', 'CHECK_IN', 'CHECKED_IN', 'IN PROGRESS'];
+                this.activeTasksCount = list.filter(app => 
+                    app.appointmentDate === todayStr && activeStatuses.includes(app.appointmentStatus)
+                ).length;
+            },
+            error: (error) => {
+                console.error('Failed to load active tasks count', error);
+            }
+        });
+    }
+
+    loadReceptionistMetrics() {
+        const today = new Date();
+        const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000))
+            .toISOString().split('T')[0];
+
+        this.appointmentService.getData().subscribe({
+            next: (appointments: any[]) => {
+                const list = appointments || [];
+                // 1. Today's Appointments count: count of all appointments where date is today and status is NOT CANCELLED
+                this.todayAppointmentsCount = list.filter(app => 
+                    app.appointmentDate === todayStr && app.appointmentStatus !== 'CANCELLED'
+                ).length;
+
+                // 2. Appointments ready for Billing: count of all appointments where status is 'READY FOR BILLING'
+                this.appointmentsReadyForBillingCount = list.filter(app => 
+                    app.appointmentStatus === 'READY FOR BILLING'
+                ).length;
+
+                // 3. Completed Appointments today: count of all appointments where date is today and status is 'COMPLETED'
+                this.completedAppointmentsTodayCount = list.filter(app => 
+                    app.appointmentDate === todayStr && app.appointmentStatus === 'COMPLETED'
+                ).length;
+
+                // Today's schedule list (excluding cancelled, sorted by start time)
+                this.todayScheduleList = list.filter(app => 
+                    app.appointmentDate === todayStr && app.appointmentStatus !== 'CANCELLED'
+                ).sort((a, b) => {
+                    const timeA = a.appointmentStartTime || '';
+                    const timeB = b.appointmentStartTime || '';
+                    return timeA.localeCompare(timeB);
+                });
+            },
+            error: (error) => {
+                console.error('Failed to load receptionist appointment metrics', error);
+            }
+        });
+
+        this.clientRegService.getData().subscribe({
+            next: (clients: any[]) => {
+                const list = clients || [];
+                // 4. New Clients today: count of all clients registered today
+                this.newClientsTodayCount = list.filter(client => {
+                    if (!client.registrationDate) return false;
+                    return client.registrationDate.startsWith(todayStr);
+                }).length;
+            },
+            error: (error) => {
+                console.error('Failed to load receptionist client metrics', error);
+            }
+        });
+    }
+
+    loadManagerMetrics() {
+        const today = new Date();
+        const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000))
+            .toISOString().split('T')[0];
+
+        forkJoin({
+            appointments: this.appointmentService.getData(),
+            attendances: this.employeeAttendanceService.getData(),
+            employees: this.employeeRegService.getData()
+        }).subscribe({
+            next: (res: any) => {
+                const appointmentsList = res.appointments || [];
+                const attendancesList = res.attendances || [];
+                const employeesList = res.employees || [];
+
+                // 1. Today's All Appointments: count of all appointments scheduled for today
+                this.managerTodayAppointmentsCount = appointmentsList.filter(app => 
+                    app.appointmentDate === todayStr
+                ).length;
+
+                // 2. Today's completed Appointments: count of appointments where date is today and status is 'COMPLETED'
+                this.managerCompletedAppointmentsCount = appointmentsList.filter(app => 
+                    app.appointmentDate === todayStr && app.appointmentStatus === 'COMPLETED'
+                ).length;
+
+                // 3. Appointments cancelled: count of appointments where date is today and status is 'CANCELLED'
+                this.managerCancelledAppointmentsCount = appointmentsList.filter(app => 
+                    app.appointmentDate === todayStr && app.appointmentStatus === 'CANCELLED'
+                ).length;
+
+                // 4. Employees Present today: count of check-ins with status 'Present' or 'Late' where checkInTime matches today
+                this.employeesPresentTodayCount = attendancesList.filter(att => {
+                    if (!att.checkInTime) return false;
+                    const recordDate = new Date(att.checkInTime);
+                    const recordDateStr = new Date(recordDate.getTime() - (recordDate.getTimezoneOffset() * 60000))
+                        .toISOString().split('T')[0];
+                    return recordDateStr === todayStr && (att.status === 'Present' || att.status === 'Late');
+                }).length;
+
+                // 5. Stylists workload computation
+                const stylists = employeesList.filter((emp: any) => 
+                    emp.designation && emp.designation.toLowerCase().includes('stylist')
+                );
+
+                this.employeeWorkloadList = stylists.map((stylist: any) => {
+                    const stylistApps = appointmentsList.filter((app: any) => 
+                        app.appointmentDate === todayStr && 
+                        app.employeeId === stylist.id && 
+                        app.appointmentStatus !== 'CANCELLED'
+                    );
+
+                    const todayAtt = attendancesList.find((att: any) => {
+                        if (!att.checkInTime || att.employeeId !== stylist.id) return false;
+                        const recordDate = new Date(att.checkInTime);
+                        const recordDateStr = new Date(recordDate.getTime() - (recordDate.getTimezoneOffset() * 60000))
+                            .toISOString().split('T')[0];
+                        return recordDateStr === todayStr;
+                    });
+
+                    return {
+                        stylistName: stylist.employeeName,
+                        appointmentCount: stylistApps.length,
+                        status: todayAtt ? todayAtt.status : 'Not Checked In'
+                    };
+                });
+            },
+            error: (error) => {
+                console.error('Failed to load manager metrics', error);
+            }
+        });
     }
     // Runs startNotificationPolling() method at every 60,000 ms intervals ( equals to 1 minute)
     startNotificationPolling() {
@@ -389,5 +564,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         });
     }
 
+    navigateToRegisterClient() {
+        this.router.navigate(['/pages/client-reg'], { queryParams: { openAddModal: 'true' } });
+    }
+
+    navigateToNewAppointment() {
+        this.router.navigate(['/pages/appointment-schedule'], { queryParams: { openAddModal: 'true' } });
+    }
+
+    navigateToCreateBilling() {
+        this.router.navigate(['/pages/billing'], { queryParams: { openAddModal: 'true' } });
+    }
 
 }

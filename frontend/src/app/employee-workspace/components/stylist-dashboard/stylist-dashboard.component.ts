@@ -15,6 +15,9 @@ export class StylistDashboardComponent implements OnInit {
   appointments: any[] = [];
   filteredAppointments: any[] = [];
 
+  todayAppointmentsCount: number = 0;
+  completedAppointmentsCount: number = 0;
+
   filterDate: Date | null = null;
   filterStatus: string = '';
 
@@ -39,10 +42,23 @@ export class StylistDashboardComponent implements OnInit {
         console.log("Logged In Stylist:", this.stylist);
         // Filter appointments only for this specific stylist by matching name
         this.appointments = res.filter(app => {
-          const match = app.employeeName === this.stylist.employeeName;
+          const match = app.employeeId === this.stylist.id || app.employeeName === this.stylist.employeeName;
           console.log("Match check:", app.employeeName, "vs", this.stylist.employeeName, "->", match);
           return match;
         });
+
+        const today = new Date();
+        const todayStr = new Date(today.getTime() - (today.getTimezoneOffset() * 60000))
+          .toISOString().split('T')[0];
+
+        this.todayAppointmentsCount = this.appointments.filter(app => 
+          app.appointmentDate === todayStr && app.appointmentStatus !== 'CANCELLED'
+        ).length;
+
+        this.completedAppointmentsCount = this.appointments.filter(app => 
+          app.appointmentStatus === 'COMPLETED'
+        ).length;
+
         this.applyFilters();
       },
       error: (err) => {

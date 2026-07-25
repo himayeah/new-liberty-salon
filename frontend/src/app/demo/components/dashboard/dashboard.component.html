@@ -1,4 +1,261 @@
-<div class="dashboard-row">
+<h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-top: 1rem; margin-bottom: 1rem;" *ngIf="isReceptionist">Overview</h3>
+<div class="dashboard-row" *ngIf="isReceptionist" style="grid-template-columns: repeat(4, 1fr);">
+    <!-- Card 1: Today's Appointments count -->
+    <div class="dashboard-card" style="background-color: #F7DFDF !important; border-color: #F7DFDF;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Today's Appointments</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ todayAppointmentsCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.5); color: #991b1b;">
+                <i class="pi pi-calendar"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Today</span>
+    </div>
+
+    <!-- Card 2: Appointments ready for Billing -->
+    <div class="dashboard-card" style="background-color: #F7DFDF !important; border-color: #F7DFDF;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Ready for Billing</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ appointmentsReadyForBillingCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.5); color: #991b1b;">
+                <i class="pi pi-credit-card"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Pending billing</span>
+    </div>
+
+    <!-- Card 3: Completed Appointments today -->
+    <div class="dashboard-card" style="background-color: #F7DFDF !important; border-color: #F7DFDF;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Completed Today</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ completedAppointmentsTodayCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.5); color: #991b1b;">
+                <i class="pi pi-check-circle"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Today</span>
+    </div>
+
+    <!-- Card 4: New Clients today -->
+    <div class="dashboard-card" style="background-color: #F7DFDF !important; border-color: #F7DFDF;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">New Clients Today</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ newClientsTodayCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.5); color: #991b1b;">
+                <i class="pi pi-user-plus"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Today</span>
+    </div>
+</div>
+
+<div class="quick-actions-section" *ngIf="isReceptionist" style="margin-top: 1rem; margin-bottom: 2rem;">
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">Quick Actions</h3>
+    <div class="quick-actions-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        
+        <!-- Action 1: Register a New Client -->
+        <div class="quick-action-card" (click)="navigateToRegisterClient()">
+            <div class="action-icon-wrapper" style="background: #FCE8E8; color: #991b1b;">
+                <i class="pi pi-user-plus"></i>
+            </div>
+            <div class="action-content">
+                <h4 class="action-title">Register a New Client</h4>
+                <p class="action-desc">Add a new client profile</p>
+            </div>
+        </div>
+
+        <!-- Action 2: Add a New Appointment -->
+        <div class="quick-action-card" (click)="navigateToNewAppointment()">
+            <div class="action-icon-wrapper" style="background: #FCE8E8; color: #991b1b;">
+                <i class="pi pi-calendar-plus"></i>
+            </div>
+            <div class="action-content">
+                <h4 class="action-title">Add a New Appointment</h4>
+                <p class="action-desc">Schedule salon services</p>
+            </div>
+        </div>
+
+        <!-- Action 3: Create a Billing -->
+        <div class="quick-action-card" (click)="navigateToCreateBilling()">
+            <div class="action-icon-wrapper" style="background: #FCE8E8; color: #991b1b;">
+                <i class="pi pi-credit-card"></i>
+            </div>
+            <div class="action-content">
+                <h4 class="action-title">Create a Billing</h4>
+                <p class="action-desc">Generate client invoice</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="today-schedule-section" *ngIf="isReceptionist" style="margin-top: 2rem; margin-bottom: 2rem;">
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">Today's Schedule</h3>
+    
+    <mat-card class="report-card" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); overflow: hidden; border: 1px solid #e5e7eb;">
+        <mat-card-content style="padding: 0;">
+            <div class="table-wrapper" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background-color: #F9FAFB; border-bottom: 2px solid #E5E7EB;">
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 12%;">Start Time</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 12%;">End Time</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 20%;">Client Name</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 18%;">Client Phone</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 18%;">Service Title</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 20%;">Stylist Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of todayScheduleList" style="border-bottom: 1px solid #E5E7EB; transition: background-color 0.2s;" class="schedule-row">
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #1F2937; font-weight: 500;">
+                                {{ item.appointmentStartTime }}
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #4B5563;">
+                                {{ item.appointmentEndTime }}
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #1F2937; font-weight: 500;">
+                                {{ item.clientName || (item.client ? (item.client.firstName + ' ' + item.client.lastName) : 'N/A') }}
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #4B5563;">
+                                {{ item.clientPhone || (item.client ? item.client.phoneNumber : 'N/A') }}
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #4B5563;">
+                                {{ item.serviceName || (item.service ? item.service.name : 'N/A') }}
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #4B5563;">
+                                {{ item.employeeName || item.stylistName || (item.employee ? (item.employee.firstName + ' ' + item.employee.lastName) : (item.stylist ? (item.stylist.firstName + ' ' + item.stylist.lastName) : 'N/A')) }}
+                            </td>
+                        </tr>
+                        <tr *ngIf="todayScheduleList.length === 0">
+                            <td colspan="6" style="padding: 2rem; text-align: center; font-size: 0.875rem; color: #9CA3AF;">
+                                No appointments scheduled for today.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-top: 1rem; margin-bottom: 1rem;" *ngIf="isManager">Overview</h3>
+<div class="dashboard-row" *ngIf="isManager" style="grid-template-columns: repeat(4, 1fr);">
+
+    <!-- Card 1: Today's All Appointments -->
+    <div class="dashboard-card" style="background-color: #B1D6F4 !important; border-color: #B1D6F4;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Today's All Appointments</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ managerTodayAppointmentsCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.4); color: #1e3a8a;">
+                <i class="pi pi-calendar"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Today</span>
+    </div>
+
+    <!-- Card 2: Today's completed Appointments -->
+    <div class="dashboard-card" style="background-color: #B1D6F4 !important; border-color: #B1D6F4;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Today's Completed</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ managerCompletedAppointmentsCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.4); color: #1e3a8a;">
+                <i class="pi pi-check-circle"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Completed today</span>
+    </div>
+
+    <!-- Card 3: Appointments cancelled -->
+    <div class="dashboard-card" style="background-color: #B1D6F4 !important; border-color: #B1D6F4;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Appointments Cancelled</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ managerCancelledAppointmentsCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.4); color: #1e3a8a;">
+                <i class="pi pi-times-circle"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Cancelled today</span>
+    </div>
+
+    <!-- Card 4: Employees Present today -->
+    <div class="dashboard-card" style="background-color: #B1D6F4 !important; border-color: #B1D6F4;">
+        <div class="dashboard-card__header">
+            <div>
+                <span class="dashboard-card__label" style="color: #1f2937;">Employees Present</span>
+                <div class="dashboard-card__value" style="color: #1f2937;">{{ employeesPresentTodayCount }}</div>
+            </div>
+            <div class="dashboard-card__icon" style="background-color: rgba(255, 255, 255, 0.4); color: #1e3a8a;">
+                <i class="pi pi-users"></i>
+            </div>
+        </div>
+        <span class="dashboard-card__subtitle" style="color: #4b5563;">Active today</span>
+    </div>
+
+</div>
+
+<!-- Manager Employee Workload Table -->
+<div class="workload-section" *ngIf="isManager" style="margin-top: 2rem; margin-bottom: 2rem;">
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">Employee workload Today</h3>
+    
+    <mat-card class="report-card" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); overflow: hidden; border: 1px solid #e5e7eb;">
+        <mat-card-content style="padding: 0;">
+            <div class="table-wrapper" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background-color: #F9FAFB; border-bottom: 2px solid #E5E7EB;">
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 40%;">Stylist Name</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 30%; text-align: center;">No of appointments</th>
+                            <th style="padding: 1rem; font-size: 0.875rem; font-weight: 600; color: #4B5563; width: 30%;">Current status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of employeeWorkloadList" style="border-bottom: 1px solid #E5E7EB; transition: background-color 0.2s;" class="schedule-row">
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #1F2937; font-weight: 500;">
+                                {{ item.stylistName }}
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem; color: #1F2937; font-weight: 500; text-align: center;">
+                                <span class="appointment-badge" style="background-color: #DBEAFE; color: #1E40AF; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; font-size: 0.85rem;">
+                                    {{ item.appointmentCount }}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem; font-size: 0.875rem;">
+                                <span class="status-badge" 
+                                      [style.background-color]="item.status === 'Present' ? '#D1FAE5' : (item.status === 'Late' ? '#FEF3C7' : (item.status === 'Absent' ? '#FEE2E2' : '#F3F4F6'))"
+                                      [style.color]="item.status === 'Present' ? '#065F46' : (item.status === 'Late' ? '#92400E' : (item.status === 'Absent' ? '#991B1B' : '#374151'))"
+                                      style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; display: inline-block;">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr *ngIf="employeeWorkloadList.length === 0">
+                            <td colspan="3" style="padding: 2rem; text-align: center; font-size: 0.875rem; color: #9CA3AF;">
+                                No stylists found in the system.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-top: 1rem; margin-bottom: 1rem;" *ngIf="!isReceptionist && !isManager">Overview</h3>
+<div class="dashboard-row" *ngIf="!isReceptionist && !isManager">
 
     <!-- Card 1: Appointments in Last 30 Days -->
     <div class="dashboard-card dashboard-card--appointments">
@@ -56,12 +313,12 @@
         <span class="dashboard-card__subtitle">Last 30 days</span>
     </div>
 
-    <!--Card 5: Active Tasks (Placeholder) -->
+    <!--Card 5: Active Tasks -->
     <div class="dashboard-card dashboard-card--tasks">
         <div class="dashboard-card__header">
             <div>
                 <span class="dashboard-card__label">Active Tasks</span>
-                <div class="dashboard-card__value">14</div>
+                <div class="dashboard-card__value">{{ activeTasksCount }}</div>
             </div>
             <div class="dashboard-card__icon dashboard-card__icon--tasks">
                 <i class="pi pi-list"></i>
@@ -72,7 +329,7 @@
 </div>
 
 <!-- NEWLYADDED: Top Employee -->
-<div class="dashboard-card dashboard-card--top-employee">
+<div class="dashboard-card dashboard-card--top-employee" *ngIf="!isReceptionist && !isManager">
     <div class="dashboard-card__header">
         <div>
             <span class="dashboard-card__label">Top Employee</span>
@@ -89,7 +346,7 @@
 
 <!--Appointment Overview and Top 3 Services charts-->
 <div class="content-grid">
-    <div class="chart-section">
+    <div class="chart-section" *ngIf="!isReceptionist">
         <mat-card class="report-card">
             <mat-card-header
                 style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">
@@ -107,7 +364,7 @@
         </mat-card>
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section" *ngIf="!isReceptionist">
         <mat-card class="report-card">
             <mat-card-header
                 style="display: flex; justify-content: space-betweenx; align-items: center; padding: 1rem 1rem 0 1rem;">
@@ -126,7 +383,7 @@
     </div>
 
     <!--Table Top 5 Employees-->
-    <div class="chart-section">
+    <div class="chart-section" *ngIf="!isReceptionist">
         <mat-card class="report-card">
             <mat-card-header
                 style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1rem 0 1rem;">

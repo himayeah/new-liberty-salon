@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageServiceService } from 'src/app/services/message-service/message-service.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppointmentSchedulingServiceService } from 'src/app/services/appointment_scheduling/appointment-scheduling-service.service';
 import { AppointmentFormComponent } from './appointment-form/appointment-form.component';
 
@@ -57,10 +57,17 @@ export class AppointmentScheduleComponent implements OnInit {
         private messageService: MessageServiceService,
         private dialog: MatDialog,
         private router: Router,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
         this.populateData();
+
+        this.route.queryParams.subscribe(params => {
+            if (params['openAddModal'] === 'true') {
+                this.openAddModal();
+            }
+        });
     }
 
     populateData(): void {

@@ -73,7 +73,7 @@ export class AppMenuComponent implements OnInit {
     private setReceptionistEntitlements(menuArray: any[]): void {
         const allowedLinks = [
             // dashboard added for Receptionist
-            // '/dashboard',
+            '/dashboard',
             '/pages/client-reg',
             '/pages/appointment-schedule',
             '/pages/employee-attendance',
@@ -85,6 +85,72 @@ export class AppMenuComponent implements OnInit {
             '/pages/service-category',
             '/pages/product',
             '/pages/product-category'
+        ];
+
+        menuArray.forEach(group => {
+            let hasVisibleItems = false;
+            if (group.items && group.items.length > 0) {
+                group.items.forEach((item: any) => {
+                    const link = item.routerLink && item.routerLink[0];
+                    if (link && allowedLinks.includes(link)) {
+                        item.isVisible = true;
+                        hasVisibleItems = true;
+                    } else {
+                        item.isVisible = false;
+                    }
+                });
+                group.isVisible = hasVisibleItems;
+            } else {
+                group.isVisible = false;
+            }
+        });
+    }
+
+    private setStylistEntitlements(menuArray: any[]): void {
+        const allowedLinks = [
+            '/dashboard',
+            '/pages/appointment-schedule'
+        ];
+
+        menuArray.forEach(group => {
+            let hasVisibleItems = false;
+            if (group.items && group.items.length > 0) {
+                group.items.forEach((item: any) => {
+                    const link = item.routerLink && item.routerLink[0];
+                    if (link && allowedLinks.includes(link)) {
+                        item.isVisible = true;
+                        hasVisibleItems = true;
+                    } else {
+                        item.isVisible = false;
+                    }
+                });
+                group.isVisible = hasVisibleItems;
+            } else {
+                group.isVisible = false;
+            }
+        });
+    }
+
+    private setSeniorStylistEntitlements(menuArray: any[]): void {
+        const allowedLinks = [
+            '/dashboard',
+            '/pages/client-reg',
+            '/pages/client-profile',
+            '/pages/appointment-schedule',
+            '/pages/employee-attendance',
+            '/pages/employee-schedule',
+            '/pages/employee-leave',
+            '/pages/billing',
+            '/pages/report-client-reg',
+            '/pages/report-appointment-status',
+            '/pages/report-procurement',
+            '/pages/inventory',
+            '/pages/product',
+            '/pages/service',
+            '/pages/product-category',
+            '/pages/service-category',
+            '/pages/employee-reg',
+            '/pages/employee-profile'
         ];
 
         menuArray.forEach(group => {
@@ -156,6 +222,14 @@ export class AppMenuComponent implements OnInit {
             } else if (role === Role.MANAGER) {
                 this.model = this.navigationMenu.get();
                 this.setManagerEntitlements(this.model);
+                return;
+            } else if (role === Role.STYLIST) {
+                this.model = this.navigationMenu.get();
+                this.setStylistEntitlements(this.model);
+                return;
+            } else if (role === Role.SENIORSTYIST) {
+                this.model = this.navigationMenu.get();
+                this.setSeniorStylistEntitlements(this.model);
                 return;
             }
         }

@@ -31,7 +31,7 @@ export class EmployeeAuthGuard implements CanActivate {
     }
 
     // Not logged in, redirect to employee login
-    this.router.navigate(['/employee-workspace'], { queryParams: { returnUrl: state.url } });
+    this.router.navigate(['/employee-workspace']);
     return false;
   }
   

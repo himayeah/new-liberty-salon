@@ -10,6 +10,33 @@
     </button>
   </div>
 
+  <!-- Stylist Metrics Cards -->
+  <div class="stylist-metrics-grid">
+    <!-- Card 1: Today's Appointments -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <span class="metric-label">Today's Appointments</span>
+        <div class="metric-value">{{ todayAppointmentsCount }}</div>
+        <span class="metric-subtitle">Scheduled for today</span>
+      </div>
+      <div class="metric-icon">
+        <i class="pi pi-calendar"></i>
+      </div>
+    </div>
+
+    <!-- Card 2: Completed Appointments -->
+    <div class="metric-card">
+      <div class="metric-content">
+        <span class="metric-label">Completed Appointments</span>
+        <div class="metric-value">{{ completedAppointmentsCount }}</div>
+        <span class="metric-subtitle">Overall completed</span>
+      </div>
+      <div class="metric-icon">
+        <i class="pi pi-check-circle"></i>
+      </div>
+    </div>
+  </div>
+
   <!-- Filter Section -->
   <mat-card class="filter-card">
     <mat-card-content class="filter-container">

@@ -92,6 +92,7 @@ export class AuthGuard implements CanActivate {
         // with filtered appointments ony showing their appointments
          if (role === Role.STYLIST) {
             const allowedStylistPrefixes = [
+                '/dashboard',
                 '/pages/appointment-schedule',
             ];
             const isAllowed = allowedStylistPrefixes.some(prefix => url === prefix || url.startsWith(prefix + '/') || url.startsWith(prefix + '?'));
@@ -132,9 +133,7 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        this.router.navigate(['/auth/login'], {
-            queryParams: { returnUrl: state.url },
-        });
+        this.router.navigate(['/auth/login']);
         return false;
     }
 }

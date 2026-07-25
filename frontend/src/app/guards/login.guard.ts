@@ -16,9 +16,7 @@ export class LoginGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const loggedInStatus = this.httpService.isLoggedIn;
     if (loggedInStatus) {
-      this.router.navigate(['/authentication/login'], {
-        queryParams: { returnUrl: state.url },
-      });
+      this.router.navigate(['/authentication/login']);
       return loggedInStatus;
     }
     return !loggedInStatus;
